@@ -9,6 +9,8 @@ udf_field_type_2#:#Auswahlliste
 udf_field_type_3#:#Textbereich
 udf_field_type_51#:#Kaskadiert
 show_infotab#:#Tab "Info" anzeigen
+always_edit#:#Direkt bearbeitbar
+always_edit_info#:#Wenn alle Felder bereits gefüllt sind, entfällt das Einschalten des Bearbeitungsmodus 
 delete_confirmation_text#:#Sind Sie sicher, dass Sie folgendes Element löschen möchten?
 msg_successfully_deleted#:#Element erfolgreich gelöscht.
 msg_no_udfs#:#Auf dieser Plattform existieren noch keine Benutzerdefinierten Felder. Diese können in der Benutzeradministration erstellt werden.
@@ -34,7 +36,8 @@ fold_create_xudf#:#UdfEditor Erstellen
 grp_create_xudf#:#UdfEditor Erstellen
 root_create_xudf#:#UdfEditor Erstellen
 xudf_visible#:#Anzeigen: UdfEditor ist sichtbar
-xudf_read#:#Lesezugriff: Videos können angezeigt werden
+xudf_read#:#Lesezugriff: Inhalte können gesehen werden
+xudf_copy#:#Kopieren: UdfEditor kann kopiert werden
 xudf_write#:#Einstellungen bearbeiten: Einstellungen und Inhalte können bearbeitet werden
 xudf_delete#:#Löschen: Objekt kann gelöscht werden
 xudf_edit_permission#:#Rechteeinstellungen ändern: Rechteeinstellungen ändern
@@ -49,7 +52,6 @@ stay_in_form#:#Im Formular bleiben
 to_ilias_object#:#ILIAS-Objekt
 to_url#:#URL
 notification#:#Benachrichtigung
-
 notifications4plugin_actions#:#Aktionen
 notifications4plugin_add#:#Hinzugefügen
 notifications4plugin_add_notification#:#Benachrichtigung hinzufügen

@@ -9,6 +9,8 @@ udf_field_type_2#:#Selector
 udf_field_type_3#:#Textarea
 udf_field_type_51#:#Cascading
 show_infotab#:#Show Tab "Info"
+always_edit#:#Directly editable
+always_edit_info#:#Users dont need to turn on editmode if form is already filled completely
 delete_confirmation_text#:#Do you really want to delete the following element?
 msg_successfully_deleted#:#Element deleted successfully.
 msg_no_udfs#:#There are no user defined fields on this platform. These can be created in the user administration.
@@ -34,7 +36,8 @@ fold_create_xudf#:#Create UdfEditor
 grp_create_xudf#:#Create UdfEditor
 root_create_xudf#:#Create UdfEditor
 xudf_visible#:#Visible: UdfEditor is visible
-xudf_read#:#Read: User can watch the videos
+xudf_read#:#Read: User can see UdfEditor content
+xudf_copy#:#Copy: User can copy UdfEditor object
 xudf_rep_robj_xudf_perm_upload#:#Upload: User can upload videos
 xudf_write#:#Edit Settings: User can edit content and settings of UdfEditor object
 xudf_delete#:#Delete: User can delete UdfEditor object
@@ -50,7 +53,6 @@ stay_in_form#:#stay in form
 to_ilias_object#:#to ILIAS object
 to_url#:#to URL
 notification#:#Notification
-
 notifications4plugin_actions#:#Actions
 notifications4plugin_add#:#Add
 notifications4plugin_add_notification#:#Add notification
