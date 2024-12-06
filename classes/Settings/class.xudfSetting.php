@@ -97,6 +97,16 @@ class xudfSetting extends ActiveRecord
      * @con_is_notnull   true
      */
     protected string $notification_name = "";
+    
+    /**
+     * @var bool
+     *
+     * @con_has_field    true
+     * @con_fieldtype    integer
+     * @con_length       1
+     * @con_is_notnull   false
+     */
+    protected $always_edit = false;
 
     public function getObjId(): int
     {

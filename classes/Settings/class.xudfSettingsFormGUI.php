@@ -27,6 +27,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
     public const F_DESCRIPTION = 'description';
     public const F_ONLINE = 'online';
     public const F_SHOW_INFOTAB = 'show_infotab';
+    public const F_ALWAYS_EDIT = 'always_edit';
     public const F_MAIL_NOTIFICATION = 'mail_notification';
     public const F_ADDITIONAL_NOTIFICATION = 'additional_notification';
     public const F_REDIRECT_TYPE = 'redirect_type';
@@ -83,6 +84,11 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $input = new ilCheckboxInputGUI($this->pl->txt(self::F_SHOW_INFOTAB), self::F_SHOW_INFOTAB);
         $this->addItem($input);
 
+        // Configure Edit Mode
+        $input = new ilCheckboxInputGUI($this->pl->txt(self::F_ALWAYS_EDIT), self::F_ALWAYS_EDIT);
+        $input->setInfo($this->pl->txt(self::F_ALWAYS_EDIT . '_info'));
+        $this->addItem($input);
+
         // MAIL NOTIFICATION
         $input = new ilCheckboxInputGUI($this->pl->txt(self::F_MAIL_NOTIFICATION), self::F_MAIL_NOTIFICATION);
         $input->setInfo($this->pl->txt(self::F_MAIL_NOTIFICATION . '_info'));
@@ -122,6 +128,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
             self::F_DESCRIPTION => $this->parent_gui->getObject()->getDescription(),
             self::F_ONLINE => $this->xudfSetting->isOnline(),
             self::F_SHOW_INFOTAB => $this->xudfSetting->isShowInfoTab(),
+            self::F_ALWAYS_EDIT => $this->xudfSetting->getAlwaysEdit(),
             self::F_MAIL_NOTIFICATION => $this->xudfSetting->hasMailNotification(),
             self::F_ADDITIONAL_NOTIFICATION => $this->xudfSetting->getAdditionalNotification(),
             self::F_REDIRECT_TYPE => $this->xudfSetting->getRedirectType()
@@ -146,6 +153,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
 
         $this->xudfSetting->setIsOnline((bool) $this->getInput(self::F_ONLINE));
         $this->xudfSetting->setShowInfoTab((bool) $this->getInput(self::F_SHOW_INFOTAB));
+        $this->xudfSetting->setAlwaysEdit($this->getInput(self::F_ALWAYS_EDIT));
         $this->xudfSetting->setMailNotification((bool) $this->getInput(self::F_MAIL_NOTIFICATION));
         $this->xudfSetting->setAdditionalNotification($this->getInput(self::F_ADDITIONAL_NOTIFICATION));
         $this->xudfSetting->setRedirectType($this->getInput(self::F_REDIRECT_TYPE));
