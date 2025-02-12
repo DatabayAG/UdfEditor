@@ -75,7 +75,7 @@ class xudfContentGUI extends xudfGUI
 
     protected function index(): void
     {
-        $has_open_fields = false;
+        $editable = $this->getObject()->getSettings()->getAlwaysEdit();
         $where = xudfContentElement::where(['obj_id' => $this->getObjId()]);
         if (!$_GET['edit'] && $where->count()) {
             $udf_values = $this->dic->user()->getUserDefinedData();
@@ -83,11 +83,11 @@ class xudfContentGUI extends xudfGUI
             /** @var xudfContentElement $element */
             foreach ($where->get() as $element) {
                 if (!$element->isSeparator() && !isset($udf_values["f_{$element->getUdfFieldId()}"])) {
-                    $has_open_fields = true;
+                    $editable = true;
                     break;
                 }
             }
-            if (!$has_open_fields) {
+            if (!$editable) {
                 // return button
                 $button = ilLinkButton::getInstance();
                 $button->setPrimary(true);
@@ -103,7 +103,7 @@ class xudfContentGUI extends xudfGUI
             }
         }
         $page_obj_gui = new xudfPageObjectGUI($this);
-        $form = new xudfContentFormGUI($this, $has_open_fields || $_GET['edit']);
+        $form = new xudfContentFormGUI($this, $editable || $_GET['edit']);
         $form->fillForm();
         $this->tpl->setContent($page_obj_gui->getHTML() . $form->getHTML());
     }
