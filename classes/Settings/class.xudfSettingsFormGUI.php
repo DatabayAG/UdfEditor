@@ -30,7 +30,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
     public const F_MAIL_NOTIFICATION = 'mail_notification';
     public const F_ADDITIONAL_NOTIFICATION = 'additional_notification';
     public const F_REDIRECT_TYPE = 'redirect_type';
-    public const F_REF_ID = 'ref_id';
+    public const F_REF_ID = 'ref_id_redir';
     public const F_URL = 'url';
 
     protected static array $redirect_type_to_postvar
