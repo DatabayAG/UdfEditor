@@ -57,7 +57,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                 }
             }
             if ($rref != $this->ref_id && $rref!=0) {
-                $_SESSION['xudfreturn'] = $_SERVER['HTTP_REFERER'];
+                ilSession::set('xudfreturn',$_SERVER['HTTP_REFERER']);
             }
         }
     }
