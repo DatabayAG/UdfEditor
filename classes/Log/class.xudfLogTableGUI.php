@@ -115,8 +115,8 @@ class xudfLogTableGUI extends ilTable2GUI
     {
         // Not set (null) on first visit, false on reset filter, string if is set
         return (
-            isset($_SESSION["form_{$this->getId()}_$field_id"])
-            && $_SESSION["form_{$this->getId()}_$field_id"] !== false
+            ilsession::has("form_{$this->getId()}_$field_id")
+            && ilSession::get("form_{$this->getId()}_$field_id") !== false
         );
     }
 
