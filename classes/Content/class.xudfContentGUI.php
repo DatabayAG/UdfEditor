@@ -165,7 +165,7 @@ class xudfContentGUI extends xudfGUI
 
     protected function returnToParent(): void
     {
-        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $this->tree->getParentId($_GET['ref_id']));
+        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $this->tree->getParentId((int) $_GET['ref_id']));
         $this->dic->ctrl()->redirectByClass(ilRepositoryGUI::class);
     }
 
@@ -177,8 +177,7 @@ class xudfContentGUI extends xudfGUI
                 break;
             case xudfSetting::REDIRECT_TO_ILIAS_OBJECT:
                 $ref_id = $this->getObject()->getSettings()->getRedirectValue();
-                $this->ctrl->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $ref_id);
-                $this->ctrl->redirectByClass(ilRepositoryGUI::class);
+                $this->ctrl->redirectToUrl('goto.php?target=' . ilObject::_lookupType((int) $ref_id,true) . '_' . $ref_id);
                 break;
             case xudfSetting::REDIRECT_TO_URL:
                 $url = $this->getObject()->getSettings()->getRedirectValue();
