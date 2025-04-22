@@ -31,14 +31,15 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
     public const F_MAIL_NOTIFICATION = 'mail_notification';
     public const F_ADDITIONAL_NOTIFICATION = 'additional_notification';
     public const F_REDIRECT_TYPE = 'redirect_type';
-    public const F_REF_ID = 'ref_id';
+    public const F_REF_ID = 'ref_id_target';
     public const F_URL = 'url';
 
     protected static array $redirect_type_to_postvar
         = [
             xudfSetting::REDIRECT_STAY_IN_FORM => false,
             xudfSetting::REDIRECT_TO_ILIAS_OBJECT => self::F_REF_ID,
-            xudfSetting::REDIRECT_TO_URL => self::F_URL
+            xudfSetting::REDIRECT_TO_URL => self::F_URL,
+            xudfSetting::REDIRECT_TO_CALLER => false
         ];
 
     protected ilCtrl $ctrl;
@@ -115,7 +116,13 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $url_input = new ilTextInputGUI('', self::F_URL);
         $opt->addSubItem($url_input);
         $input->addOption($opt);
-
+        // only offer redirect to caller if referer contains a ref_id
+        // since some proxy scenarios do not pass the complete referer
+        if (isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'],'ref_id')) {
+            $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_CALLER), xudfSetting::REDIRECT_TO_CALLER);
+            $input->addOption($opt); 
+        }
+        
         $this->addItem($input);
 
         $this->addCommandButton(xudfSettingsGUI::CMD_UPDATE, $this->lng->txt('save'));
