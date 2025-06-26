@@ -95,6 +95,10 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 
     public function exchangeUIRendererAfterInitialization(Container $dic): Closure
     {
-        return CustomInputGUIsLoaderDetector::exchangeUIRendererAfterInitialization();
+        $renderer = $dic->raw("ui.renderer");
+        if (!$this->isActive()) {
+            return $renderer;
+        }
+        return CustomInputGUIsLoaderDetector::exchangeUIRendererAfterInitialization($renderer, $dic);
     }
 }
