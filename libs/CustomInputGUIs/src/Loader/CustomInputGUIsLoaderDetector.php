@@ -13,6 +13,7 @@ use ILIAS\UI\Renderer;
 use Pimple\Container;
 use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\InputGUIWrapperUIInputComponent;
 use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\Renderer as InputGUIWrapperUIInputComponentRenderer;
+use Throwable;
 
 class CustomInputGUIsLoaderDetector implements Loader
 {
@@ -30,31 +31,25 @@ class CustomInputGUIsLoaderDetector implements Loader
         $this->loader = $loader;
     }
 
-
-    /**
-     * @param callable[]|null $get_renderer_for_hooks
-     */
-    public static function exchangeUIRendererAfterInitialization(?array $get_renderer_for_hooks = null): callable
+    public static function exchangeUIRendererAfterInitialization(Closure $renderer, \ILIAS\DI\Container $dic): Closure
     {
-        global $DIC;
         self::fixCtrlNamespaceCurrentUrl();
 
-        $previous_renderer = Closure::bind(function (): callable {
-            return $this->raw("ui.renderer");
-        }, $DIC, Container::class)();
+        return function () use ($dic, $renderer): Renderer|Closure {
+            try {
+                $rendererObj = $renderer($dic);
 
-        return function () use ($DIC, $previous_renderer, $get_renderer_for_hooks): Renderer {
-            $previous_renderer = $previous_renderer($DIC);
-
-            if ($previous_renderer instanceof DefaultRenderer) {
-                $previous_renderer_loader = Closure::bind(function (): Loader {
-                    return $this->component_renderer_loader;
-                }, $previous_renderer, DefaultRenderer::class)();
-            } else {
-                return $previous_renderer;
+                if ($rendererObj instanceof DefaultRenderer) {
+                    /** @var DefaultRenderer|Closure $renderer */
+                    $previous_renderer_loader = Closure::bind(function (): Loader {
+                        return $this->component_renderer_loader;
+                    }, $rendererObj, DefaultRenderer::class)();
+                    return new DefaultRenderer(new self($previous_renderer_loader));
+                }
+                return $rendererObj;
+            } catch (Throwable) {
+                return $renderer($dic);
             }
-
-            return new DefaultRenderer(new self($previous_renderer_loader, $get_renderer_for_hooks));
         };
     }
 
