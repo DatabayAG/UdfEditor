@@ -81,9 +81,18 @@ class ilObjUdfEditor extends ilObjectPlugin
 
     protected function cloneContentElements(ilObjUdfEditor $new_obj): void
     {
+        /** @var array<int, array{old: xudfContentElement, new: xudfContentElement}> $old_to_new_content_element_map */
+        $old_to_new_content_element_map = [];
+
         /** @var xudfContentElement $old_content_element */
         foreach (xudfContentElement::where(['obj_id' => $this->getId()])->get() as $old_content_element) {
             $new_content_element = new xudfContentElement();
+
+            $old_to_new_content_element_map[] = [
+                "old" => $old_content_element,
+                "new" => $new_content_element
+            ];
+
             $new_content_element->setObjId($new_obj->getId());
             try {
                 $new_content_element->setTitle($old_content_element->getTitle());
@@ -92,9 +101,18 @@ class ilObjUdfEditor extends ilObjectPlugin
             }
             $new_content_element->setDescription($old_content_element->getDescription());
             $new_content_element->setIsSeparator($old_content_element->isSeparator());
-            $new_content_element->setSort($old_content_element->getSort());
             $new_content_element->setUdfFieldId($old_content_element->getUdfFieldId());
             $new_content_element->create();
+        }
+
+        //create method resets sortation, sortation needs to be done after they are created
+        foreach ($old_to_new_content_element_map as $old_and_new) {
+            $old = $old_and_new["old"];
+            $new = $old_and_new["new"];
+            if ($new->getSort() !== $old->getSort()) {
+                $new->setSort($old->getSort());
+                $new->update();
+            }
         }
     }
 
