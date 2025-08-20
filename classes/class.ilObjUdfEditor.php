@@ -109,10 +109,10 @@ class ilObjUdfEditor extends ilObjectPlugin
         foreach ($old_to_new_content_element_map as $old_and_new) {
             $old = $old_and_new["old"];
             $new = $old_and_new["new"];
-            if ($new->getSort() !== $old->getSort()) {
-                $new->setSort($old->getSort());
-                $new->update();
-            }
+
+            $new->setIsRequired($old->isRequired());
+            $new->setSort($old->getSort());
+            $new->update();
         }
     }
 
