@@ -76,6 +76,10 @@ class ilObjUdfEditor extends ilObjectPlugin
         $new_settings->setAdditionalNotification($old_settings->getAdditionalNotification());
         $new_settings->setMailNotification($old_settings->hasMailNotification());
         $new_settings->setShowInfoTab($old_settings->isShowInfoTab());
+        $new_settings->setRedirectType($old_settings->getRedirectType());
+        $new_settings->setRedirectValue($old_settings->getRedirectValue());
+        $new_settings->setAlwaysEdit($old_settings->isAlwaysEdit());
+        $new_settings->setIsOnline($old_settings->isOnline());
         $new_settings->update();
     }
 
@@ -109,10 +113,10 @@ class ilObjUdfEditor extends ilObjectPlugin
         foreach ($old_to_new_content_element_map as $old_and_new) {
             $old = $old_and_new["old"];
             $new = $old_and_new["new"];
-            if ($new->getSort() !== $old->getSort()) {
-                $new->setSort($old->getSort());
-                $new->update();
-            }
+
+            $new->setIsRequired($old->isRequired());
+            $new->setSort($old->getSort());
+            $new->update();
         }
     }
 
