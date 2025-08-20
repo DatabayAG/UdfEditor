@@ -120,9 +120,9 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         // since some proxy scenarios do not pass the complete referer
         if (isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'],'ref_id')) {
             $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_CALLER), xudfSetting::REDIRECT_TO_CALLER);
-            $input->addOption($opt); 
+            $input->addOption($opt);
         }
-        
+
         $this->addItem($input);
 
         $this->addCommandButton(xudfSettingsGUI::CMD_UPDATE, $this->lng->txt('save'));
@@ -135,7 +135,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
             self::F_DESCRIPTION => $this->parent_gui->getObject()->getDescription(),
             self::F_ONLINE => $this->xudfSetting->isOnline(),
             self::F_SHOW_INFOTAB => $this->xudfSetting->isShowInfoTab(),
-            self::F_ALWAYS_EDIT => $this->xudfSetting->getAlwaysEdit(),
+            self::F_ALWAYS_EDIT => $this->xudfSetting->isAlwaysEdit(),
             self::F_MAIL_NOTIFICATION => $this->xudfSetting->hasMailNotification(),
             self::F_ADDITIONAL_NOTIFICATION => $this->xudfSetting->getAdditionalNotification(),
             self::F_REDIRECT_TYPE => $this->xudfSetting->getRedirectType()
@@ -160,7 +160,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
 
         $this->xudfSetting->setIsOnline((bool) $this->getInput(self::F_ONLINE));
         $this->xudfSetting->setShowInfoTab((bool) $this->getInput(self::F_SHOW_INFOTAB));
-        $this->xudfSetting->setAlwaysEdit($this->getInput(self::F_ALWAYS_EDIT));
+        $this->xudfSetting->setAlwaysEdit((bool) $this->getInput(self::F_ALWAYS_EDIT));
         $this->xudfSetting->setMailNotification((bool) $this->getInput(self::F_MAIL_NOTIFICATION));
         $this->xudfSetting->setAdditionalNotification($this->getInput(self::F_ADDITIONAL_NOTIFICATION));
         $this->xudfSetting->setRedirectType($this->getInput(self::F_REDIRECT_TYPE));

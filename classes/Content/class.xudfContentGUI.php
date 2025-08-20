@@ -75,7 +75,7 @@ class xudfContentGUI extends xudfGUI
 
     protected function index(): void
     {
-        $editable = $this->getObject()->getSettings()->getAlwaysEdit();
+        $editable = $this->getObject()->getSettings()->isAlwaysEdit();
         $where = xudfContentElement::where(['obj_id' => $this->getObjId()]);
         if (!$_GET['edit'] && $where->count()) {
             $udf_values = $this->dic->user()->getUserDefinedData();
@@ -169,7 +169,7 @@ class xudfContentGUI extends xudfGUI
         $this->dic->ctrl()->redirectByClass(ilRepositoryGUI::class);
     }
 
-    protected function returnToCaller(): void 
+    protected function returnToCaller(): void
     {
 	    if (ilSession::has('xudfreturn')) {
 		    $backlink = ilSession::get('xudfreturn');
@@ -179,7 +179,7 @@ class xudfContentGUI extends xudfGUI
 		    $this->ctrl->redirect($this);
 	    }
     }
-    
+
     protected function redirectAfterSave(): void
     {
         switch ($this->getObject()->getSettings()->getRedirectType()) {
@@ -202,7 +202,7 @@ class xudfContentGUI extends xudfGUI
 	            }
                 $url = $this->getObject()->getSettings()->getRedirectValue();
                 $this->ctrl->redirectToURL($url);
-                break; 
+                break;
             case xudfSetting::REDIRECT_TO_CALLER:
 	            $this->returnToCaller();
 	            break;

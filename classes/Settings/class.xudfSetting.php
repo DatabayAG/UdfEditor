@@ -98,7 +98,7 @@ class xudfSetting extends ActiveRecord
      * @con_is_notnull   true
      */
     protected string $notification_name = "";
-    
+
     /**
      * @var bool
      *
@@ -107,7 +107,7 @@ class xudfSetting extends ActiveRecord
      * @con_length       1
      * @con_is_notnull   false
      */
-    protected $always_edit = false;
+    protected bool|int $always_edit = false;
 
     public function getObjId(): int
     {
@@ -182,6 +182,17 @@ class xudfSetting extends ActiveRecord
     public static function find($primary_key, array $add_constructor_args = []): ?self
     {
         return parent::find($primary_key, $add_constructor_args);
+    }
+
+    public function isAlwaysEdit(): bool
+    {
+        return (bool) $this->always_edit;
+    }
+
+    public function setAlwaysEdit(bool $always_edit): xudfSetting
+    {
+        $this->always_edit = $always_edit;
+        return $this;
     }
 
     public function getNotification(): NotificationInterface
