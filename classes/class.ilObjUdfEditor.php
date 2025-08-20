@@ -79,6 +79,7 @@ class ilObjUdfEditor extends ilObjectPlugin
         $new_settings->setRedirectType($old_settings->getRedirectType());
         $new_settings->setRedirectValue($old_settings->getRedirectValue());
         $new_settings->setAlwaysEdit($old_settings->isAlwaysEdit());
+        $new_settings->setIsOnline($old_settings->isOnline());
         $new_settings->update();
     }
 
