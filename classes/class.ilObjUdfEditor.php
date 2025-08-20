@@ -76,6 +76,8 @@ class ilObjUdfEditor extends ilObjectPlugin
         $new_settings->setAdditionalNotification($old_settings->getAdditionalNotification());
         $new_settings->setMailNotification($old_settings->hasMailNotification());
         $new_settings->setShowInfoTab($old_settings->isShowInfoTab());
+        $new_settings->setRedirectType($old_settings->getRedirectType());
+        $new_settings->setRedirectValue($old_settings->getRedirectValue());
         $new_settings->update();
     }
 
