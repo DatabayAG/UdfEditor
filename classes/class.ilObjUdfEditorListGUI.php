@@ -84,7 +84,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
      *                        'property' (string) => property name
      *                        'value' (string) => property value
      */
-    public function getCustomProperties($a_prop): array
+    public function getCustomProperties($prop): array
     {
         $props = parent::getCustomProperties([]);
 

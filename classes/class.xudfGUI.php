@@ -26,7 +26,7 @@ abstract class xudfGUI
 {
     public const CMD_STANDARD = 'index';
 
-    protected ilCtrl $ctrl;
+    protected ilCtrlInterface $ctrl;
 
     protected ilObjUser $user;
 
@@ -41,6 +41,7 @@ abstract class xudfGUI
 
     protected ilObjUdfEditorGUI $parent_gui;
     protected Container $dic;
+    private ilTree $tree;
 
     public function __construct(ilObjUdfEditorGUI $parent_gui)
     {
@@ -69,6 +70,7 @@ abstract class xudfGUI
         }
     }
 
+    /** @noinspection PhpStatementHasEmptyBodyInspection */
     protected function performCommand(string $cmd): void
     {
         if ((new NotificationCtrl($this))->handleCommand($cmd)) {

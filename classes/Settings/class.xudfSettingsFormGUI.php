@@ -42,8 +42,6 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
             xudfSetting::REDIRECT_TO_CALLER => false
         ];
 
-    protected ilCtrl $ctrl;
-
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
@@ -56,7 +54,6 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
     {
         parent::__construct();
         global $DIC;
-        $this->ctrl = $DIC->ctrl();
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->parent_gui = $parent_gui;
