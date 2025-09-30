@@ -6,12 +6,6 @@
   "license": "GPL-3.0+",
   "authors": [
     {
-      "name": "Martin Studer",
-      "email": "martin@fluxlabs.ch",
-      "homepage": "https://fluxlabs.ch",
-      "role": "Maintainer, Developer"
-    },
-    {
       "name": "mbeym",
       "email": "mbeym@databay.de"
     }
