@@ -41,9 +41,9 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         $this->setFormAction($this->dic->ctrl()->getFormAction($parent_gui));
         $this->setRowTemplate($this->pl->getDirectory() . '/templates/default/tpl.form_configuration_table_row.html');
 
-        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getDirectory() . '/templates/default/sortable.js');
-        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getDirectory() . '/templates/default/waiter.js');
-        $this->dic->ui()->mainTemplate()->addCss($this->pl->getDirectory() . '/templates/default/waiter.css');
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/sortable.js');
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/waiter.js');
+        $this->dic->ui()->mainTemplate()->addCss($this->pl->getRelativeDirectory() . '/templates/default/waiter.css');
         $this->dic->ui()->mainTemplate()->addOnLoadCode("xoctWaiter.init();");
 
         $base_link = $this->dic->ctrl()->getLinkTarget($parent_gui, xudfFormConfigurationGUI::CMD_REORDER, '', true);
