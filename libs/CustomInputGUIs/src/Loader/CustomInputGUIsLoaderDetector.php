@@ -44,10 +44,13 @@ class CustomInputGUIsLoaderDetector implements Loader
                     $previous_renderer_loader = Closure::bind(function (): Loader {
                         return $this->component_renderer_loader;
                     }, $rendererObj, DefaultRenderer::class)();
-                    return new DefaultRenderer(new self($previous_renderer_loader));
+                    return new DefaultRenderer(
+                        new self($previous_renderer_loader),
+                        $dic["ui.javascript_binding"]
+                    );
                 }
                 return $rendererObj;
-            } catch (Throwable) {
+            } catch (Throwable $ex) {
                 return $renderer($dic);
             }
         };
@@ -91,7 +94,6 @@ class CustomInputGUIsLoaderDetector implements Loader
                     $this->dic["ui.template_factory"],
                     $this->dic->language(),
                     $this->dic["ui.javascript_binding"],
-                    $this->dic->refinery(),
                     $this->dic["ui.pathresolver"],
                     new Factory(),
                     $this->dic["help.text_retriever"],
