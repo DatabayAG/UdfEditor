@@ -80,8 +80,6 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
         foreach ($this->tabs as $tab) {
             foreach ($tab->getInputs($this->getPostVar(), $this->getValue()) as $org_post_var => $input) {
-                $b_value = $_POST[$input->getPostVar()];
-
                 $value = $_POST[$this->getPostVar()][$tab->getPostVar()][$org_post_var];
                 //Unable to use checkInput of internal input object because internal inputs can't use array access for post data
                 //$_POST[$input->getPostVar()] = $_POST[$this->getPostVar()][$tab->getPostVar()][$org_post_var];
