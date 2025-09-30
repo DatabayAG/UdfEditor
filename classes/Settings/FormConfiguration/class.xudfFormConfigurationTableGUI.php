@@ -121,13 +121,22 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
 
     protected function buildActions($id): string
     {
-        $actions = new ilAdvancedSelectionListGUI();
-        $actions->setListTitle($this->dic->language()->txt('actions'));
+        $uiFactory = $this->dic->ui()->factory();
+        $uiRenderer = $this->dic->ui()->renderer();
+
         $this->dic->ctrl()->setParameter($this->parent_obj, 'element_id', $id);
+        $actions = [
+            $uiFactory->link()->standard(
+                $this->dic->language()->txt('edit'),
+                $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_EDIT)
+            ),
+            $uiFactory->link()->standard(
+                $this->dic->language()->txt('delete'),
+                $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_DELETE)
+            )
+        ];
 
-        $actions->addItem($this->dic->language()->txt('edit'), 'edit', $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_EDIT));
-        $actions->addItem($this->dic->language()->txt('delete'), 'delete', $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_DELETE));
-
-        return $actions->getHTML();
+        $actionDropdown = $uiFactory->dropdown()->standard($actions)->withLabel($this->dic->language()->txt('actions'));
+        return $uiRenderer->render($actionDropdown);
     }
 }
