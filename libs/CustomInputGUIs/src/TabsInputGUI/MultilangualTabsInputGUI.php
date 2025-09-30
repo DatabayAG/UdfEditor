@@ -3,7 +3,6 @@
 namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
 
 use ilFormPropertyGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\PropertyFormGUI;
 
 class MultilangualTabsInputGUI
 {
@@ -23,15 +22,15 @@ class MultilangualTabsInputGUI
                 $tab_item = $item;
 
                 if ($default_required && $lang_key === "default") {
-                    $tab_item[PropertyFormGUI::PROPERTY_REQUIRED] = true;
+                    $tab_item["required"] = true;
                 }
 
                 $tab_items[$item_key] = $tab_item;
             }
 
             $tab = [
-                PropertyFormGUI::PROPERTY_CLASS => TabsInputGUITab::class,
-                PropertyFormGUI::PROPERTY_SUBITEMS => $tab_items,
+                "class" => TabsInputGUITab::class,
+                "subitems" => $tab_items,
                 "setTitle" => $lang_title,
                 "setActive" => ($lang_key === ($default_language ? "default" : $DIC->language()->getLangKey()))
             ];

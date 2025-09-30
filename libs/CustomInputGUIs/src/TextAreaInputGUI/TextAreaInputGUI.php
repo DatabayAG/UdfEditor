@@ -2,8 +2,8 @@
 
 namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TextAreaInputGUI;
 
+use ilTemplate;
 use ilTextAreaInputGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\Template\Template;
 
 class TextAreaInputGUI extends ilTextAreaInputGUI
 {
@@ -75,7 +75,7 @@ class TextAreaInputGUI extends ilTextAreaInputGUI
 
     public function render(): string
     {
-        $tpl = new Template(__DIR__ . '/templates/tpl.text_area_helper.html', false, false);
+        $tpl = new ilTemplate(__DIR__ . '/templates/tpl.text_area_helper.html', false, false);
         $this->insert($tpl);
         $tpl->setVariable('INLINE_STYLE', $this->getInlineStyle());
 
