@@ -18,7 +18,15 @@ class Renderer extends AbstractRenderer
 
         $input_tpl = $this->getTemplate("input.html", true, true);
 
-        $html = $this->wrapInFormContext($component, $this->renderInputField($input_tpl, $component, "", $default_renderer));
+        $html = $this->wrapInFormContext(
+            $component,
+            "",
+            $this->renderInputField(
+                $input_tpl,
+                $component,
+                "",
+                $default_renderer),
+        );
 
         return $html;
     }
