@@ -175,7 +175,7 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function edit(): void
     {
         $elementId = $this->httpWrapper->query()->retrieve(
-            xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
+            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
         $element = xudfContentElement::find($elementId);
@@ -187,7 +187,7 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function delete(): void
     {
         $elementId = $this->httpWrapper->query()->retrieve(
-            xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
+            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
         $element = new xudfContentElement($elementId);
