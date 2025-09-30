@@ -197,7 +197,7 @@ class xudfFormConfigurationGUI extends xudfGUI
         $text .= $this->lng->txt('type') . ": " . ($element->isSeparator() ? 'Separator' : $this->pl->txt('udf_field'));
 
         $confirmationGUI = new ilConfirmationGUI();
-        $confirmationGUI->addItem('element_id', $elementId, $text);
+        $confirmationGUI->addItem('element_id', (string) $elementId, $text);
         $confirmationGUI->setFormAction($this->ctrl->getFormAction($this));
         $confirmationGUI->setHeaderText($this->pl->txt('delete_confirmation_text'));
         $confirmationGUI->setConfirm($this->lng->txt('delete'), self::CMD_CONFIRM_DELETE);
