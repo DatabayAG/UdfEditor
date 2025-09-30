@@ -189,7 +189,7 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
         foreach ($this->getTabs() as $tab) {
             $inputs = $tab->getInputs($this->getPostVar(), $this->getValue());
 
-            $tpl->setCurrentBlock("tab");
+            $tpl->setCurrentBlock("tab_item");
 
             $post_var = str_replace(["[", "]"], "__", $this->getPostVar() . "_" . $tab->getPostVar());
             $tab_id = "tabsinputgui_tab_" . $post_var;
@@ -203,10 +203,6 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
             if ($tab->isActive()) {
                 $tpl->setVariableEscaped("ACTIVE", " active");
             }
-
-            $tpl->parseCurrentBlock();
-
-            $tpl->setCurrentBlock("tab_content");
 
             if ($this->getShowInputLabel() === self::SHOW_INPUT_LABEL_AUTO) {
                 $tpl->setVariableEscaped("SHOW_INPUT_LABEL", (count($inputs) > 1 ? self::SHOW_INPUT_LABEL_ALWAYS : self::SHOW_INPUT_LABEL_NONE));
