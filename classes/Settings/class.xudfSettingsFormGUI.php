@@ -115,7 +115,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $input->addOption($opt);
         // only offer redirect to caller if referer contains a ref_id
         // since some proxy scenarios do not pass the complete referer
-        if (isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'],'ref_id')) {
+        if (isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], 'ref_id')) {
             $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_CALLER), xudfSetting::REDIRECT_TO_CALLER);
             $input->addOption($opt);
         }

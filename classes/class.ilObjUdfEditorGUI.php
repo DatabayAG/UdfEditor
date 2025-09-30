@@ -47,17 +47,17 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         $this->dic = $DIC;
         if (isset($_SERVER['HTTP_REFERER'])) {
             $rref = 0;
-            $a_referer = explode('&',$_SERVER['HTTP_REFERER']);
+            $a_referer = explode('&', $_SERVER['HTTP_REFERER']);
             if (count($a_referer)) {
                 foreach ($a_referer as $entry) {
-                    $a_entry = explode('=',$entry);
+                    $a_entry = explode('=', $entry);
                     if ($a_entry[0] === 'ref_id' && isset($a_entry[1])) {
                         $rref = $a_entry[1];
                     }
                 }
             }
-            if ($rref != $this->ref_id && $rref!=0) {
-                ilSession::set('xudfreturn',$_SERVER['HTTP_REFERER']);
+            if ($rref != $this->ref_id && $rref != 0) {
+                ilSession::set('xudfreturn', $_SERVER['HTTP_REFERER']);
             }
         }
     }

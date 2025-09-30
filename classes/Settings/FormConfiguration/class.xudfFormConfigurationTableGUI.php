@@ -98,7 +98,7 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         } else {
             if ($a_set['is_required'] == 1) {
                 $imagePath = ilUtil::getImagePath("standard/icon_ok.svg");
-                $udf_required ="<img style='width: 1rem' src='$imagePath'>";
+                $udf_required = "<img style='width: 1rem' src='$imagePath'>";
             } else {
                 $imagePath = ilUtil::getImagePath("standard/icon_not_ok.svg");
                 $udf_required = "<img style='width: 1rem' src='$imagePath'>";

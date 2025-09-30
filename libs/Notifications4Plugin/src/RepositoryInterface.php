@@ -2,7 +2,6 @@
 
 namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin;
 
-use srag\Plugins\UdfEditor\Libs\DIC\Plugin\Pluginable;
 use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\RepositoryInterface as NotificationRepositoryInterface;
 use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\RepositoryInterface as ParserRepositoryInterface;
 use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender\RepositoryInterface as SenderRepositoryInterface;
