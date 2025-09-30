@@ -41,6 +41,9 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         $this->setFormAction($this->dic->ctrl()->getFormAction($parent_gui));
         $this->setRowTemplate($this->pl->getDirectory() . '/templates/default/tpl.form_configuration_table_row.html');
 
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/jquery-ui.min.js');
+        $this->dic->ui()->mainTemplate()->addCss($this->pl->getRelativeDirectory() . '/templates/default/jquery-ui.min.css');
+
         $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/sortable.js');
         $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/waiter.js');
         $this->dic->ui()->mainTemplate()->addCss($this->pl->getRelativeDirectory() . '/templates/default/waiter.css');

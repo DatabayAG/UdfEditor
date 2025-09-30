@@ -217,8 +217,19 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function reorder(): void
     {
         $sort = 10;
-        foreach ($_POST['ids'] as $id) {
+        $ids = $this->httpWrapper->post()->retrieve(
+            "ids",
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()),
+                $this->refinery->always([])
+            ])
+        );
+
+        foreach ($ids as $id) {
             $element = xudfContentElement::find($id);
+            if (!$element) {
+                continue;
+            }
             $element->setSort($sort);
             $element->update();
             $sort += 10;
