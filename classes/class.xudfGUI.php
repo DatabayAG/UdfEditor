@@ -19,6 +19,8 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Refinery\Factory;
 use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
 use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationsCtrl;
 
@@ -41,7 +43,9 @@ abstract class xudfGUI
 
     protected ilObjUdfEditorGUI $parent_gui;
     protected Container $dic;
-    private ilTree $tree;
+    protected ilTree $tree;
+    protected WrapperFactory $httpWrapper;
+    protected Factory $refinery;
 
     public function __construct(ilObjUdfEditorGUI $parent_gui)
     {
@@ -56,6 +60,8 @@ abstract class xudfGUI
         $this->tree = $DIC->repositoryTree();
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->parent_gui = $parent_gui;
+        $this->httpWrapper = $this->dic->http()->wrapper();
+        $this->refinery = $this->dic->refinery();
     }
 
     public function executeCommand(): void

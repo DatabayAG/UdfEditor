@@ -77,7 +77,16 @@ class xudfContentGUI extends xudfGUI
     {
         $editable = $this->getObject()->getSettings()->isAlwaysEdit();
         $where = xudfContentElement::where(['obj_id' => $this->getObjId()]);
-        if (!$_GET['edit'] && $where->count()) {
+
+        $edit = $this->httpWrapper->query()->retrieve(
+            "edit",
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->bool(),
+                $this->refinery->always(false)
+            ])
+        );
+
+        if (!$edit && $where->count()) {
             $udf_values = $this->dic->user()->getUserDefinedData();
 
             /** @var xudfContentElement $element */
@@ -103,7 +112,7 @@ class xudfContentGUI extends xudfGUI
             }
         }
         $page_obj_gui = new xudfPageObjectGUI($this);
-        $form = new xudfContentFormGUI($this, $editable || $_GET['edit']);
+        $form = new xudfContentFormGUI($this, $editable || $edit);
         $form->fillForm();
         $this->tpl->setContent($page_obj_gui->getHTML() . $form->getHTML());
     }
@@ -165,7 +174,11 @@ class xudfContentGUI extends xudfGUI
 
     protected function returnToParent(): void
     {
-        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $this->tree->getParentId((int) $_GET['ref_id']));
+        $refId = $this->httpWrapper->query()->retrieve(
+            "ref_id",
+            $this->refinery->kindlyTo()->int()
+        );
+        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $this->tree->getParentId($refId));
         $this->dic->ctrl()->redirectByClass(ilRepositoryGUI::class);
     }
 

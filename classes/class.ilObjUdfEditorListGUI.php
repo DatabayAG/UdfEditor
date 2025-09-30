@@ -22,6 +22,8 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 {
+    private bool $payment_enabled = false;
+
     public function getGuiClass(): string
     {
         return ilObjUdfEditorGUI::class;

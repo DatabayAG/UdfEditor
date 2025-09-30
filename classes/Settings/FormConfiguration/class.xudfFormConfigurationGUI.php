@@ -18,6 +18,8 @@
 
 declare(strict_types=1);
 
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Refinery\Factory;
 use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
 
 /**
@@ -36,6 +38,16 @@ class xudfFormConfigurationGUI extends xudfGUI
     public const CMD_DELETE = 'delete';
     public const CMD_CONFIRM_DELETE = 'confirmDelete';
     public const CMD_REORDER = 'reorder';
+    protected WrapperFactory $httpWrapper;
+    protected Factory $refinery;
+
+    public function __construct(ilObjUdfEditorGUI $parent_gui)
+    {
+        global $DIC;
+        parent::__construct($parent_gui);
+        $this->httpWrapper = $DIC->http()->wrapper();
+        $this->refinery = $DIC->refinery();
+    }
 
     protected function performCommand(string $cmd): void
     {
@@ -109,10 +121,28 @@ class xudfFormConfigurationGUI extends xudfGUI
         $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
     }
 
+    protected function retrieveElementIdFromPost(): int
+    {
+        return $this->httpWrapper->post()->retrieve(
+            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->int(),
+                $this->refinery->always(0)
+            ])
+        );
+    }
+
     protected function create(): void
     {
-        $element = new xudfContentElement($_POST['element_id']);
-        $element->setIsSeparator((bool) $_POST[xudfFormConfigurationFormGUI::F_IS_SEPARATOR]);
+        $element = new xudfContentElement($this->retrieveElementIdFromPost());
+        $isSeparator = $this->httpWrapper->post()->retrieve(
+            xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->bool(),
+                $this->refinery->always(false)
+            ])
+        );
+        $element->setIsSeparator($isSeparator);
 
         $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
         $xudfFormConfigurationFormGUI->setValuesByPost();
@@ -128,7 +158,7 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function update(): void
     {
-        $element = new xudfContentElement($_POST['element_id']);
+        $element = new xudfContentElement($this->retrieveElementIdFromPost());
 
         $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
         $xudfFormConfigurationFormGUI->setValuesByPost();
@@ -144,7 +174,11 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function edit(): void
     {
-        $element = xudfContentElement::find($_GET['element_id']);
+        $elementId = $this->httpWrapper->query()->retrieve(
+            xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
+            $this->refinery->kindlyTo()->int()
+        );
+        $element = xudfContentElement::find($elementId);
         $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
         $xudfFormConfigurationFormGUI->fillForm();
         $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
@@ -152,14 +186,18 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function delete(): void
     {
-        $element = new xudfContentElement($_GET['element_id']);
+        $elementId = $this->httpWrapper->query()->retrieve(
+            xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
+            $this->refinery->kindlyTo()->int()
+        );
+        $element = new xudfContentElement($elementId);
 
         $text = $this->lng->txt('title') . ": {$element->getTitle()}<br>";
         $text .= $this->lng->txt('description') . ": {$element->getDescription()}<br>";
         $text .= $this->lng->txt('type') . ": " . ($element->isSeparator() ? 'Separator' : $this->pl->txt('udf_field'));
 
         $confirmationGUI = new ilConfirmationGUI();
-        $confirmationGUI->addItem('element_id', $_GET['element_id'], $text);
+        $confirmationGUI->addItem('element_id', $elementId, $text);
         $confirmationGUI->setFormAction($this->ctrl->getFormAction($this));
         $confirmationGUI->setHeaderText($this->pl->txt('delete_confirmation_text'));
         $confirmationGUI->setConfirm($this->lng->txt('delete'), self::CMD_CONFIRM_DELETE);
@@ -170,7 +208,7 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function confirmDelete(): void
     {
-        $element = new xudfContentElement($_POST['element_id']);
+        $element = new xudfContentElement($this->retrieveElementIdFromPost());
         $element->delete();
         $this->tpl->setOnScreenMessage("success", $this->pl->txt('msg_successfully_deleted'), true);
         $this->ctrl->redirect($this, self::CMD_STANDARD);
