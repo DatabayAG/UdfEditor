@@ -20,7 +20,6 @@ use TypeError;
  */
 final class Items
 {
-
     /**
      * @var bool
      */

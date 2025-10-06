@@ -25,7 +25,8 @@ class Renderer extends AbstractRenderer
                 $input_tpl,
                 $component,
                 "",
-                $default_renderer),
+                $default_renderer
+            ),
         );
 
         return $html;
