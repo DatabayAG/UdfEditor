@@ -19,7 +19,6 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
 
 class xudfLogTableGUI extends ilTable2GUI
 {
@@ -74,13 +73,12 @@ class xudfLogTableGUI extends ilTable2GUI
      */
     protected function initData(): void
     {
-        $filter_values = array_map(static function ($item) {
-            return Items::getValueFromItem($item);
-        }, $this->filter_cache);
-        $filter_user = $filter_values['user'];
+        /** @var ilSelectInputGUI $userFilter */
+        $userFilter = $this->filter_cache["user"];
+        $filter_user = $userFilter->getValue();
 
         $where = xudfLogEntry::where(['obj_id' => $this->parent_obj->getObjId()]);
-        if ($filter_user != '') {
+        if ($filter_user !== null) {
             $where = $where->where(['usr_id' => $filter_user]);
         }
         $this->setData($where->getArray());

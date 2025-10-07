@@ -41,9 +41,12 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         $this->setFormAction($this->dic->ctrl()->getFormAction($parent_gui));
         $this->setRowTemplate($this->pl->getDirectory() . '/templates/default/tpl.form_configuration_table_row.html');
 
-        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getDirectory() . '/templates/default/sortable.js');
-        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getDirectory() . '/templates/default/waiter.js');
-        $this->dic->ui()->mainTemplate()->addCss($this->pl->getDirectory() . '/templates/default/waiter.css');
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/jquery-ui.min.js');
+        $this->dic->ui()->mainTemplate()->addCss($this->pl->getRelativeDirectory() . '/templates/default/jquery-ui.min.css');
+
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/sortable.js');
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/waiter.js');
+        $this->dic->ui()->mainTemplate()->addCss($this->pl->getRelativeDirectory() . '/templates/default/waiter.css');
         $this->dic->ui()->mainTemplate()->addOnLoadCode("xoctWaiter.init();");
 
         $base_link = $this->dic->ctrl()->getLinkTarget($parent_gui, xudfFormConfigurationGUI::CMD_REORDER, '', true);
@@ -97,9 +100,11 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
             $udf_required = '&nbsp';
         } else {
             if ($a_set['is_required'] == 1) {
-                $udf_required = '<img style="width: 1rem" src="./templates/default/images/standard/icon_ok.svg">';
+                $imagePath = ilUtil::getImagePath("standard/icon_ok.svg");
+                $udf_required = "<img style='width: 1rem' src='$imagePath'>";
             } else {
-                $udf_required = '<img style="width: 1rem" src="./templates/default/images/standard/icon_not_ok.svg">';
+                $imagePath = ilUtil::getImagePath("standard/icon_not_ok.svg");
+                $udf_required = "<img style='width: 1rem' src='$imagePath'>";
             }
         }
 
@@ -119,13 +124,22 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
 
     protected function buildActions($id): string
     {
-        $actions = new ilAdvancedSelectionListGUI();
-        $actions->setListTitle($this->dic->language()->txt('actions'));
+        $uiFactory = $this->dic->ui()->factory();
+        $uiRenderer = $this->dic->ui()->renderer();
+
         $this->dic->ctrl()->setParameter($this->parent_obj, 'element_id', $id);
+        $actions = [
+            $uiFactory->link()->standard(
+                $this->dic->language()->txt('edit'),
+                $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_EDIT)
+            ),
+            $uiFactory->link()->standard(
+                $this->dic->language()->txt('delete'),
+                $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_DELETE)
+            )
+        ];
 
-        $actions->addItem($this->dic->language()->txt('edit'), 'edit', $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_EDIT));
-        $actions->addItem($this->dic->language()->txt('delete'), 'delete', $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_DELETE));
-
-        return $actions->getHTML();
+        $actionDropdown = $uiFactory->dropdown()->standard($actions)->withLabel($this->dic->language()->txt('actions'));
+        return $uiRenderer->render($actionDropdown);
     }
 }

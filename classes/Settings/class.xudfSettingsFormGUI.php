@@ -42,8 +42,6 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
             xudfSetting::REDIRECT_TO_CALLER => false
         ];
 
-    protected ilCtrl $ctrl;
-
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
@@ -56,7 +54,6 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
     {
         parent::__construct();
         global $DIC;
-        $this->ctrl = $DIC->ctrl();
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->parent_gui = $parent_gui;
@@ -118,7 +115,9 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $input->addOption($opt);
         // only offer redirect to caller if referer contains a ref_id
         // since some proxy scenarios do not pass the complete referer
-        if (isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'],'ref_id')) {
+        $serverParams = $this->http->request()->getServerParams();
+
+        if (isset($serverParams['HTTP_REFERER']) && str_contains($serverParams['HTTP_REFERER'], 'ref_id')) {
             $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_CALLER), xudfSetting::REDIRECT_TO_CALLER);
             $input->addOption($opt);
         }

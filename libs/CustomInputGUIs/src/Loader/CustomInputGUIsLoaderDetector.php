@@ -44,10 +44,13 @@ class CustomInputGUIsLoaderDetector implements Loader
                     $previous_renderer_loader = Closure::bind(function (): Loader {
                         return $this->component_renderer_loader;
                     }, $rendererObj, DefaultRenderer::class)();
-                    return new DefaultRenderer(new self($previous_renderer_loader));
+                    return new DefaultRenderer(
+                        new self($previous_renderer_loader),
+                        $dic["ui.javascript_binding"]
+                    );
                 }
                 return $rendererObj;
-            } catch (Throwable) {
+            } catch (Throwable $ex) {
                 return $renderer($dic);
             }
         };
@@ -58,11 +61,15 @@ class CustomInputGUIsLoaderDetector implements Loader
     {
         if (!self::$has_fix_ctrl_namespace_current_url) {
             self::$has_fix_ctrl_namespace_current_url = true;
+            global $DIC;
 
+            /*
+             * Likely not used anymore/ever
+            $serverParams = $DIC->http()->request()->getServerParams();
             // Fix language select meta bar which current ctrl gui has namespaces (public page)
-            if (isset($_SERVER["REQUEST_URI"])) {
-                $_SERVER["REQUEST_URI"] = str_replace("\\", "%5C", $_SERVER["REQUEST_URI"]);
-            }
+            if (isset($serverParams["REQUEST_URI"])) {
+                $_SERVER["REQUEST_URI"] = str_replace("\\", "%5C", $serverParams["REQUEST_URI"]);
+            }*/
         }
     }
 
@@ -91,7 +98,6 @@ class CustomInputGUIsLoaderDetector implements Loader
                     $this->dic["ui.template_factory"],
                     $this->dic->language(),
                     $this->dic["ui.javascript_binding"],
-                    $this->dic->refinery(),
                     $this->dic["ui.pathresolver"],
                     new Factory(),
                     $this->dic["help.text_retriever"],

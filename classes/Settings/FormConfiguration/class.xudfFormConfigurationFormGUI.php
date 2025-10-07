@@ -29,8 +29,6 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
     public const F_ELEMENT_ID = 'element_id';
     public const F_REQUIRED = 'is_required';
 
-    protected ilCtrl $ctrl;
-
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
@@ -43,7 +41,6 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
     {
         parent::__construct();
         global $DIC;
-        $this->ctrl = $DIC->ctrl();
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->parent_gui = $parent_gui;

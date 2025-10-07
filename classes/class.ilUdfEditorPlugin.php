@@ -80,6 +80,11 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         self::initNotifications();
     }
 
+    public function getRelativeDirectory(): string
+    {
+        return str_replace(ILIAS_ABSOLUTE_PATH . "/public/", "", realpath($this->getDirectory()));
+    }
+
     protected function uninstallCustom(): void
     {
         global $DIC;

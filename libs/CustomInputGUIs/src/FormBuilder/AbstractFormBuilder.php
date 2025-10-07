@@ -16,7 +16,6 @@ use ILIAS\UI\Implementation\Component\Input\Field\Radio;
 use ILIAS\UI\Implementation\Component\Input\Field\SwitchableGroup;
 use ilSubmitButton;
 use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\InputGUIWrapperUIInputComponent;
-use srag\Plugins\UdfEditor\Libs\DIC\Exception\DICException;
 use Throwable;
 
 abstract class AbstractFormBuilder implements FormBuilder

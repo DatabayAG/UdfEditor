@@ -7,8 +7,6 @@ use ilTableFilterItem;
 use ilTemplate;
 use ilToolbarItem;
 use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\src\Utils\PluginVersionParameter;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\Template\Template;
 
 class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToolbarItem
 {
@@ -47,15 +45,10 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
             global $DIC;
             self::$init = true;
 
-            $version_parameter = PluginVersionParameter::getInstance();
-            if ($plugin !== null) {
-                $version_parameter = $version_parameter->withPlugin($plugin);
-            }
-
             $dir = __DIR__;
             $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
 
-            $DIC->ui()->mainTemplate()->addCss($version_parameter->appendToUrl($dir . "/css/tabs_input_gui.css"));
+            $DIC->ui()->mainTemplate()->addCss($dir . "/css/tabs_input_gui.css");
         }
     }
 
@@ -80,8 +73,6 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
         foreach ($this->tabs as $tab) {
             foreach ($tab->getInputs($this->getPostVar(), $this->getValue()) as $org_post_var => $input) {
-                $b_value = $_POST[$input->getPostVar()];
-
                 $value = $_POST[$this->getPostVar()][$tab->getPostVar()][$org_post_var];
                 //Unable to use checkInput of internal input object because internal inputs can't use array access for post data
                 //$_POST[$input->getPostVar()] = $_POST[$this->getPostVar()][$tab->getPostVar()][$org_post_var];
@@ -186,47 +177,43 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
     public function render(): string
     {
-        $tpl = new Template(__DIR__ . "/templates/tabs_input_gui.html");
+        $tpl = new ilTemplate(__DIR__ . "/templates/tabs_input_gui.html", true, true);
 
         foreach ($this->getTabs() as $tab) {
             $inputs = $tab->getInputs($this->getPostVar(), $this->getValue());
 
-            $tpl->setCurrentBlock("tab");
+            $tpl->setCurrentBlock("tab_item");
 
             $post_var = str_replace(["[", "]"], "__", $this->getPostVar() . "_" . $tab->getPostVar());
             $tab_id = "tabsinputgui_tab_" . $post_var;
             $tab_content_id = "tabsinputgui_tab_content_" . $post_var;
 
-            $tpl->setVariableEscaped("TAB_ID", $tab_id);
-            $tpl->setVariableEscaped("TAB_CONTENT_ID", $tab_content_id);
+            $tpl->setVariable("TAB_ID", htmlspecialchars($tab_id));
+            $tpl->setVariable("TAB_CONTENT_ID", htmlspecialchars($tab_content_id));
 
-            $tpl->setVariableEscaped("TITLE", $tab->getTitle());
+            $tpl->setVariable("TITLE", htmlspecialchars($tab->getTitle()));
 
             if ($tab->isActive()) {
-                $tpl->setVariableEscaped("ACTIVE", " active");
+                $tpl->setVariable("ACTIVE", htmlspecialchars(" active"));
             }
-
-            $tpl->parseCurrentBlock();
-
-            $tpl->setCurrentBlock("tab_content");
 
             if ($this->getShowInputLabel() === self::SHOW_INPUT_LABEL_AUTO) {
-                $tpl->setVariableEscaped("SHOW_INPUT_LABEL", (count($inputs) > 1 ? self::SHOW_INPUT_LABEL_ALWAYS : self::SHOW_INPUT_LABEL_NONE));
+                $tpl->setVariable("SHOW_INPUT_LABEL", htmlspecialchars((count($inputs) > 1 ? self::SHOW_INPUT_LABEL_ALWAYS : self::SHOW_INPUT_LABEL_NONE)));
             } else {
-                $tpl->setVariableEscaped("SHOW_INPUT_LABEL", $this->getShowInputLabel());
+                $tpl->setVariable("SHOW_INPUT_LABEL", htmlspecialchars($this->getShowInputLabel()));
             }
 
             if ($tab->isActive()) {
-                $tpl->setVariableEscaped("ACTIVE", " active");
+                $tpl->setVariable("ACTIVE", htmlspecialchars(" active"));
             }
 
-            $tpl->setVariableEscaped("TAB_ID", $tab_id);
-            $tpl->setVariableEscaped("TAB_CONTENT_ID", $tab_content_id);
+            $tpl->setVariable("TAB_ID", htmlspecialchars($tab_id));
+            $tpl->setVariable("TAB_CONTENT_ID", htmlspecialchars($tab_content_id));
 
             if (!empty($tab->getInfo())) {
-                $info_tpl = new Template(__DIR__ . "/../PropertyFormGUI/Items/templates/input_gui_input_info.html");
+                $info_tpl = new ilTemplate(__DIR__ . "/../PropertyFormGUI/Items/templates/input_gui_input_info.html", true, true);
 
-                $info_tpl->setVariableEscaped("INFO", $tab->getInfo());
+                $info_tpl->setVariable("INFO", htmlspecialchars($tab->getInfo()));
 
                 $tpl->setVariable("INFO", self::output()->getHTML($info_tpl));
             }

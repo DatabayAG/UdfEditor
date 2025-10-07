@@ -6,15 +6,15 @@ xudfContentElement::updateDB();
 <#2>
 <?php
 global $DIC;
-$DIC->database()->modifyTableColumn('copg_pobj_def', 'component', array('length' => 120));
+$DIC->database()->modifyTableColumn('copg_pobj_def', 'component', ['length' => 120]);
 $sql_query = $DIC->database()->query('SELECT * FROM copg_pobj_def WHERE parent_type = "xudf"');
 if ($DIC->database()->numRows($sql_query) === 0) {
-	$DIC->database()->insert('copg_pobj_def', array(
-		'parent_type' => array('text', 'xudf'),
-		'class_name' => array('text', 'xudfPageObject'),
-		'directory' => array('text', 'classes/Content/PageEditor'),
-		'component' => array('text', 'Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor')
-	));
+	$DIC->database()->insert('copg_pobj_def', [
+		'parent_type' => [ilDBConstants::T_TEXT, 'xudf'],
+		'class_name' => [ilDBConstants::T_TEXT, 'xudfPageObject'],
+		'directory' => [ilDBConstants::T_TEXT, 'classes/Content/PageEditor'],
+		'component' => [ilDBConstants::T_TEXT, 'Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor']
+    ]);
 }
 ?>
 <#3>
@@ -27,12 +27,12 @@ xudfSetting::updateDB();
 global $DIC;
 $sql_query = $DIC->database()->query('SELECT * FROM copg_pobj_def WHERE parent_type = "xudf"');
 if ($DIC->database()->numRows($sql_query) === 0) {
-	$DIC->database()->insert('copg_pobj_def', array(
-		'parent_type' => array('text', 'xudf'),
-		'class_name' => array('text', 'xudfPageObject'),
-		'directory' => array('text', 'classes/Content/PageEditor'),
-		'component' => array('text', 'Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor')
-	));
+	$DIC->database()->insert('copg_pobj_def', [
+		'parent_type' => [ilDBConstants::T_TEXT, 'xudf'],
+		'class_name' => [ilDBConstants::T_TEXT, 'xudfPageObject'],
+		'directory' => [ilDBConstants::T_TEXT, 'classes/Content/PageEditor'],
+		'component' => [ilDBConstants::T_TEXT, 'Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor']
+    ]);
 }
 ?>
 <#5>

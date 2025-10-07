@@ -45,19 +45,22 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
         global $DIC;
         $this->dic = $DIC;
-        if (isset($_SERVER['HTTP_REFERER'])) {
+
+        $serverParams = $this->request->getServerParams();
+
+        if (isset($serverParams['HTTP_REFERER'])) {
             $rref = 0;
-            $a_referer = explode('&',$_SERVER['HTTP_REFERER']);
+            $a_referer = explode('&', $serverParams['HTTP_REFERER']);
             if (count($a_referer)) {
                 foreach ($a_referer as $entry) {
-                    $a_entry = explode('=',$entry);
-                    if ($a_entry[0] == 'ref_id' && isset($a_entry[1])) {
+                    $a_entry = explode('=', $entry);
+                    if ($a_entry[0] === 'ref_id' && isset($a_entry[1])) {
                         $rref = $a_entry[1];
                     }
                 }
             }
-            if ($rref != $this->ref_id && $rref!=0) {
-                ilSession::set('xudfreturn',$_SERVER['HTTP_REFERER']);
+            if ($rref != $this->ref_id && $rref != 0) {
+                ilSession::set('xudfreturn', $serverParams['HTTP_REFERER']);
             }
         }
     }
@@ -66,7 +69,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
     {
         $next_class = $this->dic->ctrl()->getNextClass();
         $cmd = $this->dic->ctrl()->getCmd();
-        if (!ilObjUdfEditorAccess::hasReadAccess() && $next_class != strtolower(ilInfoScreenGUI::class) && $cmd != "infoScreen") {
+        if (!ilObjUdfEditorAccess::hasReadAccess() && $next_class != strtolower(ilInfoScreenGUI::class) && $cmd !== "infoScreen") {
             $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
             $this->dic->ctrl()->returnToParent($this);
         }
@@ -142,7 +145,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                     break;
                 default:
                     // workaround for object deletion; 'parent::executeCommand()' shows the template and leads to "Headers already sent" error
-                    if ($next_class == "" && $cmd == 'deleteObject') {
+                    if ($next_class == "" && $cmd === 'deleteObject') {
                         $this->deleteObject();
                         break;
                     }

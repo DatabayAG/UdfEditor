@@ -22,6 +22,8 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 {
+    private bool $payment_enabled = false;
+
     public function getGuiClass(): string
     {
         return ilObjUdfEditorGUI::class;
@@ -84,7 +86,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
      *                        'property' (string) => property name
      *                        'value' (string) => property value
      */
-    public function getCustomProperties($a_prop): array
+    public function getCustomProperties($prop): array
     {
         $props = parent::getCustomProperties([]);
 

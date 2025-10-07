@@ -46,40 +46,40 @@ class ilObjUdfEditorAccess extends ilObjectPluginAccess
         $this->usr = $DIC->user();
     }
 
-    public function _checkAccess(string $a_cmd, string $a_permission, ?int $a_ref_id = null, ?int $a_obj_id = null, ?int $a_user_id = null): bool
+    public function _checkAccess(string $cmd, string $permission, ?int $ref_id = null, ?int $obj_id = null, ?int $user_id = null): bool
     {
-        if ($a_ref_id === null) {
-            $a_ref_id = (int) filter_input(INPUT_GET, "ref_id");
+        if ($ref_id === null) {
+            $ref_id = (int) filter_input(INPUT_GET, "ref_id");
         }
 
-        if ($a_obj_id === null) {
-            $a_obj_id = ilObjUdfEditor::_lookupObjectId($a_ref_id);
+        if ($obj_id === null) {
+            $obj_id = ilObjUdfEditor::_lookupObjectId($ref_id);
         }
 
-        if ($a_user_id == null) {
-            $a_user_id = $this->usr->getId();
+        if ($user_id === null) {
+            $user_id = $this->usr->getId();
         }
 
-        switch ($a_permission) {
+        switch ($permission) {
             case "visible":
             case "read":
-                return (($this->access->checkAccessOfUser($a_user_id, $a_permission, "", $a_ref_id) && !self::_isOffline($a_obj_id))
-                    || $this->access->checkAccessOfUser($a_user_id, "write", "", $a_ref_id));
+                return (($this->access->checkAccessOfUser($user_id, $permission, "", $ref_id) && !self::_isOffline($obj_id))
+                    || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id));
 
             case "delete":
-                return ($this->access->checkAccessOfUser($a_user_id, "delete", "", $a_ref_id)
-                    || $this->access->checkAccessOfUser($a_user_id, "write", "", $a_ref_id));
+                return ($this->access->checkAccessOfUser($user_id, "delete", "", $ref_id)
+                    || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id));
 
             case "write":
             case "edit_permission":
             default:
-                return $this->access->checkAccessOfUser($a_user_id, $a_permission, "", $a_ref_id);
+                return $this->access->checkAccessOfUser($user_id, $permission, "", $ref_id);
         }
     }
 
-    protected static function checkAccess(string $a_cmd, string $a_permission, ?int $a_ref_id = null, ?int $a_obj_id = null, ?int $a_user_id = null): bool
+    protected static function checkAccess(string $cmd, string $permission, ?int $ref_id = null, ?int $obj_id = null, ?int $user_id = null): bool
     {
-        return self::getInstance()->_checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id);
+        return self::getInstance()->_checkAccess($cmd, $permission, $ref_id, $obj_id, $user_id);
     }
 
     public static function redirectNonAccess(string $class, string $cmd = ""): void
