@@ -45,9 +45,12 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
         global $DIC;
         $this->dic = $DIC;
-        if (isset($_SERVER['HTTP_REFERER'])) {
+
+        $serverParams = $this->request->getServerParams();
+
+        if (isset($serverParams['HTTP_REFERER'])) {
             $rref = 0;
-            $a_referer = explode('&', $_SERVER['HTTP_REFERER']);
+            $a_referer = explode('&', $serverParams['HTTP_REFERER']);
             if (count($a_referer)) {
                 foreach ($a_referer as $entry) {
                     $a_entry = explode('=', $entry);
@@ -57,7 +60,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                 }
             }
             if ($rref != $this->ref_id && $rref != 0) {
-                ilSession::set('xudfreturn', $_SERVER['HTTP_REFERER']);
+                ilSession::set('xudfreturn', $serverParams['HTTP_REFERER']);
             }
         }
     }

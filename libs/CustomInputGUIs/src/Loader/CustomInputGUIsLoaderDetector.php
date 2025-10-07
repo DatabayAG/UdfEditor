@@ -61,10 +61,12 @@ class CustomInputGUIsLoaderDetector implements Loader
     {
         if (!self::$has_fix_ctrl_namespace_current_url) {
             self::$has_fix_ctrl_namespace_current_url = true;
+            global $DIC;
 
+            $serverParams = $DIC->http()->request()->getServerParams();
             // Fix language select meta bar which current ctrl gui has namespaces (public page)
-            if (isset($_SERVER["REQUEST_URI"])) {
-                $_SERVER["REQUEST_URI"] = str_replace("\\", "%5C", $_SERVER["REQUEST_URI"]);
+            if (isset($serverParams["REQUEST_URI"])) {
+                $_SERVER["REQUEST_URI"] = str_replace("\\", "%5C", $serverParams["REQUEST_URI"]);
             }
         }
     }
