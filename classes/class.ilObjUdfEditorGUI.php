@@ -39,6 +39,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
     public const CMD_SETTINGS = 'showSettings';
 
     private Container $dic;
+    protected ilUdfEditorPlugin|ilPlugin|null $plugin = null;
 
     public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
     {
@@ -185,7 +186,11 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         if ($render_locator) {
             $this->setLocator();
         }
-        $this->tpl->setTitleIcon(ilObjUdfEditor::_getIcon($this->object_id));
+        $this->tpl->setTitleIcon(str_replace(
+            ILIAS_ABSOLUTE_PATH . "/public/",
+            "",
+            realpath(ilObjUdfEditor::_getIcon($this->object_id))
+        ));
         $this->tpl->setTitle($this->object->getTitle());
         $this->tpl->setDescription($this->object->getDescription());
 
