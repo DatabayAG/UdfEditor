@@ -112,7 +112,22 @@ class xudfContentFormGUI extends ilPropertyFormGUI
         foreach (xudfContentElement::where(['obj_id' => $this->obj_id, 'is_separator' => false])->get() as $element) {
             $values[$element->getUdfFieldId()] = $udf_data['f_' . $element->getUdfFieldId()] ?? "";
 
-            if ($element->getUdfFieldDefinition()['field_type'] === "51") {
+            //Probably unused/not doing anything
+            try {
+                $udfFieldDefinition = $element->getUdfFieldDefinition();
+            } catch (UDFNotFoundException $ex) {
+                $this->global_tpl->setOnScreenMessage(
+                    ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE,
+                    $ex->getMessage()
+                );
+                $udfFieldDefinition = null;
+            }
+
+            if (
+                $udfFieldDefinition
+                && isset($udfFieldDefinition['field_type'])
+                && $udfFieldDefinition['field_type'] === "51"
+            ) {
                 $values["udf_" . $element->getUdfFieldId()] = $udf_data['f_' . $element->getUdfFieldId()] ?? "";
             }
         }
