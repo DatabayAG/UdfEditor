@@ -80,20 +80,26 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
             $this->showMissingUdfMessage();
         }
 
+        $fieldName = $udf_definition['field_name'] ?? $this->pl->txt('field_not_found');
+        $fieldType = isset($udf_definition['field_type'])
+            ? $this->pl->txt('udf_field_type_' . $udf_definition['field_type'])
+            : $this->pl->txt('field_not_found');
+
         $this->tpl->setVariable('ID', $a_set['id']);
         $this->tpl->setVariable(
             'TITLE',
-            $a_set['is_separator'] ?
-                $a_set['title']
-                : ($udf_definition['field_name'] ?: $this->pl->txt('field_not_found'))
+            $a_set['is_separator']
+                ? $a_set['title']
+                : $fieldName
         );
         $this->tpl->setVariable('DESCRIPTION', $a_set['description']);
         $this->tpl->setVariable('TYPE', $a_set['is_separator'] ? 'Separator' : $this->pl->txt('udf_field'));
 
         $this->tpl->setVariable(
             'UDF_TYPE',
-            $a_set['is_separator'] ? '&nbsp'
-                : ($udf_definition['field_type'] ? $this->pl->txt('udf_field_type_' . $udf_definition['field_type']) : $this->pl->txt('field_not_found'))
+            $a_set['is_separator']
+                ? '&nbsp'
+                : $fieldType
         );
 
         if ($a_set['is_separator']) {
@@ -101,10 +107,10 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         } else {
             if ($a_set['is_required'] == 1) {
                 $imagePath = ilUtil::getImagePath("standard/icon_ok.svg");
-                $udf_required = "<img style='width: 1rem' src='$imagePath'>";
+                $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_ok'>";
             } else {
                 $imagePath = ilUtil::getImagePath("standard/icon_not_ok.svg");
-                $udf_required = "<img style='width: 1rem' src='$imagePath'>";
+                $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_not_ok'>";
             }
         }
 
