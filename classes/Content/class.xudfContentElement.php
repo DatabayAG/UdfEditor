@@ -171,7 +171,15 @@ class xudfContentElement extends ActiveRecord
     public function getTitle(): string
     {
         if (!$this->isSeparator()) {
-            return $this->getUdfFieldDefinition()['field_name'];
+            try {
+                $udfFieldDefinition = $this->getUdfFieldDefinition();
+            } catch (UDFNotFoundException $e) {
+                $udfFieldDefinition = null;
+            }
+            if ($udfFieldDefinition) {
+                return $udfFieldDefinition['field_name'];
+
+            }
         }
 
         return $this->title;

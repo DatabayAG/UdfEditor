@@ -113,7 +113,6 @@ class xudfContentFormGUI extends ilPropertyFormGUI
             $udfFieldId = $element->getUdfFieldId();
             $values[$udfFieldId] = $udf_data['f_' . $udfFieldId] ?? "";
 
-            //Probably unused/not doing anything
             try {
                 $udfFieldDefinition = $element->getUdfFieldDefinition();
             } catch (UDFNotFoundException $ex) {
@@ -127,7 +126,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
             if (
                 $udfFieldDefinition
                 && isset($udfFieldDefinition['field_type'])
-                && $udfFieldDefinition['field_type'] === "51"
+                && $udfFieldDefinition['field_type'] === 51
             ) {
                 $values["udf_" . $udfFieldId] = $udf_data['f_' . $udfFieldId] ?? "";
             }
@@ -148,7 +147,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
         foreach (xudfContentElement::where(['obj_id' => $this->obj_id, 'is_separator' => false])->get() as $element) {
             $value = $this->getInput((string) $element->getUdfFieldId());
 
-            if ($value === null) {
+            if (!$value) {
                 $value = $this->getInput("udf_" . $element->getUdfFieldId());
             }
 
