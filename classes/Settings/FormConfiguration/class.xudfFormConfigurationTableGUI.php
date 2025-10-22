@@ -123,7 +123,11 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
     {
         static $already_shown;
         if (!$already_shown) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_missing_udf'), true);
+            $this->main_tpl->setOnScreenMessage(
+               ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE,
+                $this->pl->txt('msg_missing_udf'),
+                true
+            );
             $already_shown = true;
         }
     }
