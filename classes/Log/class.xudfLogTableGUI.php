@@ -47,7 +47,7 @@ class xudfLogTableGUI extends ilTable2GUI
         global $DIC;
         $this->dic = $DIC;
         $this->plugin = ilUdfEditorPlugin::getInstance();
-        $this->dic->ui()->mainTemplate()->addCss($this->plugin->getDirectory() . '/templates/default/log_table.css');
+        $this->dic->ui()->mainTemplate()->addCss($this->plugin->getRelativeDirectory() . '/templates/default/log_table.css');
 
         if (!(strpos($this->parent_cmd, "applyFilter") === 0
             || strpos($this->parent_cmd, "resetFilter") === 0)
