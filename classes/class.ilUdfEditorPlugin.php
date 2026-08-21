@@ -21,8 +21,8 @@ declare(strict_types=1);
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use ILIAS\DI\Container;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {

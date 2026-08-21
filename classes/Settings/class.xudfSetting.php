@@ -18,8 +18,8 @@
 
 declare(strict_types=1);
 
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class xudfSetting extends ActiveRecord
 {

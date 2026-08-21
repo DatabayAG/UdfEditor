@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TextAreaInputGUI;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TextAreaInputGUI;
 
 use ilTemplate;
 use ilTextAreaInputGUI;

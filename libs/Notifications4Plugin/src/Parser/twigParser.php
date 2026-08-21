@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser;
 
 use Twig\Environment;
 use Twig\Error\LoaderError;

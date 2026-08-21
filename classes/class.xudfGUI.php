@@ -21,8 +21,8 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Refinery\Factory;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationsCtrl;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationsCtrl;
 
 abstract class xudfGUI
 {

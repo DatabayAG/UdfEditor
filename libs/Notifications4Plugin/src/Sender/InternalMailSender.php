@@ -1,14 +1,14 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Sender;
 
 use ILIAS\DI\Container;
 use ilMail;
 use ilMailError;
 use ilMailException;
 use ilObjUser;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 use Throwable;
 
 /**

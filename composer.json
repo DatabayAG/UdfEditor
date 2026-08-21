@@ -22,8 +22,8 @@
   },
   "autoload": {
     "psr-4": {
-      "srag\\Plugins\\UdfEditor\\": "src/",
-      "srag\\Plugins\\UdfEditor\\Libs\\": "libs/"
+      "ILIAS\\Plugin\\UdfEditor\\": "src/",
+      "ILIAS\\Plugin\\UdfEditor\\Libs\\": "libs/"
     },
     "classmap": [
       "./classes/",

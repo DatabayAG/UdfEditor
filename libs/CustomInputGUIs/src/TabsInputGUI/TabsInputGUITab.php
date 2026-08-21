@@ -1,9 +1,9 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
 
 use ilFormPropertyGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
 
 class TabsInputGUITab
 {

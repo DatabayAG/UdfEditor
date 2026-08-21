@@ -1,9 +1,9 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser;
 
 use ILIAS\UI\Implementation\Component\Input\Input;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
 
 interface Parser
 {

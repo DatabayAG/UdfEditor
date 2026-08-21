@@ -19,8 +19,8 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use srag\Plugins\UdfEditor\Exception\UDFNotFoundException;
-use srag\Plugins\UdfEditor\Exception\UnknownUdfTypeException;
+use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
+use ILIAS\Plugin\UdfEditor\Exception\UnknownUdfTypeException;
 
 class xudfContentFormGUI extends ilPropertyFormGUI
 {

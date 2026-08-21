@@ -56,7 +56,7 @@ Your class in this you want to use Notifications4Plugin needs to use the trait `
 
 ```php
 ...
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Utils\Notifications4PluginTrait;
 ...
 class x {
 ...
@@ -83,7 +83,7 @@ Add an update step to your `dbupdate.php`
 ...
 <#x>
 <?php
-\srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Repository::getInstance()->installTables();
+\ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Repository::getInstance()->installTables();
 ?>
 ```
 
@@ -100,7 +100,7 @@ self::notifications4plugin()->notifications()->dropTables();
 /**
  * ...
  *
- * @ilCtrl_isCalledBy srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Notification\NotificationsCtrl: x
+ * @ilCtrl_isCalledBy ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Notification\NotificationsCtrl: x
  */
 class x
 {
@@ -130,7 +130,7 @@ Expand you plugin class for installing languages of the library to your plugin
 Add to your `dbupdate.php` like:
 
 ```php
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Notification\Repository;if (Repository::getInstance()->migrateFromOldGlobalPlugin(x::TEMPLATE_NAME) === null) {
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Notification\Repository;if (Repository::getInstance()->migrateFromOldGlobalPlugin(x::TEMPLATE_NAME) === null) {
 
 	$notification = Repository::getInstance()->factory()->newInstance();
 
@@ -174,7 +174,7 @@ $sender = self::notifications4plugin()->sender()->factory()->internalMail('from_
 $sender = self::notifications4plugin()->sender()->factory()->vcalendar(...);
 
 // Implement a custom sender object
-// Your class must implement the interface `srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Sender\Sender`
+// Your class must implement the interface `ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Sender\Sender`
 ```
 
 ```php
@@ -240,7 +240,7 @@ $text = self::notifications4plugin()->parser()->parseText($parser, $notification
 
 ## Implement a custom parser
 
-Your class must extends `srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Parser\AbstractParser`
+Your class must extends `ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Parser\AbstractParser`
 
 You can add it
 

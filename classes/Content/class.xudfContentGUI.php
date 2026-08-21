@@ -18,9 +18,9 @@
 
 declare(strict_types=1);
 
-use srag\Plugins\UdfEditor\Exception\UDFNotFoundException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 /**
  * @ilCtrl_isCalledBy xudfContentGUI: ilObjUdfEditorGUI

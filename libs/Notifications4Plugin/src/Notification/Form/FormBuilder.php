@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\Form;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Form;
 
 use ILIAS\DI\Container;
 use ILIAS\UI\Component\Input\Field\Group;
@@ -8,16 +8,16 @@ use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
 use ilNonEditableValueGUI;
 use ilTextInputGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\FormBuilder\AbstractFormBuilder;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\InputGUIWrapperUIInputComponent;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\TabsInputGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TextAreaInputGUI\TextAreaInputGUI;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\Parser;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\FormBuilder\AbstractFormBuilder;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\InputGUIWrapperUIInputComponent;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\TabsInputGUI;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TextAreaInputGUI\TextAreaInputGUI;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\Parser;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class FormBuilder extends AbstractFormBuilder
 {

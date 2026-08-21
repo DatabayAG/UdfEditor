@@ -1,11 +1,11 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\Language;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Language;
 
 use ActiveRecord;
 use arConnector;
 use ilDateTime;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 /**
  *

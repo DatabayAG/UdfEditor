@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
 
 use ilFormPropertyGUI;
 

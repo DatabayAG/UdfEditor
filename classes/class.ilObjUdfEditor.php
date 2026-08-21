@@ -18,7 +18,7 @@
 
 declare(strict_types=1);
 
-use srag\Plugins\UdfEditor\Exception\UDFNotFoundException;
+use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\FormBuilder;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\FormBuilder;
 
 use ILIAS\UI\Component\Input\Container\Form\Form;
 

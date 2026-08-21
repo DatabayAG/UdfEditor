@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Exception;
+namespace ILIAS\Plugin\UdfEditor\Exception;
 
 use ilException;
 

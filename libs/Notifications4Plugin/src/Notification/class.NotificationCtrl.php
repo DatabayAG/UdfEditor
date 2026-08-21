@@ -1,13 +1,13 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 require_once __DIR__ . "/../../../../vendor/autoload.php";
 
 use ilConfirmationGUI;
 use ILIAS\DI\Container;
 use ilObjUser;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class NotificationCtrl
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception;
 
 use ilException;
 

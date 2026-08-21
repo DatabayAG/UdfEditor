@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items;
 
 use ilDateTime;
 use ilFormPropertyGUI;

@@ -1,14 +1,14 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 use ActiveRecord;
 use ilDateTime;
 use ILIAS\DI\Container;
 use ILIAS\UI\Component\Component;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\twigParser;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\twigParser;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class Notification extends ActiveRecord implements NotificationInterface
 {

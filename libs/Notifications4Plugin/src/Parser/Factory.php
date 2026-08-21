@@ -1,8 +1,8 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser;
 
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 final class Factory implements FactoryInterface
 {

@@ -47,7 +47,7 @@ xudfSetting::updateDB();
 ?>
 <#7>
 <?php
-\srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Repository::getInstance()->installTables();
+\ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Repository::getInstance()->installTables();
 \xudfSetting::updateDB();
 ?>
 <#8>

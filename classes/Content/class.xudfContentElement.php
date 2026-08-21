@@ -18,7 +18,7 @@
 
 declare(strict_types=1);
 
-use srag\Plugins\UdfEditor\Exception\UDFNotFoundException;
+use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 
 class xudfContentElement extends ActiveRecord
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 use ilDateTime;
 use ilDBConstants;
 use ILIAS\DI\Container;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\Language\NotificationLanguage;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\twigParser;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Language\NotificationLanguage;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\twigParser;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 use stdClass;
 use Throwable;
 
