@@ -33,20 +33,14 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
 
     protected ilUdfEditorPlugin $pl;
 
-    protected xudfFormConfigurationGUI $parent_gui;
-
-    protected xudfContentElement $element;
-
-    public function __construct(xudfFormConfigurationGUI $parent_gui, xudfContentElement $element)
+    public function __construct(protected xudfFormConfigurationGUI $parent_gui, protected xudfContentElement $element)
     {
         parent::__construct();
         global $DIC;
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->parent_gui = $parent_gui;
-        $this->element = $element;
         $this->setTitle($this->element->getId() ? $this->lng->txt('edit') : $this->lng->txt('create'));
-        $this->setFormAction($this->ctrl->getFormAction($parent_gui));
+        $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 
         $this->initForm();
     }
@@ -112,7 +106,7 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
     {
         try {
             $title = $this->element->getTitle();
-        } catch (UDFNotFoundException $e) {
+        } catch (UDFNotFoundException) {
             $this->global_tpl->setOnScreenMessage("info", $this->pl->txt('msg_choose_new_type'));
             $title = '';
         }

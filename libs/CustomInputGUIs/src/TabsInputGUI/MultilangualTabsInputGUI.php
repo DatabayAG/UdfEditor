@@ -76,7 +76,7 @@ class MultilangualTabsInputGUI
             array_unshift($lang_keys, "default");
         }
 
-        return array_combine($lang_keys, array_map("strtoupper", $lang_keys));
+        return array_combine($lang_keys, array_map(strtoupper(...), $lang_keys));
     }
 
 

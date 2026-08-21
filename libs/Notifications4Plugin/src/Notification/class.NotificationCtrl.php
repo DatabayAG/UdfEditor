@@ -27,13 +27,11 @@ class NotificationCtrl
      */
     protected $notification;
     private Container $dic;
-    private object $parentGui;
 
 
-    public function __construct(object $parentGui)
+    public function __construct(private object $parentGui)
     {
         global $DIC;
-        $this->parentGui = $parentGui;
         $this->dic = $DIC;
     }
 

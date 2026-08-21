@@ -46,20 +46,17 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
 
     protected ilUdfEditorPlugin $pl;
 
-    protected xudfSettingsGUI $parent_gui;
-
     protected xudfSetting $xudfSetting;
 
-    public function __construct(xudfSettingsGUI $parent_gui)
+    public function __construct(protected xudfSettingsGUI $parent_gui)
     {
         parent::__construct();
         global $DIC;
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->parent_gui = $parent_gui;
         $this->xudfSetting = xudfSetting::find($this->parent_gui->getObjId());
         $this->setTitle($this->lng->txt('settings'));
-        $this->setFormAction($this->ctrl->getFormAction($parent_gui));
+        $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
         $this->initForm();
     }
 

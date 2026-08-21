@@ -38,7 +38,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
     public const CMD_INDEX = 'index';
     public const CMD_SETTINGS = 'showSettings';
 
-    private Container $dic;
+    private readonly Container $dic;
     protected ilUdfEditorPlugin|ilPlugin|null $plugin = null;
 
     public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
@@ -224,7 +224,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
         if ($this->checkPermissionBool("edit_permission")) {
             $this->dic->tabs()->addTab("perm_settings", $lng->txt("perm_settings"), $this->dic->ctrl()->getLinkTargetByClass([
-                get_class($this),
+                static::class,
                 "ilpermissiongui",
             ], "perm"));
         }
@@ -243,7 +243,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                 $this->dic->logger()->root()->alert($e->getTraceAsString());
             }
         }
-        $info->addProperty($this->plugin->txt('info_section_subtitle'), $fields_string ? $fields_string : '-');
+        $info->addProperty($this->plugin->txt('info_section_subtitle'), $fields_string ?: '-');
     }
 
     public function getAfterCreationCmd(): string

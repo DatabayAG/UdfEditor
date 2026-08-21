@@ -45,7 +45,7 @@ class xudfSetting extends ActiveRecord
      * @con_is_notnull   true
      * @con_is_primary   true
      */
-    protected ?int $obj_id;
+    protected ?int $obj_id = null;
 
     /**
      * @con_has_field    true

@@ -50,7 +50,7 @@ class CustomInputGUIsLoaderDetector implements Loader
                     );
                 }
                 return $rendererObj;
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 return $renderer($dic);
             }
         };

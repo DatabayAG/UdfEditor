@@ -25,7 +25,7 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
     public const PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
 
     protected ilUdfEditorPlugin $pl;
-    private Container $dic;
+    private readonly Container $dic;
 
     /**
      * @throws arException|ilCtrlException
@@ -56,7 +56,7 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
 
         try {
             $this->setData(xudfContentElement::where(['obj_id' => ilObjUdfEditor::_lookupObjectId((int) filter_input(INPUT_GET, 'ref_id'))])->orderBy('sort')->getArray());
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->setData([]);
         }
     }

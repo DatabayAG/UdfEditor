@@ -314,15 +314,10 @@ class Notification extends ActiveRecord implements NotificationInterface
     {
         $field_value = $this->{$field_name};
 
-        switch ($field_name) {
-            case "subject":
-            case "text":
-            case "parser_options":
-                return json_encode($field_value);
-
-            default:
-                return parent::sleep($field_name);
-        }
+        return match ($field_name) {
+            "subject", "text", "parser_options" => json_encode($field_value),
+            default => parent::sleep($field_name),
+        };
     }
 
     /**
@@ -331,14 +326,9 @@ class Notification extends ActiveRecord implements NotificationInterface
      */
     public function wakeUp($field_name, $field_value): mixed
     {
-        switch ($field_name) {
-            case "subject":
-            case "text":
-            case "parser_options":
-                return json_decode($field_value, true);
-
-            default:
-                return parent::wakeUp($field_name, $field_value);
-        }
+        return match ($field_name) {
+            "subject", "text", "parser_options" => json_decode($field_value, true),
+            default => parent::wakeUp($field_name, $field_value),
+        };
     }
 }

@@ -22,17 +22,14 @@ use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginT
 class FormBuilder extends AbstractFormBuilder
 {
     use Notifications4PluginTrait;
-
-    protected NotificationInterface $notification;
     private Container $dic;
     private Factory $uiFactory;
     private Renderer $uiRenderer;
 
-    public function __construct(object $parentGui, NotificationInterface $notification)
+    public function __construct(object $parentGui, protected NotificationInterface $notification)
     {
         global $DIC;
         $this->dic = $DIC;
-        $this->notification = $notification;
         $this->uiFactory = $this->dic->ui()->factory();
         $this->uiRenderer = $this->dic->ui()->renderer();
 
@@ -73,18 +70,13 @@ class FormBuilder extends AbstractFormBuilder
         $data = [];
 
         foreach (array_keys($this->getFields()) as $key) {
-            switch ($key) {
-                case "parser":
-                    $data[$key] = [
-                        "value" => Items::getter($this->notification, $key),
-                        "group_values" => $this->notification->getParserOptions()
-                    ];
-                    break;
-
-                default:
-                    $data[$key] = Items::getter($this->notification, $key);
-                    break;
-            }
+            $data[$key] = match ($key) {
+                "parser" => [
+                    "value" => Items::getter($this->notification, $key),
+                    "group_values" => $this->notification->getParserOptions()
+                ],
+                default => Items::getter($this->notification, $key),
+            };
         }
 
         return $data;

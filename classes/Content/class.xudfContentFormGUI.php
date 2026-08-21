@@ -24,21 +24,19 @@ use srag\Plugins\UdfEditor\Exception\UnknownUdfTypeException;
 
 class xudfContentFormGUI extends ilPropertyFormGUI
 {
-    protected xudfContentGUI $parent_gui;
     protected int $obj_id;
-    private Container $dic;
+    private readonly Container $dic;
 
     /**
      * @throws UnknownUdfTypeException|ilCtrlException
      */
-    public function __construct(xudfContentGUI $parent_gui, bool $editable = true)
+    public function __construct(protected xudfContentGUI $parent_gui, bool $editable = true)
     {
         parent::__construct();
-        $this->parent_gui = $parent_gui;
-        $this->obj_id = $parent_gui->getObjId();
+        $this->obj_id = $this->parent_gui->getObjId();
         global $DIC;
         $this->dic = $DIC;
-        $this->setFormAction($this->dic->ctrl()->getFormAction($parent_gui));
+        $this->setFormAction($this->dic->ctrl()->getFormAction($this->parent_gui));
         $this->initForm($editable);
     }
 

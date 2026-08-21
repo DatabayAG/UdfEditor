@@ -100,7 +100,7 @@ class ilObjUdfEditor extends ilObjectPlugin
             $new_content_element->setObjId($new_obj->getId());
             try {
                 $new_content_element->setTitle($old_content_element->getTitle());
-            } catch (UDFNotFoundException $e) {
+            } catch (UDFNotFoundException) {
                 $new_content_element->setTitle('UDF not found');
             }
             $new_content_element->setDescription($old_content_element->getDescription());

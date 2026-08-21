@@ -60,21 +60,13 @@ class ilObjUdfEditorAccess extends ilObjectPluginAccess
             $user_id = $this->usr->getId();
         }
 
-        switch ($permission) {
-            case "visible":
-            case "read":
-                return (($this->access->checkAccessOfUser($user_id, $permission, "", $ref_id) && !self::_isOffline($obj_id))
-                    || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id));
-
-            case "delete":
-                return ($this->access->checkAccessOfUser($user_id, "delete", "", $ref_id)
-                    || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id));
-
-            case "write":
-            case "edit_permission":
-            default:
-                return $this->access->checkAccessOfUser($user_id, $permission, "", $ref_id);
-        }
+        return match ($permission) {
+            "visible", "read" => ($this->access->checkAccessOfUser($user_id, $permission, "", $ref_id) && !self::_isOffline($obj_id))
+                || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id),
+            "delete" => $this->access->checkAccessOfUser($user_id, "delete", "", $ref_id)
+                || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id),
+            default => $this->access->checkAccessOfUser($user_id, $permission, "", $ref_id),
+        };
     }
 
     protected static function checkAccess(string $cmd, string $permission, ?int $ref_id = null, ?int $obj_id = null, ?int $user_id = null): bool

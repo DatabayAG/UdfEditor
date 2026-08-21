@@ -35,7 +35,7 @@ class xudfLogEntry extends ActiveRecord
      * @con_is_notnull   true
      * @con_is_primary   true
      */
-    protected ?int $id;
+    protected ?int $id = null;
 
     /**
      * @con_has_field    true
@@ -113,14 +113,11 @@ class xudfLogEntry extends ActiveRecord
      */
     public function sleep($field_name): mixed
     {
-        switch ($field_name) {
-            case 'values':
-                return json_encode($this->values, JSON_THROW_ON_ERROR);
-            case 'timestamp':
-                return $this->timestamp->get(IL_CAL_DATETIME);
-            default:
-                return parent::sleep($field_name);
-        }
+        return match ($field_name) {
+            'values' => json_encode($this->values, JSON_THROW_ON_ERROR),
+            'timestamp' => $this->timestamp->get(IL_CAL_DATETIME),
+            default => parent::sleep($field_name),
+        };
     }
 
     /**
@@ -129,13 +126,10 @@ class xudfLogEntry extends ActiveRecord
      */
     public function wakeUp($field_name, $field_value): mixed
     {
-        switch ($field_name) {
-            case 'values':
-                return json_decode($field_value, true, 512, JSON_THROW_ON_ERROR);
-            case 'timestamp':
-                return new ilDateTime($field_value, IL_CAL_DATETIME);
-        }
-
-        return parent::wakeUp($field_name, $field_value);
+        return match ($field_name) {
+            'values' => json_decode($field_value, true, 512, JSON_THROW_ON_ERROR),
+            'timestamp' => new ilDateTime($field_value, IL_CAL_DATETIME),
+            default => parent::wakeUp($field_name, $field_value),
+        };
     }
 }

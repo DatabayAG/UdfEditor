@@ -33,7 +33,7 @@ abstract class AbstractFormBuilder implements FormBuilder
      * @var object
      */
     protected $parent;
-    private Container $dic;
+    private readonly Container $dic;
 
 
     public function __construct(object $parent)
@@ -106,7 +106,7 @@ abstract class AbstractFormBuilder implements FormBuilder
             }
 
             $this->storeData($data);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             $this->messages[] = $this->dic->ui()->factory()->messageBox()->failure($this->dic->language()->txt("form_input_not_valid"));
 
             return false;
@@ -210,16 +210,16 @@ abstract class AbstractFormBuilder implements FormBuilder
                             if (isset($data[$key]["value"])) {
                                 try {
                                     $inputs[$key] = $field = $field->withValue($data[$key]["value"] ? [] : null);
-                                } catch (Throwable $ex) {
+                                } catch (Throwable) {
 
                                 }
                             }
-                            $data2 = (isset($data[$key]["group_values"]) ? $data[$key]["group_values"] : $data[$key])["dependant_group"];
+                            $data2 = ($data[$key]["group_values"] ?? $data[$key])["dependant_group"];
                             foreach ($inputs2 as $key2 => $field2) {
                                 if (isset($data2[$key2])) {
                                     try {
                                         $inputs2[$key2] = $field2 = $field2->withValue($data2[$key2]);
-                                    } catch (Throwable $ex) {
+                                    } catch (Throwable) {
 
                                     }
                                 }
@@ -237,7 +237,7 @@ abstract class AbstractFormBuilder implements FormBuilder
                             if (isset($data[$key]["value"])) {
                                 try {
                                     $inputs[$key] = $field = $field->withValue($data[$key]["value"]);
-                                } catch (Throwable $ex) {
+                                } catch (Throwable) {
 
                                 }
                             }
@@ -249,7 +249,7 @@ abstract class AbstractFormBuilder implements FormBuilder
                                         if (isset($data2[$key3])) {
                                             try {
                                                 $inputs3[$key3] = $field3 = $field3->withValue($data2[$key3]);
-                                            } catch (Throwable $ex) {
+                                            } catch (Throwable) {
 
                                             }
                                         }
@@ -272,7 +272,7 @@ abstract class AbstractFormBuilder implements FormBuilder
                     ) {
                         try {
                             $inputs[$key] = $field = $field->withValue($data[$key]["value"]);
-                        } catch (Throwable $ex) {
+                        } catch (Throwable) {
 
                         }
                         $data2 = $data[$key]["group_values"];
@@ -280,7 +280,7 @@ abstract class AbstractFormBuilder implements FormBuilder
                             if (isset($data2[$key2])) {
                                 try {
                                     $inputs2[$key2] = $field2 = $field2->withValue($data2[$key2]);
-                                } catch (Throwable $ex) {
+                                } catch (Throwable) {
 
                                 }
                             }
@@ -297,7 +297,7 @@ abstract class AbstractFormBuilder implements FormBuilder
                     }
                     try {
                         $inputs[$key] = $field = $field->withValue($data[$key]);
-                    } catch (Throwable $ex) {
+                    } catch (Throwable) {
 
                     }
                 }

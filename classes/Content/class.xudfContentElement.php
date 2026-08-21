@@ -173,7 +173,7 @@ class xudfContentElement extends ActiveRecord
         if (!$this->isSeparator()) {
             try {
                 $udfFieldDefinition = $this->getUdfFieldDefinition();
-            } catch (UDFNotFoundException $e) {
+            } catch (UDFNotFoundException) {
                 $udfFieldDefinition = null;
             }
             if ($udfFieldDefinition) {

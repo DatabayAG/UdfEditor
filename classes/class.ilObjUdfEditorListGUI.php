@@ -93,7 +93,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
         try {
             /** @var xudfSetting $settings */
             $settings = xudfSetting::find($this->obj_id);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             return $props;
         }
 

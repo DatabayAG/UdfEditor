@@ -26,31 +26,26 @@ class xudfLogTableGUI extends ilTable2GUI
     public const PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
     public const ROW_TEMPLATE = 'tpl.log_table_row.html';
     /**
-     * @var xudfLogGUI|null
-     */
-    protected ?object $parent_obj;
-    /**
      * @var ilFormPropertyGUI[]
      *
      */
     private array $filter_cache = [];
 
-    private Container $dic;
-    private ilUdfEditorPlugin $plugin;
+    private readonly Container $dic;
+    private readonly ilUdfEditorPlugin $plugin;
 
-    public function __construct(xudfLogGUI $parent, string $parent_cmd)
+    public function __construct(protected xudfLogGUI $parent_obj, string $parent_cmd)
     {
-        $this->parent_obj = $parent;
         $this->setId(self::ID_PREFIX . $this->parent_obj->getObjId());
 
-        parent::__construct($parent, $parent_cmd);
+        parent::__construct($this->parent_obj, $parent_cmd);
         global $DIC;
         $this->dic = $DIC;
         $this->plugin = ilUdfEditorPlugin::getInstance();
         $this->dic->ui()->mainTemplate()->addCss($this->plugin->getRelativeDirectory() . '/templates/default/log_table.css');
 
-        if (!(strpos($this->parent_cmd, "applyFilter") === 0
-            || strpos($this->parent_cmd, "resetFilter") === 0)
+        if (!(str_starts_with($this->parent_cmd, "applyFilter")
+            || str_starts_with($this->parent_cmd, "resetFilter"))
         ) {
             $this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
             $this->setTitle($this->dic->language()->txt('history'));

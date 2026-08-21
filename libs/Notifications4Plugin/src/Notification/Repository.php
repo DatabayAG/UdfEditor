@@ -148,7 +148,7 @@ final class Repository implements RepositoryInterface
     {
         try {
             Notification::updateDB();
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             // Fix Call to a member function getName() on null (Because not use ILIAS sequence)
         }
 

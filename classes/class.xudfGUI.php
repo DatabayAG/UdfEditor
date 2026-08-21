@@ -40,14 +40,12 @@ abstract class xudfGUI
     protected ilToolbarGUI $toolbar;
 
     protected ilUdfEditorPlugin $pl;
-
-    protected ilObjUdfEditorGUI $parent_gui;
     protected Container $dic;
     protected ilTree $tree;
     protected WrapperFactory $httpWrapper;
     protected Factory $refinery;
 
-    public function __construct(ilObjUdfEditorGUI $parent_gui)
+    public function __construct(protected ilObjUdfEditorGUI $parent_gui)
     {
         global $DIC;
         $this->dic = $DIC;
@@ -59,7 +57,6 @@ abstract class xudfGUI
         $this->toolbar = $DIC->toolbar();
         $this->tree = $DIC->repositoryTree();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->parent_gui = $parent_gui;
         $this->httpWrapper = $this->dic->http()->wrapper();
         $this->refinery = $this->dic->refinery();
     }

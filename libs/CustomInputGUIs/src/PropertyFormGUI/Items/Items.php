@@ -198,10 +198,10 @@ final class Items
         if (method_exists($object, $method = "with" . self::strToCamelCase($property)) || method_exists($object, $method = "set" . self::strToCamelCase($property))) {
             try {
                 $res = $object->{$method}($value);
-            } catch (TypeError $ex) {
+            } catch (TypeError) {
                 try {
                     $res = $object->{$method}(intval($value));
-                } catch (TypeError $ex) {
+                } catch (TypeError) {
                     $res = $object->{$method}(boolval($value));
                 }
             }

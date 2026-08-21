@@ -94,7 +94,7 @@ abstract class AbstractRenderer extends Renderer
 
                     // Not supported!
                 default:
-                    throw new Exception("Class " . get_class($value) . " is not supported for output!");
+                    throw new Exception("Class " . $value::class . " is not supported for output!");
                     break;
             }
         }
