@@ -18,8 +18,8 @@ class NotificationsCtrl implements DataRetrieval
 {
     use Notifications4PluginTrait;
 
-    public const CMD_LIST_NOTIFICATIONS = "listNotifications";
-    public const TAB_NOTIFICATIONS = "notifications";
+    public const string CMD_LIST_NOTIFICATIONS = "listNotifications";
+    public const string TAB_NOTIFICATIONS = "notifications";
 
     private Container $dic;
     private Factory $uiFactory;

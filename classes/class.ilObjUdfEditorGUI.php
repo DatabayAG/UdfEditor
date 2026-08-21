@@ -29,14 +29,14 @@ require_once __DIR__ . "/../vendor/autoload.php";
  */
 class ilObjUdfEditorGUI extends ilObjectPluginGUI
 {
-    public const PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
-    public const TAB_CONTENT = 'content';
-    public const TAB_INFO = 'info';
-    public const TAB_SETTINGS = 'settings';
-    public const TAB_HISTORY = 'log_history';
-    public const TAB_PERMISSIONS = 'permissions';
-    public const CMD_INDEX = 'index';
-    public const CMD_SETTINGS = 'showSettings';
+    public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
+    public const string TAB_CONTENT = 'content';
+    public const string TAB_INFO = 'info';
+    public const string TAB_SETTINGS = 'settings';
+    public const string TAB_HISTORY = 'log_history';
+    public const string TAB_PERMISSIONS = 'permissions';
+    public const string CMD_INDEX = 'index';
+    public const string CMD_SETTINGS = 'showSettings';
 
     private readonly Container $dic;
     protected ilUdfEditorPlugin|ilPlugin|null $plugin = null;

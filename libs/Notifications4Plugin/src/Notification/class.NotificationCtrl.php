@@ -13,15 +13,15 @@ class NotificationCtrl
 {
     use Notifications4PluginTrait;
 
-    public const CMD_ADD_NOTIFICATION = "addNotification";
-    public const CMD_BACK = "back";
-    public const CMD_CREATE_NOTIFICATION = "createNotification";
-    public const CMD_DELETE_NOTIFICATION = "deleteNotification";
-    public const CMD_DELETE_NOTIFICATION_CONFIRM = "deleteNotificationConfirm";
-    public const CMD_DUPLICATE_NOTIFICATION = "duplicateNotification";
-    public const CMD_EDIT_NOTIFICATION = "editNotification";
-    public const CMD_UPDATE_NOTIFICATION = "updateNotification";
-    public const GET_PARAM_NOTIFICATION_ID = "notification_id";
+    public const string CMD_ADD_NOTIFICATION = "addNotification";
+    public const string CMD_BACK = "back";
+    public const string CMD_CREATE_NOTIFICATION = "createNotification";
+    public const string CMD_DELETE_NOTIFICATION = "deleteNotification";
+    public const string CMD_DELETE_NOTIFICATION_CONFIRM = "deleteNotificationConfirm";
+    public const string CMD_DUPLICATE_NOTIFICATION = "duplicateNotification";
+    public const string CMD_EDIT_NOTIFICATION = "editNotification";
+    public const string CMD_UPDATE_NOTIFICATION = "updateNotification";
+    public const string GET_PARAM_NOTIFICATION_ID = "notification_id";
     /**
      * @var Notification
      */

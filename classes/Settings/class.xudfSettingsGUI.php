@@ -31,11 +31,11 @@ class xudfSettingsGUI extends xudfGUI
 {
     use Notifications4PluginTrait;
 
-    public const SUBTAB_SETTINGS = 'settings';
-    public const SUBTAB_FORM_CONFIGURATION = 'form_configuration';
-    public const SUBTAB_MAIL_TEMPLATE = NotificationsCtrl::TAB_NOTIFICATIONS;
+    public const string SUBTAB_SETTINGS = 'settings';
+    public const string SUBTAB_FORM_CONFIGURATION = 'form_configuration';
+    public const string SUBTAB_MAIL_TEMPLATE = NotificationsCtrl::TAB_NOTIFICATIONS;
 
-    public const CMD_UPDATE = 'update';
+    public const string CMD_UPDATE = 'update';
 
     /**
      * @throws ilCtrlException

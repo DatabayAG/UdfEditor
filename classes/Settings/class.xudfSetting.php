@@ -25,13 +25,13 @@ class xudfSetting extends ActiveRecord
 {
     use Notifications4PluginTrait;
 
-    public const PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
-    public const DB_TABLE_NAME = 'xudf_setting';
+    public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
+    public const string DB_TABLE_NAME = 'xudf_setting';
 
-    public const REDIRECT_STAY_IN_FORM = 'stay_in_form';
-    public const REDIRECT_TO_ILIAS_OBJECT = 'to_ilias_object';
-    public const REDIRECT_TO_URL = 'to_url';
-    public const REDIRECT_TO_CALLER = 'to_caller';
+    public const string REDIRECT_STAY_IN_FORM = 'stay_in_form';
+    public const string REDIRECT_TO_ILIAS_OBJECT = 'to_ilias_object';
+    public const string REDIRECT_TO_URL = 'to_url';
+    public const string REDIRECT_TO_CALLER = 'to_caller';
 
     public function getConnectorContainerName(): string
     {

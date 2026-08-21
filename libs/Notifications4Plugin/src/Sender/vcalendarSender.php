@@ -21,8 +21,8 @@ class vcalendarSender implements Sender
 {
     use Notifications4PluginTrait;
 
-    public const METHOD_CANCEL = "CANCEL";
-    public const METHOD_REQUEST = "REQUEST";
+    public const string METHOD_CANCEL = "CANCEL";
+    public const string METHOD_REQUEST = "REQUEST";
     /**
      * @var array
      */

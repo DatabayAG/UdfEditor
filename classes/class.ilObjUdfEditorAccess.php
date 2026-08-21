@@ -24,7 +24,7 @@ class ilObjUdfEditorAccess extends ilObjectPluginAccess
 {
     protected static ?ilObjUdfEditorAccess $instance = null;
 
-    public static function getInstance(): ilObjUdfEditorAccess
+    public static function getInstance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();

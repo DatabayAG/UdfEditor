@@ -27,17 +27,17 @@ use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCt
  */
 class xudfFormConfigurationGUI extends xudfGUI
 {
-    public const SUBTAB_SETTINGS = 'settings';
-    public const SUBTAB_FORM_CONFIGURATION = 'form_configuration';
-    public const CMD_FORM_CONFIGURATION = 'index';
-    public const CMD_ADD_UDF_FIELD = 'addUdfField';
-    public const CMD_ADD_SEPARATOR = 'addSeparator';
-    public const CMD_CREATE = 'create';
-    public const CMD_EDIT = 'edit';
-    public const CMD_UPDATE = 'update';
-    public const CMD_DELETE = 'delete';
-    public const CMD_CONFIRM_DELETE = 'confirmDelete';
-    public const CMD_REORDER = 'reorder';
+    public const string SUBTAB_SETTINGS = 'settings';
+    public const string SUBTAB_FORM_CONFIGURATION = 'form_configuration';
+    public const string CMD_FORM_CONFIGURATION = 'index';
+    public const string CMD_ADD_UDF_FIELD = 'addUdfField';
+    public const string CMD_ADD_SEPARATOR = 'addSeparator';
+    public const string CMD_CREATE = 'create';
+    public const string CMD_EDIT = 'edit';
+    public const string CMD_UPDATE = 'update';
+    public const string CMD_DELETE = 'delete';
+    public const string CMD_CONFIRM_DELETE = 'confirmDelete';
+    public const string CMD_REORDER = 'reorder';
     protected WrapperFactory $httpWrapper;
     protected Factory $refinery;
 

@@ -83,7 +83,7 @@ class MultilangualTabsInputGUI
     /**
      * @return mixed
      */
-    public static function getValueForLang(array $values, /*?*/ string $lang_key = null, string $sub_key = null, bool $use_default_if_not_set = true)
+    public static function getValueForLang(array $values, string $lang_key = null, string $sub_key = null, bool $use_default_if_not_set = true): mixed
     {
         global $DIC;
         if (empty($lang_key)) {
@@ -125,7 +125,7 @@ class MultilangualTabsInputGUI
     /**
      * @param mixed $value
      */
-    public static function setValueForLang(array &$values, $value, string $lang_key, string $sub_key = null): void
+    public static function setValueForLang(array &$values, mixed $value, string $lang_key, string $sub_key = null): void
     {
         if (!empty($sub_key)) {
             if (!isset($values[$lang_key])) {

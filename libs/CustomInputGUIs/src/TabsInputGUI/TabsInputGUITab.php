@@ -10,27 +10,27 @@ class TabsInputGUITab
     /**
      * @var bool
      */
-    protected $active = false;
+    protected bool $active = false;
     /**
      * @var string
      */
-    protected $info = "";
+    protected string $info = "";
     /**
      * @var ilFormPropertyGUI[]
      */
-    protected $inputs = [];
+    protected array $inputs = [];
     /**
      * @var ilFormPropertyGUI[]|null
      */
-    protected $inputs_generated = null;
+    protected ?array $inputs_generated = null;
     /**
      * @var string
      */
-    protected $post_var = "";
+    protected string $post_var = "";
     /**
      * @var string
      */
-    protected $title = "";
+    protected string $title = "";
 
 
     public function __construct(string $title = "", string $post_var = "")

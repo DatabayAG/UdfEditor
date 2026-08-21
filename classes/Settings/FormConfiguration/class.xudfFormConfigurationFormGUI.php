@@ -22,12 +22,12 @@ use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 
 class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
 {
-    public const F_TITLE = 'title';
-    public const F_DESCRIPTION = 'description';
-    public const F_UDF_FIELD = 'udf_field';
-    public const F_IS_SEPARATOR = 'is_separator';
-    public const F_ELEMENT_ID = 'element_id';
-    public const F_REQUIRED = 'is_required';
+    public const string F_TITLE = 'title';
+    public const string F_DESCRIPTION = 'description';
+    public const string F_UDF_FIELD = 'udf_field';
+    public const string F_IS_SEPARATOR = 'is_separator';
+    public const string F_ELEMENT_ID = 'element_id';
+    public const string F_REQUIRED = 'is_required';
 
     protected ilLanguage $lng;
 

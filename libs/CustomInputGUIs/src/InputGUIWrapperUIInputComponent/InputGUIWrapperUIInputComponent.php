@@ -19,7 +19,7 @@ class InputGUIWrapperUIInputComponent extends FormInput
     /**
      * @var ilFormPropertyGUI
      */
-    protected $input;
+    protected ilFormPropertyGUI $input;
     private Container $dic;
 
 

@@ -14,7 +14,7 @@ class Notification extends ActiveRecord implements NotificationInterface
 {
     use Notifications4PluginTrait;
 
-    public const TABLE_NAME_SUFFIX = "not";
+    public const string TABLE_NAME_SUFFIX = "not";
     /**
      * @var ilDateTime
      * @con_has_field    true

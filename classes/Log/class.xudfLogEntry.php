@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 class xudfLogEntry extends ActiveRecord
 {
-    public const TABLE_NAME = 'xudf_log_entry';
+    public const string TABLE_NAME = 'xudf_log_entry';
 
     public function getConnectorContainerName(): string
     {

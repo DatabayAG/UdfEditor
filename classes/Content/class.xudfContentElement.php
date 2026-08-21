@@ -22,7 +22,7 @@ use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 
 class xudfContentElement extends ActiveRecord
 {
-    public const DB_TABLE_NAME = 'xudf_element';
+    public const string DB_TABLE_NAME = 'xudf_element';
 
     public function getConnectorContainerName(): string
     {

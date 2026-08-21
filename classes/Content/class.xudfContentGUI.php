@@ -29,10 +29,10 @@ class xudfContentGUI extends xudfGUI
 {
     use Notifications4PluginTrait;
 
-    public const SUBTAB_SHOW = 'show';
-    public const SUBTAB_EDIT_PAGE = 'edit_page';
+    public const string SUBTAB_SHOW = 'show';
+    public const string SUBTAB_EDIT_PAGE = 'edit_page';
 
-    public const CMD_RETURN_TO_PARENT = 'returnToParent';
+    public const string CMD_RETURN_TO_PARENT = 'returnToParent';
 
     protected function setSubtabs(): void
     {

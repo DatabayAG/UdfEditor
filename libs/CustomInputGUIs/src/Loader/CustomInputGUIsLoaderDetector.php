@@ -20,7 +20,7 @@ class CustomInputGUIsLoaderDetector implements Loader
     /**
      * @var bool
      */
-    protected static $has_fix_ctrl_namespace_current_url = false;
+    protected static bool $has_fix_ctrl_namespace_current_url = false;
     private Container $dic;
     protected Loader $loader;
 
@@ -46,7 +46,8 @@ class CustomInputGUIsLoaderDetector implements Loader
                     }, $rendererObj, DefaultRenderer::class)();
                     return new DefaultRenderer(
                         new self($previous_renderer_loader),
-                        $dic["ui.javascript_binding"]
+                        $dic["ui.javascript_binding"],
+                        $dic->language()
                     );
                 }
                 return $rendererObj;

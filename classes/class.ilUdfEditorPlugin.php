@@ -28,8 +28,8 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {
     use Notifications4PluginTrait;
 
-    public const PLUGIN_ID = 'xudf';
-    public const PLUGIN_CLASS_NAME = self::class;
+    public const string PLUGIN_ID = 'xudf';
+    public const string PLUGIN_CLASS_NAME = self::class;
 
     protected static bool $init_notifications = false;
     protected static ?ilUdfEditorPlugin $instance = null;
@@ -59,7 +59,7 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         return true;
     }
 
-    public static function getInstance(): ilUdfEditorPlugin
+    public static function getInstance(): self
     {
         if (!isset(self::$instance)) {
             global $DIC;

@@ -23,16 +23,16 @@ declare(strict_types=1);
  */
 class xudfSettingsFormGUI extends ilPropertyFormGUI
 {
-    public const F_TITLE = 'title';
-    public const F_DESCRIPTION = 'description';
-    public const F_ONLINE = 'online';
-    public const F_SHOW_INFOTAB = 'show_infotab';
-    public const F_ALWAYS_EDIT = 'always_edit';
-    public const F_MAIL_NOTIFICATION = 'mail_notification';
-    public const F_ADDITIONAL_NOTIFICATION = 'additional_notification';
-    public const F_REDIRECT_TYPE = 'redirect_type';
-    public const F_REF_ID = 'ref_id_redir';
-    public const F_URL = 'url';
+    public const string F_TITLE = 'title';
+    public const string F_DESCRIPTION = 'description';
+    public const string F_ONLINE = 'online';
+    public const string F_SHOW_INFOTAB = 'show_infotab';
+    public const string F_ALWAYS_EDIT = 'always_edit';
+    public const string F_MAIL_NOTIFICATION = 'mail_notification';
+    public const string F_ADDITIONAL_NOTIFICATION = 'additional_notification';
+    public const string F_REDIRECT_TYPE = 'redirect_type';
+    public const string F_REF_ID = 'ref_id_redir';
+    public const string F_URL = 'url';
 
     protected static array $redirect_type_to_postvar
         = [

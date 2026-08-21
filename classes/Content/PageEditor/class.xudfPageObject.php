@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 class xudfPageObject extends ilPageObject
 {
-    public const PARENT_TYPE = 'xudf';
+    public const string PARENT_TYPE = 'xudf';
 
     public function getParentType(): string
     {

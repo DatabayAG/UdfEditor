@@ -22,9 +22,9 @@ use ILIAS\DI\Container;
 
 class xudfLogTableGUI extends ilTable2GUI
 {
-    public const ID_PREFIX = 'xudf_log_table_';
-    public const PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
-    public const ROW_TEMPLATE = 'tpl.log_table_row.html';
+    public const string ID_PREFIX = 'xudf_log_table_';
+    public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
+    public const string ROW_TEMPLATE = 'tpl.log_table_row.html';
     /**
      * @var ilFormPropertyGUI[]
      *
@@ -34,7 +34,10 @@ class xudfLogTableGUI extends ilTable2GUI
     private readonly Container $dic;
     private readonly ilUdfEditorPlugin $plugin;
 
-    public function __construct(protected xudfLogGUI $parent_obj, string $parent_cmd)
+    /**
+     * @param xudfLogGUI|null $parent_obj
+     */
+    public function __construct(protected ?object $parent_obj, string $parent_cmd)
     {
         $this->setId(self::ID_PREFIX . $this->parent_obj->getObjId());
 

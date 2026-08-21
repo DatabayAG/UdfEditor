@@ -3,6 +3,7 @@
 namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
 
 use ilFormPropertyGUI;
+use ilPlugin;
 use ilTableFilterItem;
 use ilTemplate;
 use ilToolbarItem;
@@ -10,25 +11,25 @@ use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
 
 class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToolbarItem
 {
-    public const SHOW_INPUT_LABEL_ALWAYS = 3;
-    public const SHOW_INPUT_LABEL_AUTO = 2;
-    public const SHOW_INPUT_LABEL_NONE = 1;
+    public const int SHOW_INPUT_LABEL_ALWAYS = 3;
+    public const int SHOW_INPUT_LABEL_AUTO = 2;
+    public const int SHOW_INPUT_LABEL_NONE = 1;
     /**
      * @var bool
      */
-    protected static $init = false;
+    protected static bool $init = false;
     /**
      * @var int
      */
-    protected $show_input_label = self::SHOW_INPUT_LABEL_AUTO;
+    protected int $show_input_label = self::SHOW_INPUT_LABEL_AUTO;
     /**
      * @var TabsInputGUITab[]
      */
-    protected $tabs = [];
+    protected array $tabs = [];
     /**
      * @var array
      */
-    protected $value = [];
+    protected array $value = [];
 
 
     public function __construct(string $title = "", string $post_var = "")
@@ -55,7 +56,7 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
     public function __clone()
     {
-        $this->tabs = array_map(function (TabsInputGUITab $tab): TabsInputGUITab {
+        $this->tabs = array_map(static function (TabsInputGUITab $tab): TabsInputGUITab {
             return clone $tab;
         }, $this->tabs);
     }

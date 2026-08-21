@@ -6,7 +6,7 @@ use ilDateTime;
 
 interface NotificationInterface
 {
-    public const DEFAULT_PARSER_OPTIONS
+    public const array DEFAULT_PARSER_OPTIONS
         = [
             "autoescape" => false
         ];

@@ -10,11 +10,11 @@ class TextAreaInputGUI extends ilTextAreaInputGUI
     /**
      * @var string
      */
-    protected $inline_style = '';
+    protected string $inline_style = '';
     /**
      * @var int
      */
-    protected $maxlength = 1000;
+    protected int $maxlength = 1000;
 
 
     public function customPrepare(): void

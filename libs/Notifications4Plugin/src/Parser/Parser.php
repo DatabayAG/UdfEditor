@@ -11,12 +11,12 @@ interface Parser
      * @var string
      * @abstract
      */
-    public const DOC_LINK = "";
+    public const string DOC_LINK = "";
     /**
      * @var string
      * @abstract
      */
-    public const NAME = "";
+    public const string NAME = "";
 
 
     public function getClass(): string;

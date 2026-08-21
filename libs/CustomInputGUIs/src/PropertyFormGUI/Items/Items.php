@@ -23,7 +23,7 @@ final class Items
     /**
      * @var bool
      */
-    protected static $init = false;
+    protected static bool $init = false;
 
 
     private function __construct()
@@ -74,7 +74,7 @@ final class Items
     /**
      * @return mixed
      */
-    public static function getter(object $object, string $property)
+    public static function getter(object $object, string $property): mixed
     {
         if (method_exists($object, $method = "get" . self::strToCamelCase($property))) {
             return $object->{$method}();
@@ -157,7 +157,7 @@ final class Items
      * @param mixed $value
      * @deprecated
      */
-    public static function setValueToItem($item, $value): void
+    public static function setValueToItem(ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item, mixed $value): void
     {
         if (method_exists($item, "setChecked")) {
             $item->setChecked($value);
@@ -191,7 +191,7 @@ final class Items
      * @param mixed $value
      * @return mixed
      */
-    public static function setter(object $object, string $property, $value)
+    public static function setter(object $object, string $property, mixed $value): mixed
     {
         $res = null;
 

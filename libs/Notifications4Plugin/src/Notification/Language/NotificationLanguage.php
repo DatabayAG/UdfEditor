@@ -21,7 +21,7 @@ class NotificationLanguage extends ActiveRecord
      * @var string
      * @deprecated
      */
-    public const TABLE_NAME_SUFFIX = "not_lan";
+    public const string TABLE_NAME_SUFFIX = "not_lan";
     /**
      * @var ilDateTime
      * @con_has_field    true
