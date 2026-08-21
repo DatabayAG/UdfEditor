@@ -35,21 +35,6 @@ suddenly your plugin use an older or a newer version of an other plugin!
 So I recommand to use [srag/librariesnamespacechanger](https://packagist.org/packages/srag/librariesnamespacechanger) in
 your plugin.
 
-## Twig PHP 7.4 patch
-
-For make twig work with PHP 7.4, you may need to patch it (At your own risk)
-
-At the follow in your `composer.json`
-
-```json
-  ...
-  "pre-autoload-dump": [
-    ...,
-    "vendor/srag/notifications4plugin/bin/twig_php74_patch.php"
-    ]
-  ...
-```
-
 ## Using trait
 
 Your class in this you want to use Notifications4Plugin needs to use the trait `Notifications4PluginTrait`
