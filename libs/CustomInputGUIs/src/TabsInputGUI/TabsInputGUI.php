@@ -14,21 +14,12 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
     public const int SHOW_INPUT_LABEL_ALWAYS = 3;
     public const int SHOW_INPUT_LABEL_AUTO = 2;
     public const int SHOW_INPUT_LABEL_NONE = 1;
-    /**
-     * @var bool
-     */
     protected static bool $init = false;
-    /**
-     * @var int
-     */
     protected int $show_input_label = self::SHOW_INPUT_LABEL_AUTO;
     /**
      * @var TabsInputGUITab[]
      */
     protected array $tabs = [];
-    /**
-     * @var array
-     */
     protected array $value = [];
 
 

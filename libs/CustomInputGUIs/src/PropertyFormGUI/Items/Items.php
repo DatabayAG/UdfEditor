@@ -20,9 +20,6 @@ use TypeError;
  */
 final class Items
 {
-    /**
-     * @var bool
-     */
     protected static bool $init = false;
 
 
@@ -71,9 +68,6 @@ final class Items
     }
 
 
-    /**
-     * @return mixed
-     */
     public static function getter(object $object, string $property): mixed
     {
         if (method_exists($object, $method = "get" . self::strToCamelCase($property))) {
@@ -153,8 +147,6 @@ final class Items
 
 
     /**
-     * @param ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item
-     * @param mixed $value
      * @deprecated
      */
     public static function setValueToItem(ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item, mixed $value): void
@@ -187,10 +179,6 @@ final class Items
     }
 
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
     public static function setter(object $object, string $property, mixed $value): mixed
     {
         $res = null;

@@ -21,17 +21,11 @@ use Throwable;
 abstract class AbstractFormBuilder implements FormBuilder
 {
     public const string REPLACE_BUTTONS_REG_EXP = '/(<button\s+class\s*=\s*"btn btn-default"\s+data-action\s*=\s*"#?"(\s+id\s*=\s*"[a-z0-9_]+")?\s*>)(.+)(<\/button\s*>)/';
-    /**
-     * @var Form|null
-     */
     protected ?Form $form = null;
     /**
      * @var MessageBox[]
      */
     protected array $messages = [];
-    /**
-     * @var object
-     */
     protected object $parent;
     private readonly Container $dic;
 

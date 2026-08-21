@@ -22,14 +22,11 @@ class NotificationCtrl
     public const string CMD_EDIT_NOTIFICATION = "editNotification";
     public const string CMD_UPDATE_NOTIFICATION = "updateNotification";
     public const string GET_PARAM_NOTIFICATION_ID = "notification_id";
-    /**
-     * @var Notification
-     */
-    protected $notification;
+    protected Notification $notification;
     private Container $dic;
 
 
-    public function __construct(private object $parentGui)
+    public function __construct(private readonly object $parentGui)
     {
         global $DIC;
         $this->dic = $DIC;

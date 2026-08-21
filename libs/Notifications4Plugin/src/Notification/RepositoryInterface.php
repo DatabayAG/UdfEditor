@@ -41,10 +41,9 @@ interface RepositoryInterface
 
 
     /**
-     * @param string $name |null
      * @deprecated
      */
-    public function migrateFromOldGlobalPlugin(string $name = null): ?NotificationInterface;
+    public function migrateFromOldGlobalPlugin(?string $name = null): ?NotificationInterface;
 
 
     public function storeNotification(NotificationInterface $notification): void;

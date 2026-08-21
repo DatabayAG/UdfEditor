@@ -8,12 +8,10 @@ use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4Plu
 interface Parser
 {
     /**
-     * @var string
      * @abstract
      */
     public const string DOC_LINK = "";
     /**
-     * @var string
      * @abstract
      */
     public const string NAME = "";

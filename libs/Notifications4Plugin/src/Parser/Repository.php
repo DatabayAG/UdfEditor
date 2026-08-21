@@ -10,14 +10,11 @@ final class Repository implements RepositoryInterface
 {
     use Notifications4PluginTrait;
 
-    /**
-     * @var RepositoryInterface|null
-     */
-    protected static $instance = null;
+    protected static ?RepositoryInterface $instance = null;
     /**
      * @var Parser[]
      */
-    protected $parsers = [];
+    protected array $parsers = [];
 
 
     private function __construct()

@@ -7,13 +7,7 @@ use ilTextAreaInputGUI;
 
 class TextAreaInputGUI extends ilTextAreaInputGUI
 {
-    /**
-     * @var string
-     */
     protected string $inline_style = '';
-    /**
-     * @var int
-     */
     protected int $maxlength = 1000;
 
 

@@ -7,13 +7,7 @@ use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
 
 class TabsInputGUITab
 {
-    /**
-     * @var bool
-     */
     protected bool $active = false;
-    /**
-     * @var string
-     */
     protected string $info = "";
     /**
      * @var ilFormPropertyGUI[]
@@ -23,13 +17,7 @@ class TabsInputGUITab
      * @var ilFormPropertyGUI[]|null
      */
     protected ?array $inputs_generated = null;
-    /**
-     * @var string
-     */
     protected string $post_var = "";
-    /**
-     * @var string
-     */
     protected string $title = "";
 
 

@@ -16,9 +16,6 @@ use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
 
 class InputGUIWrapperUIInputComponent extends FormInput
 {
-    /**
-     * @var ilFormPropertyGUI
-     */
     protected ilFormPropertyGUI $input;
     private Container $dic;
 

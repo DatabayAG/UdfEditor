@@ -17,9 +17,6 @@ use Throwable;
 
 class CustomInputGUIsLoaderDetector implements Loader
 {
-    /**
-     * @var bool
-     */
     protected static bool $has_fix_ctrl_namespace_current_url = false;
     private Container $dic;
     protected Loader $loader;

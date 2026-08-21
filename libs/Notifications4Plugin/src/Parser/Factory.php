@@ -8,10 +8,7 @@ final class Factory implements FactoryInterface
 {
     use Notifications4PluginTrait;
 
-    /**
-     * @var FactoryInterface|null
-     */
-    protected static $instance = null;
+    protected static ?FactoryInterface $instance = null;
 
 
     private function __construct()
