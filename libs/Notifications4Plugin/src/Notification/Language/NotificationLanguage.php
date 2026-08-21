@@ -37,7 +37,7 @@ class NotificationLanguage extends ActiveRecord
      * @con_is_primary   true
      * @deprecated
      */
-    protected int $id = 0;
+    protected ?int $id = null;
     /**
      * @con_has_field    true
      * @con_fieldtype    text

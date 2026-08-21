@@ -35,7 +35,7 @@ class Notification extends ActiveRecord implements NotificationInterface
      * @con_is_notnull   true
      * @con_is_primary   true
      */
-    protected int $id = 0;
+    protected ?int $id = null;
     /**
      * @con_has_field    true
      * @con_fieldtype    text
