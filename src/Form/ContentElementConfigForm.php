@@ -18,9 +18,21 @@
 
 declare(strict_types=1);
 
-use ILIAS\Plugin\UdfEditor\Model\ContentElement;
+namespace ILIAS\Plugin\UdfEditor\Form;
 
-class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
+use ilCheckboxInputGUI;
+use ilHiddenInputGUI;
+use ILIAS\Plugin\UdfEditor\Model\ContentElement;
+use ilLanguage;
+use ilPropertyFormGUI;
+use ilSelectInputGUI;
+use ilTextInputGUI;
+use ilUdfEditorPlugin;
+use ilUserDefinedFields;
+use xudfFormConfigurationGUI;
+use xudfGUI;
+
+class ContentElementConfigForm extends ilPropertyFormGUI
 {
     public const string F_TITLE = 'title';
     public const string F_DESCRIPTION = 'description';
@@ -32,11 +44,13 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
+
     public function __construct(
         protected xudfFormConfigurationGUI $parent_gui,
-        protected readonly ?int $element_id = null,
-        protected readonly bool $separator = false
-    ) {
+        protected readonly ?int            $element_id = null,
+        protected readonly bool            $separator = false
+    )
+    {
         parent::__construct();
         global $DIC;
         $this->lng = $DIC->language();

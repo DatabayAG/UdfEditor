@@ -18,11 +18,21 @@
 
 declare(strict_types=1);
 
+namespace ILIAS\Plugin\UdfEditor\Table;
+
+use Exception;
+use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
+use ilObjUdfEditor;
+use ilTable2GUI;
+use ilUdfEditorPlugin;
+use ilUserDefinedFields;
+use ilUtil;
+use xudfFormConfigurationGUI;
 
-class xudfFormConfigurationTableGUI extends ilTable2GUI
+class ContentElementTable extends ilTable2GUI
 {
     public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
 
@@ -30,9 +40,6 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
     private readonly Container $dic;
     private ContentElementRepository $content_element_repo;
 
-    /**
-     * @throws arException|ilCtrlException
-     */
     public function __construct(object $parent_gui, string $parent_cmd)
     {
         global $DIC;

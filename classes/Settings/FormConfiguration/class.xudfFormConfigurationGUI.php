@@ -19,9 +19,11 @@
 declare(strict_types=1);
 
 use ILIAS\HTTP\Wrapper\WrapperFactory;
-use ILIAS\Plugin\UdfEditor\Model\ContentElement;
-use ILIAS\Refinery\Factory;
+use ILIAS\Plugin\UdfEditor\Form\ContentElementConfigForm;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
+use ILIAS\Plugin\UdfEditor\Model\ContentElement;
+use ILIAS\Plugin\UdfEditor\Table\ContentElementTable;
+use ILIAS\Refinery\Factory;
 
 /**
  * @ilCtrl_isCalledBy xudfFormConfigurationGUI: ilObjUdfEditorGUI
@@ -99,8 +101,8 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function index(): void
     {
-        $xudfFormConfigurationTableGUI = new xudfFormConfigurationTableGUI($this, self::CMD_STANDARD);
-        $this->tpl->setContent($xudfFormConfigurationTableGUI->getHTML());
+        $table = new ContentElementTable($this, self::CMD_STANDARD);
+        $this->tpl->setContent($table->getHTML());
     }
 
     protected function addUdfField(): void
@@ -110,20 +112,20 @@ class xudfFormConfigurationGUI extends xudfGUI
             $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_no_udfs'), true);
             $this->ctrl->redirect($this, self::CMD_STANDARD);
         }
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this);
-        $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $form = new ContentElementConfigForm($this);
+        $this->tpl->setContent($form->getHTML());
     }
 
     protected function addSeparator(): void
     {
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, null, true);
-        $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $form = new ContentElementConfigForm($this, null, true);
+        $this->tpl->setContent($form->getHTML());
     }
 
     protected function retrieveElementIdFromPost(): int
     {
         return $this->httpWrapper->post()->retrieve(
-            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
+            ContentElementConfigForm::F_ELEMENT_ID,
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(0)
@@ -134,34 +136,34 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function create(): void
     {
         $isSeparator = $this->httpWrapper->post()->retrieve(
-            xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
+            ContentElementConfigForm::F_IS_SEPARATOR,
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->bool(),
                 $this->refinery->always(false)
             ])
         );
 
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, null, $isSeparator);
+        $form = new ContentElementConfigForm($this, null, $isSeparator);
 
-        if (!$xudfFormConfigurationFormGUI->checkInput()) {
+        if (!$form->checkInput()) {
             $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
-            $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+            $this->tpl->setContent($form->getHTML());
             return;
         }
 
-        $xudfFormConfigurationFormGUI->setValuesByPost();
+        $form->setValuesByPost();
 
 
-        $udf_field_id = (int) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_UDF_FIELD);
+        $udf_field_id = (int) $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
 
         $content_element = new ContentElement(
             $this->getObjId(),
-            $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_TITLE),
-            $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_DESCRIPTION),
+            $form->getInput(ContentElementConfigForm::F_TITLE),
+            $form->getInput(ContentElementConfigForm::F_DESCRIPTION),
             0,
             $udf_field_id ?: null,
             $isSeparator,
-            (bool) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_REQUIRED),
+            (bool) $form->getInput(ContentElementConfigForm::F_REQUIRED),
         );
 
         $this->content_element_repo->create($content_element);
@@ -175,24 +177,24 @@ class xudfFormConfigurationGUI extends xudfGUI
     {
         $element = $this->content_element_repo->read($this->retrieveElementIdFromPost());
 
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element->getId(), $element->isSeparator());
+        $form = new ContentElementConfigForm($this, $element->getId(), $element->isSeparator());
 
-        if (!$xudfFormConfigurationFormGUI->checkInput()) {
+        if (!$form->checkInput()) {
             $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
-            $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+            $this->tpl->setContent($form->getHTML());
             return;
         }
 
-        $xudfFormConfigurationFormGUI->setValuesByPost();
+        $form->setValuesByPost();
 
-        $udf_field_id = (int) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_UDF_FIELD);
+        $udf_field_id = (int) $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
 
         $element
-            ->setTitle($xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_TITLE))
-            ->setDescription($xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_DESCRIPTION))
+            ->setTitle($form->getInput(ContentElementConfigForm::F_TITLE))
+            ->setDescription($form->getInput(ContentElementConfigForm::F_DESCRIPTION))
             ->setUdfField($element->getUdfField())
             ->setUdfField($udf_field_id ?: null)
-            ->setRequired((bool) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_REQUIRED));
+            ->setRequired((bool) $form->getInput(ContentElementConfigForm::F_REQUIRED));
 
         $this->content_element_repo->update($element);
 
@@ -203,20 +205,20 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function edit(): void
     {
         $elementId = $this->httpWrapper->query()->retrieve(
-            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
+            ContentElementConfigForm::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
         $element = $this->content_element_repo->read($elementId);
 
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element->getId(), $element->isSeparator());
-        $xudfFormConfigurationFormGUI->fillForm($element);
-        $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $form = new ContentElementConfigForm($this, $element->getId(), $element->isSeparator());
+        $form->fillForm($element);
+        $this->tpl->setContent($form->getHTML());
     }
 
     protected function delete(): void
     {
         $elementId = $this->httpWrapper->query()->retrieve(
-            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
+            ContentElementConfigForm::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
         $element = $this->content_element_repo->read($elementId);
