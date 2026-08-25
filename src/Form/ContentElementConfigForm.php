@@ -47,10 +47,9 @@ class ContentElementConfigForm extends ilPropertyFormGUI
 
     public function __construct(
         protected xudfFormConfigurationGUI $parent_gui,
-        protected readonly ?int            $element_id = null,
-        protected readonly bool            $separator = false
-    )
-    {
+        protected readonly ?int $element_id = null,
+        protected readonly bool $separator = false
+    ) {
         parent::__construct();
         global $DIC;
         $this->lng = $DIC->language();

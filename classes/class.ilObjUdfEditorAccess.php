@@ -18,6 +18,8 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilObjUdfEditorAccess extends ilObjectPluginAccess
@@ -80,7 +82,9 @@ class ilObjUdfEditorAccess extends ilObjectPluginAccess
 
         $ctrl = $DIC->ctrl();
 
-        $DIC->ui()->mainTemplate()->setOnScreenMessage("failure", $DIC->language()->txt("permission_denied"), true);
+        $ui_util = new UiUtil();
+
+        $ui_util->sendFailure($DIC->language()->txt("permission_denied"));
 
         if (is_object($class)) {
             $ctrl->clearParameters($class);

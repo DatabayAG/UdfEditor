@@ -24,6 +24,7 @@ use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 use ILIAS\Plugin\UdfEditor\Exception\UnknownUdfTypeException;
+use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
 
 class xudfContentFormGUI extends ilPropertyFormGUI
 {
@@ -31,6 +32,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
     private readonly Container $dic;
     private ContentElementRepository $content_element_repo;
     private LogEntryRepository $log_entry_repo;
+    private UiUtil $ui_util;
 
     /**
      * @throws UnknownUdfTypeException|ilCtrlException
@@ -41,6 +43,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
         $this->obj_id = $this->parent_gui->getObjId();
         global $DIC;
         $this->dic = $DIC;
+        $this->ui_util = new UiUtil();
 
         $this->content_element_repo = new ContentElementRepository();
         $this->log_entry_repo = new LogEntryRepository();
@@ -121,10 +124,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
             try {
                 $udfFieldDefinition = $element->getUdfFieldDefinition();
             } catch (UDFNotFoundException $ex) {
-                $this->global_tpl->setOnScreenMessage(
-                    ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE,
-                    $ex->getMessage()
-                );
+                $this->ui_util->sendFailure($ex->getMessage());
                 $udfFieldDefinition = null;
             }
 

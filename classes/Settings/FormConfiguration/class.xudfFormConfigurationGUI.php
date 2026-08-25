@@ -109,7 +109,7 @@ class xudfFormConfigurationGUI extends xudfGUI
     {
         $udf_fields = ilUserDefinedFields::_getInstance()->getDefinitions();
         if (!count($udf_fields)) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_no_udfs'), true);
+            $this->ui_util->sendFailure($this->pl->txt('msg_no_udfs'));
             $this->ctrl->redirect($this, self::CMD_STANDARD);
         }
         $form = new ContentElementConfigForm($this);
@@ -146,7 +146,7 @@ class xudfFormConfigurationGUI extends xudfGUI
         $form = new ContentElementConfigForm($this, null, $isSeparator);
 
         if (!$form->checkInput()) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
+            $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));
             $this->tpl->setContent($form->getHTML());
             return;
         }
@@ -169,7 +169,7 @@ class xudfFormConfigurationGUI extends xudfGUI
         $this->content_element_repo->create($content_element);
 
 
-        $this->tpl->setOnScreenMessage("success", $this->pl->txt('form_saved'), true);
+        $this->ui_util->sendSuccess($this->pl->txt('form_saved'));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
@@ -180,7 +180,7 @@ class xudfFormConfigurationGUI extends xudfGUI
         $form = new ContentElementConfigForm($this, $element->getId(), $element->isSeparator());
 
         if (!$form->checkInput()) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
+            $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));
             $this->tpl->setContent($form->getHTML());
             return;
         }
@@ -198,7 +198,7 @@ class xudfFormConfigurationGUI extends xudfGUI
 
         $this->content_element_repo->update($element);
 
-        $this->tpl->setOnScreenMessage("success", $this->pl->txt('form_saved'), true);
+        $this->ui_util->sendSuccess($this->pl->txt('form_saved'));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
@@ -240,7 +240,7 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function confirmDelete(): void
     {
         $this->content_element_repo->deleteById($this->retrieveElementIdFromPost());
-        $this->tpl->setOnScreenMessage("success", $this->pl->txt('msg_successfully_deleted'), true);
+        $this->ui_util->sendSuccess($this->pl->txt('msg_successfully_deleted'));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 

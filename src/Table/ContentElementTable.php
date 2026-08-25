@@ -21,10 +21,10 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\UdfEditor\Table;
 
 use Exception;
-use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
+use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
 use ilObjUdfEditor;
 use ilTable2GUI;
 use ilUdfEditorPlugin;
@@ -39,6 +39,7 @@ class ContentElementTable extends ilTable2GUI
     protected ilUdfEditorPlugin $pl;
     private readonly Container $dic;
     private ContentElementRepository $content_element_repo;
+    private UiUtil $ui_util;
 
     public function __construct(object $parent_gui, string $parent_cmd)
     {
@@ -46,6 +47,7 @@ class ContentElementTable extends ilTable2GUI
         $this->dic = $DIC;
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->content_element_repo = new ContentElementRepository();
+        $this->ui_util = new UiUtil();
 
         parent::__construct($parent_gui, $parent_cmd);
 
@@ -146,11 +148,7 @@ class ContentElementTable extends ilTable2GUI
     {
         static $already_shown;
         if (!$already_shown) {
-            $this->main_tpl->setOnScreenMessage(
-                ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE,
-                $this->pl->txt('msg_missing_udf'),
-                true
-            );
+            $this->ui_util->sendFailure($this->pl->txt('msg_missing_udf'));
             $already_shown = true;
         }
     }

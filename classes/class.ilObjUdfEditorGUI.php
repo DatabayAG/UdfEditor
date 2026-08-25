@@ -22,6 +22,7 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
+use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -44,12 +45,14 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
     protected ilUdfEditorPlugin|ilPlugin|null $plugin = null;
     private ContentElementRepository $content_element_repo;
     private SettingsRepository $settings_repo;
+    private UiUtil $ui_util;
 
     public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
     {
         parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
         global $DIC;
         $this->dic = $DIC;
+        $this->ui_util = new UiUtil();
 
         $serverParams = $this->request->getServerParams();
 
@@ -78,7 +81,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         $next_class = $this->dic->ctrl()->getNextClass();
         $cmd = $this->dic->ctrl()->getCmd();
         if (!ilObjUdfEditorAccess::hasReadAccess() && $next_class != strtolower(ilInfoScreenGUI::class) && $cmd !== "infoScreen") {
-            $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+            $this->ui_util->sendFailure($this->plugin->txt('access_denied'));
             $this->dic->ctrl()->returnToParent($this);
         }
         $this->tpl->loadStandardTemplate();
@@ -97,7 +100,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                     break;
                 case strtolower(xudfSettingsGUI::class):
                     if (!ilObjUdfEditorAccess::hasWriteAccess()) {
-                        $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+                        $this->ui_util->sendFailure($this->plugin->txt('access_denied'));
                         $this->dic->ctrl()->returnToParent($this);
                     }
                     if (!$this->dic->ctrl()->isAsynch()) {
@@ -111,7 +114,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                     break;
                 case strtolower(xudfFormConfigurationGUI::class):
                     if (!ilObjUdfEditorAccess::hasWriteAccess()) {
-                        $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+                        $this->ui_util->sendFailure($this->plugin->txt('access_denied'));
                         $this->dic->ctrl()->returnToParent($this);
                     }
                     if (!$this->dic->ctrl()->isAsynch()) {
@@ -125,7 +128,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                     break;
                 case strtolower(xudfLogGUI::class):
                     if (!ilObjUdfEditorAccess::hasWriteAccess()) {
-                        $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+                        $this->ui_util->sendFailure($this->plugin->txt('access_denied'));
                         $this->dic->ctrl()->returnToParent($this);
                     }
                     if (!$this->dic->ctrl()->isAsynch()) {
@@ -161,7 +164,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                     break;
             }
         } catch (Exception $e) {
-            $this->tpl->setOnScreenMessage("failure", $e->getMessage());
+            $this->ui_util->sendFailure($e->getMessage());
             if (!$this->creation_mode) {
                 $this->tpl->printToStdout();
             }

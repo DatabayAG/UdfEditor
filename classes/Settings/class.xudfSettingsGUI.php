@@ -93,11 +93,11 @@ class xudfSettingsGUI extends xudfGUI
         $xudfSettingsFormGUI = new xudfSettingsFormGUI($this);
         $xudfSettingsFormGUI->setValuesByPost();
         if (!$xudfSettingsFormGUI->saveForm()) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
+            $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));
             $this->tpl->setContent($xudfSettingsFormGUI->getHTML());
             return;
         }
-        $this->tpl->setOnScreenMessage("success", $this->pl->txt('form_saved'), true);
+        $this->ui_util->sendSuccess($this->pl->txt('form_saved'));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
