@@ -18,11 +18,21 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
+use ILIAS\Plugin\UdfEditor\Model\Settings;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 {
     private bool $payment_enabled = false;
+    private SettingsRepository $settings_repo;
+
+    public function __construct(int $a_context = self::CONTEXT_REPOSITORY)
+    {
+        parent::__construct($a_context);
+        $this->settings_repo = new SettingsRepository();
+    }
 
     public function getGuiClass(): string
     {
@@ -91,8 +101,8 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
         $props = parent::getCustomProperties([]);
 
         try {
-            /** @var xudfSetting $settings */
-            $settings = xudfSetting::find($this->obj_id);
+            /** @var Settings $settings */
+            $settings = $this->settings_repo->read($this->obj_id);
         } catch (Throwable) {
             return $props;
         }

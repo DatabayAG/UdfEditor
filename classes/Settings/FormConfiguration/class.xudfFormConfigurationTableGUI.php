@@ -19,6 +19,8 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Model\ContentElement;
+use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 
 class xudfFormConfigurationTableGUI extends ilTable2GUI
 {
@@ -26,6 +28,7 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
 
     protected ilUdfEditorPlugin $pl;
     private readonly Container $dic;
+    private ContentElementRepository $content_element_repo;
 
     /**
      * @throws arException|ilCtrlException
@@ -35,6 +38,7 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         global $DIC;
         $this->dic = $DIC;
         $this->pl = ilUdfEditorPlugin::getInstance();
+        $this->content_element_repo = new ContentElementRepository();
 
         parent::__construct($parent_gui, $parent_cmd);
 
@@ -55,7 +59,16 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         $this->initColumns();
 
         try {
-            $this->setData(xudfContentElement::where(['obj_id' => ilObjUdfEditor::_lookupObjectId((int) filter_input(INPUT_GET, 'ref_id'))])->orderBy('sort')->getArray());
+            $this->setData(array_map(
+                static function (ContentElement $content_element): array {
+                    return $content_element->jsonSerialize();
+                },
+                $this->content_element_repo->readAllByObjId(
+                    ilObjUdfEditor::_lookupObjectId((int) filter_input(INPUT_GET, 'ref_id')),
+                    true,
+                    true
+                )
+            ));
         } catch (Exception) {
             $this->setData([]);
         }
@@ -74,10 +87,15 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
 
     protected function fillRow(array $a_set): void
     {
-        $udf_definition = ilUserDefinedFields::_getInstance()->getDefinition($a_set['udf_field']);
+        $separator = $a_set['separator'];
 
-        if (!$a_set['is_separator'] && !$udf_definition) {
-            $this->showMissingUdfMessage();
+        if (!$separator) {
+            $udf_definition = $a_set['udf_field']
+                ? ilUserDefinedFields::_getInstance()->getDefinition($a_set['udf_field'])
+                : null;
+            if (!$udf_definition) {
+                $this->showMissingUdfMessage();
+            }
         }
 
         $fieldName = $udf_definition['field_name'] ?? $this->pl->txt('field_not_found');
@@ -88,30 +106,28 @@ class xudfFormConfigurationTableGUI extends ilTable2GUI
         $this->tpl->setVariable('ID', $a_set['id']);
         $this->tpl->setVariable(
             'TITLE',
-            $a_set['is_separator']
+            $separator
                 ? $a_set['title']
                 : $fieldName
         );
         $this->tpl->setVariable('DESCRIPTION', $a_set['description']);
-        $this->tpl->setVariable('TYPE', $a_set['is_separator'] ? 'Separator' : $this->pl->txt('udf_field'));
+        $this->tpl->setVariable('TYPE', $separator ? 'Separator' : $this->pl->txt('udf_field'));
 
         $this->tpl->setVariable(
             'UDF_TYPE',
-            $a_set['is_separator']
+            $separator
                 ? '&nbsp'
                 : $fieldType
         );
 
-        if ($a_set['is_separator']) {
+        if ($separator) {
             $udf_required = '&nbsp';
+        } elseif ($a_set['required']) {
+            $imagePath = ilUtil::getImagePath("standard/icon_ok.svg");
+            $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_ok'>";
         } else {
-            if ($a_set['is_required'] == 1) {
-                $imagePath = ilUtil::getImagePath("standard/icon_ok.svg");
-                $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_ok'>";
-            } else {
-                $imagePath = ilUtil::getImagePath("standard/icon_not_ok.svg");
-                $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_not_ok'>";
-            }
+            $imagePath = ilUtil::getImagePath("standard/icon_not_ok.svg");
+            $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_not_ok'>";
         }
 
         $this->tpl->setVariable('IS_REQUIRED', $udf_required);

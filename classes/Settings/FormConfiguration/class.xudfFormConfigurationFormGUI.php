@@ -18,7 +18,7 @@
 
 declare(strict_types=1);
 
-use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
+use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 
 class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
 {
@@ -32,14 +32,16 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
-
-    public function __construct(protected xudfFormConfigurationGUI $parent_gui, protected xudfContentElement $element)
-    {
+    public function __construct(
+        protected xudfFormConfigurationGUI $parent_gui,
+        protected readonly ?int $element_id = null,
+        protected readonly bool $separator = false
+    ) {
         parent::__construct();
         global $DIC;
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->setTitle($this->element->getId() ? $this->lng->txt('edit') : $this->lng->txt('create'));
+        $this->setTitle($this->lng->txt($element_id ? 'edit' : 'create'));
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 
         $this->initForm();
@@ -48,22 +50,28 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
     protected function initForm(): void
     {
         $input = new ilHiddenInputGUI(self::F_IS_SEPARATOR);
-        $input->setValue((string) $this->element->isSeparator());
+        $input->setValue((string) $this->separator);
         $this->addItem($input);
 
-        if ($this->element->getId()) {
+        if ($this->element_id) {
             $input = new ilHiddenInputGUI(self::F_ELEMENT_ID);
-            $input->setValue((string) $this->element->getId());
+            $input->setValue((string) $this->element_id);
             $this->addItem($input);
         }
 
-        if ($this->element->isSeparator()) {
+        if ($this->separator) {
             $this->initSeparatorForm();
         } else {
             $this->initUdfFieldForm();
         }
 
-        $this->addCommandButton(xudfFormConfigurationGUI::CMD_CREATE, $this->lng->txt('save'));
+
+        $this->addCommandButton(
+            $this->element_id
+                ? xudfFormConfigurationGUI::CMD_UPDATE
+                : xudfFormConfigurationGUI::CMD_CREATE,
+            $this->lng->txt('save')
+        );
         $this->addCommandButton(xudfGUI::CMD_STANDARD, $this->lng->txt('cancel'));
     }
 
@@ -102,37 +110,15 @@ class xudfFormConfigurationFormGUI extends ilPropertyFormGUI
         $this->addItem($input);
     }
 
-    public function fillForm(): void
+    public function fillForm(ContentElement $content_element): void
     {
-        try {
-            $title = $this->element->getTitle();
-        } catch (UDFNotFoundException) {
-            $this->global_tpl->setOnScreenMessage("info", $this->pl->txt('msg_choose_new_type'));
-            $title = '';
-        }
         $values = [
-            self::F_TITLE => $title,
-            self::F_DESCRIPTION => $this->element->getDescription(),
-            self::F_UDF_FIELD => $this->element->getUdfFieldId(),
-            self::F_REQUIRED => $this->element->isRequired()
+            self::F_TITLE => $content_element->getTitle(),
+            self::F_DESCRIPTION => $content_element->getDescription(),
+            self::F_UDF_FIELD => $content_element->getUdfField(),
+            self::F_REQUIRED => $content_element->isRequired()
         ];
 
         $this->setValuesByArray($values, true);
-    }
-
-    public function saveForm(): bool
-    {
-        if (!$this->checkInput()) {
-            return false;
-        }
-
-        $this->element->setObjId($this->parent_gui->getObjId());
-        $this->element->setTitle($this->getInput(self::F_TITLE));
-        $this->element->setDescription($this->getInput(self::F_DESCRIPTION));
-        $this->element->setUdfFieldId((int) $this->getInput(self::F_UDF_FIELD));
-        $this->element->setIsRequired((bool) $this->getInput(self::F_REQUIRED));
-        $this->element->store();
-
-        return true;
     }
 }

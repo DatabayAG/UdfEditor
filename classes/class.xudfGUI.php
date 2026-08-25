@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Refinery\Factory;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationsCtrl;
@@ -44,6 +45,7 @@ abstract class xudfGUI
     protected ilTree $tree;
     protected WrapperFactory $httpWrapper;
     protected Factory $refinery;
+    protected ContentElementRepository $content_element_repo;
 
     public function __construct(protected ilObjUdfEditorGUI $parent_gui)
     {
@@ -59,6 +61,7 @@ abstract class xudfGUI
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->httpWrapper = $this->dic->http()->wrapper();
         $this->refinery = $this->dic->refinery();
+        $this->content_element_repo = new ContentElementRepository();
     }
 
     public function executeCommand(): void

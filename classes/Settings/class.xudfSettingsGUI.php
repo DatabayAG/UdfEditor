@@ -50,8 +50,8 @@ class xudfSettingsGUI extends xudfGUI
                 $this->ctrl->forwardCommand($xudfSettingsFormGUI);
                 break;
             default:
-                if ($this->getObject()->getSettings()->hasMailNotification()
-                    && $this->getObject()->getSettings()->getNotification()->getId() === (int) filter_input(INPUT_GET, NotificationCtrl::GET_PARAM_NOTIFICATION_ID)
+                if ($this->getObject()->getSettings()->isMailNotification()
+                    && $this->getObject()->getNotification()->getId() === (int) filter_input(INPUT_GET, NotificationCtrl::GET_PARAM_NOTIFICATION_ID)
                 ) {
                     $this->tabs->activateSubTab(self::SUBTAB_MAIL_TEMPLATE);
                 }
@@ -65,12 +65,12 @@ class xudfSettingsGUI extends xudfGUI
     {
         $this->tabs->addSubTab(self::SUBTAB_SETTINGS, $this->lng->txt(self::SUBTAB_SETTINGS), $this->ctrl->getLinkTarget($this, self::CMD_STANDARD));
         $this->tabs->addSubTab(self::SUBTAB_FORM_CONFIGURATION, $this->pl->txt(self::SUBTAB_FORM_CONFIGURATION), $this->ctrl->getLinkTargetByClass(xudfFormConfigurationGUI::class));
-        $this->ctrl->setParameterByClass(self::class, NotificationCtrl::GET_PARAM_NOTIFICATION_ID, $this->getObject()->getSettings()->getNotification()->getId());
-        if ($this->getObject()->getSettings()->hasMailNotification()) {
+        $this->ctrl->setParameterByClass(self::class, NotificationCtrl::GET_PARAM_NOTIFICATION_ID, $this->getObject()->getNotification()->getId());
+        if ($this->getObject()->getSettings()->isMailNotification()) {
             $this->ctrl->setParameterByClass(
                 self::class,
                 NotificationCtrl::GET_PARAM_NOTIFICATION_ID,
-                $this->getObject()->getSettings()->getNotification()->getId()
+                $this->getObject()->getNotification()->getId()
             );
             $this->tabs->addSubTab(
                 self::SUBTAB_MAIL_TEMPLATE,

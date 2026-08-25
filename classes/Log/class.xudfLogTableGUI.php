@@ -19,6 +19,7 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 
 class xudfLogTableGUI extends ilTable2GUI
 {
@@ -33,6 +34,7 @@ class xudfLogTableGUI extends ilTable2GUI
 
     private readonly Container $dic;
     private readonly ilUdfEditorPlugin $plugin;
+    private LogEntryRepository $log_entry_repo;
 
     /**
      * @param xudfLogGUI|null $parent_obj
@@ -45,6 +47,8 @@ class xudfLogTableGUI extends ilTable2GUI
         global $DIC;
         $this->dic = $DIC;
         $this->plugin = ilUdfEditorPlugin::getInstance();
+        $this->log_entry_repo = new LogEntryRepository();
+
         $this->dic->ui()->mainTemplate()->addCss($this->plugin->getRelativeDirectory() . '/templates/default/log_table.css');
 
         if (!(str_starts_with($this->parent_cmd, "applyFilter")
@@ -75,11 +79,11 @@ class xudfLogTableGUI extends ilTable2GUI
         $userFilter = $this->filter_cache["user"];
         $filter_user = $userFilter->getValue();
 
-        $where = xudfLogEntry::where(['obj_id' => $this->parent_obj->getObjId()]);
+        $log_entries = $this->log_entry_repo->readAllByObjId($this->parent_obj->getObjId());
         if ($filter_user !== null) {
-            $where = $where->where(['usr_id' => $filter_user]);
+            $log_entries = $this->log_entry_repo->readAllByUserId((int) $filter_user);
         }
-        $this->setData($where->getArray());
+        $this->setData($log_entries);
     }
 
     public function initFilter(): void
@@ -141,7 +145,7 @@ class xudfLogTableGUI extends ilTable2GUI
     protected function getUserFilterOptions(): array
     {
         $result = $this->dic->database()->query(
-            'SELECT DISTINCT(usr_id) FROM ' . xudfLogEntry::TABLE_NAME
+            'SELECT DISTINCT(usr_id) FROM ' . LogEntryRepository::TABLE_NAME
         );
         $options = ['' => '-'];
         while ($rec = $this->dic->database()->fetchAssoc($result)) {

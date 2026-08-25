@@ -21,6 +21,8 @@ declare(strict_types=1);
 use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Model\ContentElement;
+use ILIAS\Plugin\UdfEditor\Model\Settings;
 
 /**
  * @ilCtrl_isCalledBy xudfContentGUI: ilObjUdfEditorGUI
@@ -76,7 +78,7 @@ class xudfContentGUI extends xudfGUI
     protected function index(): void
     {
         $editable = $this->getObject()->getSettings()->isAlwaysEdit();
-        $where = xudfContentElement::where(['obj_id' => $this->getObjId()]);
+        $content_elements = $this->content_element_repo->readAllByObjId($this->getObjId(), true);
 
         $edit = $this->httpWrapper->query()->retrieve(
             "edit",
@@ -86,12 +88,11 @@ class xudfContentGUI extends xudfGUI
             ])
         );
 
-        if (!$edit && $where->count()) {
+        if (!$edit && count($content_elements)) {
             $udf_values = $this->dic->user()->getUserDefinedData();
 
-            /** @var xudfContentElement $element */
-            foreach ($where->get() as $element) {
-                if (!$element->isSeparator() && !isset($udf_values["f_{$element->getUdfFieldId()}"])) {
+            foreach ($content_elements as $element) {
+                if (!$element->isSeparator() && !isset($udf_values["f_{$element->getUdfField()}"])) {
                     $editable = true;
                     break;
                 }
@@ -137,8 +138,8 @@ class xudfContentGUI extends xudfGUI
     {
         $xudfSettings = $this->getObject()->getSettings();
 
-        if ($xudfSettings->hasMailNotification()) {
-            $notification = $xudfSettings->getNotification();
+        if ($xudfSettings->isMailNotification()) {
+            $notification = $this->getObject()->getNotification();
 
             $sender = self::notifications4plugin()->sender()->factory()->internalMail(ANONYMOUS_USER_ID, $this->dic->user()->getId());
 
@@ -146,10 +147,10 @@ class xudfContentGUI extends xudfGUI
 
             $user_defined_data = [];
             $udf_data = $this->dic->user()->getUserDefinedData();
-            foreach (xudfContentElement::where(['obj_id' => $this->getObjId(), 'is_separator' => false])->get() as $element) {
-                /** @var xudfContentElement $element */
+            foreach ($this->content_element_repo->readAllByObjId($this->getObjId()) as $element) {
+                /** @var ContentElement $element */
                 try {
-                    $user_defined_data[$element->getTitle()] = $udf_data['f_' . $element->getUdfFieldId()] ?? "";
+                    $user_defined_data[$element->getTitle()] = $udf_data['f_' . $element->getUdfField()] ?? "";
                 } catch (UDFNotFoundException $e) {
                     $this->dic->logger()->root()->alert($e->getMessage());
                     $this->dic->logger()->root()->alert($e->getTraceAsString());
@@ -196,27 +197,27 @@ class xudfContentGUI extends xudfGUI
     protected function redirectAfterSave(): void
     {
         switch ($this->getObject()->getSettings()->getRedirectType()) {
-            case xudfSetting::REDIRECT_STAY_IN_FORM:
+            case Settings::REDIRECT_STAY_IN_FORM:
                 if (ilSession::has('xudfreturn')) {
                     ilSession::clear('xudfreturn');
                 }
                 $this->ctrl->redirect($this);
                 break;
-            case xudfSetting::REDIRECT_TO_ILIAS_OBJECT:
+            case Settings::REDIRECT_TO_ILIAS_OBJECT:
                 if (ilSession::has('xudfreturn')) {
                     ilSession::clear('xudfreturn');
                 }
                 $ref_id = $this->getObject()->getSettings()->getRedirectValue();
                 $this->ctrl->redirectToUrl('goto.php?target=' . ilObject::_lookupType((int) $ref_id, true) . '_' . $ref_id);
                 break;
-            case xudfSetting::REDIRECT_TO_URL:
+            case Settings::REDIRECT_TO_URL:
                 if (ilSession::has('xudfreturn')) {
                     ilSession::clear('xudfreturn');
                 }
                 $url = $this->getObject()->getSettings()->getRedirectValue();
                 $this->ctrl->redirectToURL($url);
                 break;
-            case xudfSetting::REDIRECT_TO_CALLER:
+            case Settings::REDIRECT_TO_CALLER:
                 $this->returnToCaller();
                 break;
         }

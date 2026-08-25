@@ -18,6 +18,9 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
+use ILIAS\Plugin\UdfEditor\Model\Settings;
+
 /**
  * @ilCtrl_Calls      xudfSettingsFormGUI: ilFormPropertyDispatchGUI
  */
@@ -36,17 +39,18 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
 
     protected static array $redirect_type_to_postvar
         = [
-            xudfSetting::REDIRECT_STAY_IN_FORM => false,
-            xudfSetting::REDIRECT_TO_ILIAS_OBJECT => self::F_REF_ID,
-            xudfSetting::REDIRECT_TO_URL => self::F_URL,
-            xudfSetting::REDIRECT_TO_CALLER => false
+            Settings::REDIRECT_STAY_IN_FORM => false,
+            Settings::REDIRECT_TO_ILIAS_OBJECT => self::F_REF_ID,
+            Settings::REDIRECT_TO_URL => self::F_URL,
+            Settings::REDIRECT_TO_CALLER => false
         ];
 
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
 
-    protected xudfSetting $xudfSetting;
+    protected Settings $xudfSetting;
+    private SettingsRepository $settings_repo;
 
     public function __construct(protected xudfSettingsGUI $parent_gui)
     {
@@ -54,7 +58,9 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         global $DIC;
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->xudfSetting = xudfSetting::find($this->parent_gui->getObjId());
+        $this->settings_repo = new SettingsRepository();
+
+        $this->xudfSetting = $this->settings_repo->read($this->parent_gui->getObjId());
         $this->setTitle($this->lng->txt('settings'));
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
         $this->initForm();
@@ -98,15 +104,15 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $input = new ilRadioGroupInputGUI($this->pl->txt(self::F_REDIRECT_TYPE), self::F_REDIRECT_TYPE);
         $input->setInfo($this->pl->txt(self::F_REDIRECT_TYPE . '_info'));
 
-        $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_STAY_IN_FORM), xudfSetting::REDIRECT_STAY_IN_FORM);
+        $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_STAY_IN_FORM), Settings::REDIRECT_STAY_IN_FORM);
         $input->addOption($opt);
 
-        $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_ILIAS_OBJECT), xudfSetting::REDIRECT_TO_ILIAS_OBJECT);
+        $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_TO_ILIAS_OBJECT), Settings::REDIRECT_TO_ILIAS_OBJECT);
         $obj_input = new ilRepositorySelector2InputGUI('', self::F_REF_ID, false, $this);
         $opt->addSubItem($obj_input);
         $input->addOption($opt);
 
-        $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_URL), xudfSetting::REDIRECT_TO_URL);
+        $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_TO_URL), Settings::REDIRECT_TO_URL);
         $url_input = new ilTextInputGUI('', self::F_URL);
         $opt->addSubItem($url_input);
         $input->addOption($opt);
@@ -115,7 +121,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $serverParams = $this->http->request()->getServerParams();
 
         if (isset($serverParams['HTTP_REFERER']) && str_contains($serverParams['HTTP_REFERER'], 'ref_id')) {
-            $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_CALLER), xudfSetting::REDIRECT_TO_CALLER);
+            $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_TO_CALLER), Settings::REDIRECT_TO_CALLER);
             $input->addOption($opt);
         }
 
@@ -132,7 +138,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
             self::F_ONLINE => $this->xudfSetting->isOnline(),
             self::F_SHOW_INFOTAB => $this->xudfSetting->isShowInfoTab(),
             self::F_ALWAYS_EDIT => $this->xudfSetting->isAlwaysEdit(),
-            self::F_MAIL_NOTIFICATION => $this->xudfSetting->hasMailNotification(),
+            self::F_MAIL_NOTIFICATION => $this->xudfSetting->isMailNotification(),
             self::F_ADDITIONAL_NOTIFICATION => $this->xudfSetting->getAdditionalNotification(),
             self::F_REDIRECT_TYPE => $this->xudfSetting->getRedirectType()
         ];
@@ -161,16 +167,16 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $this->xudfSetting->setAdditionalNotification($this->getInput(self::F_ADDITIONAL_NOTIFICATION));
         $this->xudfSetting->setRedirectType($this->getInput(self::F_REDIRECT_TYPE));
         switch ($this->xudfSetting->getRedirectType()) {
-            case xudfSetting::REDIRECT_TO_ILIAS_OBJECT:
+            case Settings::REDIRECT_TO_ILIAS_OBJECT:
                 $this->xudfSetting->setRedirectValue($this->getInput(self::F_REF_ID));
                 break;
-            case xudfSetting::REDIRECT_TO_URL:
+            case Settings::REDIRECT_TO_URL:
                 $this->xudfSetting->setRedirectValue($this->getInput(self::F_URL));
                 break;
             default:
                 break;
         }
-        $this->xudfSetting->update();
+        $this->settings_repo->update($this->xudfSetting);
 
         return true;
     }

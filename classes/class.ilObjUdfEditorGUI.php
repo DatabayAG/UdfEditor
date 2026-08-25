@@ -19,6 +19,8 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
+use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -40,6 +42,8 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
     private readonly Container $dic;
     protected ilUdfEditorPlugin|ilPlugin|null $plugin = null;
+    private ContentElementRepository $content_element_repo;
+    private SettingsRepository $settings_repo;
 
     public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
     {
@@ -64,6 +68,9 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                 ilSession::set('xudfreturn', $serverParams['HTTP_REFERER']);
             }
         }
+
+        $this->content_element_repo = new ContentElementRepository();
+        $this->settings_repo = new SettingsRepository();
     }
 
     public function executeCommand(): void
@@ -194,7 +201,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         $this->tpl->setTitle($this->object->getTitle());
         $this->tpl->setDescription($this->object->getDescription());
 
-        if (!xudfSetting::find($this->obj_id)->isOnline()) {
+        if (!$this->settings_repo->read($this->obj_id)?->isOnline()) {
             /**
              * @var $list_gui ilObjUdfEditorListGUI
              */
@@ -210,7 +217,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
         $this->dic->tabs()->addTab(self::TAB_CONTENT, $this->dic->language()->txt(self::TAB_CONTENT), $this->dic->ctrl()->getLinkTargetByClass(xudfContentGUI::class, xudfContentGUI::CMD_STANDARD));
 
-        if (xudfSetting::find($this->obj_id)->isShowInfoTab()) {
+        if ($this->settings_repo->read($this->obj_id)?->isShowInfoTab()) {
             $this->dic->tabs()->addTab(self::TAB_INFO, $this->dic->language()->txt(self::TAB_INFO . '_short'), $this->dic->ctrl()->getLinkTargetByClass(ilInfoScreenGUI::class));
         }
 
@@ -234,8 +241,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
     {
         $info->addSection($this->plugin->txt('info_section_title'));
         $fields_string = '';
-        foreach (xudfContentElement::where(['obj_id' => $this->getObjId(), 'is_separator' => 0])->get() as $element) {
-            /** @var $element xudfContentElement */
+        foreach ($this->content_element_repo->readAllByObjId($this->getObjId()) as $element) {
             try {
                 $fields_string .= $element->getTitle() . '<br>';
             } catch (UDFNotFoundException $e) {

@@ -23,6 +23,8 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
+use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 
 class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {
@@ -88,8 +90,8 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
     protected function uninstallCustom(): void
     {
         global $DIC;
-        $DIC->database()->dropTable(xudfSetting::DB_TABLE_NAME, false);
-        $DIC->database()->dropTable(xudfContentElement::DB_TABLE_NAME, false);
+        $DIC->database()->dropTable(SettingsRepository::TABLE_NAME, false);
+        $DIC->database()->dropTable(ContentElementRepository::TABLE_NAME, false);
         $DIC->database()->manipulateF(
             'DELETE FROM copg_pobj_def WHERE component=%s',
             ['text'],

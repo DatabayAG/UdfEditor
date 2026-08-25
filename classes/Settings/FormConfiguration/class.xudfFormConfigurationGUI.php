@@ -19,6 +19,7 @@
 declare(strict_types=1);
 
 use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Refinery\Factory;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
 
@@ -69,10 +70,10 @@ class xudfFormConfigurationGUI extends xudfGUI
         $this->ctrl->setParameterByClass(
             self::class,
             NotificationCtrl::GET_PARAM_NOTIFICATION_ID,
-            $this->getObject()->getSettings()->getNotification()->getId()
+            $this->getObject()->getNotification()->getId()
         );
 
-        if ($this->getObject()->getSettings()->hasMailNotification()) {
+        if ($this->getObject()->getSettings()->isMailNotification()) {
             $this->tabs->addSubTab(
                 xudfSettingsGUI::SUBTAB_MAIL_TEMPLATE,
                 $this->pl->txt("notification"),
@@ -109,15 +110,13 @@ class xudfFormConfigurationGUI extends xudfGUI
             $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_no_udfs'), true);
             $this->ctrl->redirect($this, self::CMD_STANDARD);
         }
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, new xudfContentElement());
+        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this);
         $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
     }
 
     protected function addSeparator(): void
     {
-        $element = new xudfContentElement();
-        $element->setIsSeparator(true);
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
+        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, null, true);
         $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
     }
 
@@ -134,7 +133,6 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function create(): void
     {
-        $element = new xudfContentElement($this->retrieveElementIdFromPost());
         $isSeparator = $this->httpWrapper->post()->retrieve(
             xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
             $this->refinery->byTrying([
@@ -142,32 +140,62 @@ class xudfFormConfigurationGUI extends xudfGUI
                 $this->refinery->always(false)
             ])
         );
-        $element->setIsSeparator($isSeparator);
 
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
-        $xudfFormConfigurationFormGUI->setValuesByPost();
-        if (!$xudfFormConfigurationFormGUI->saveForm()) {
+        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, null, $isSeparator);
+
+        if (!$xudfFormConfigurationFormGUI->checkInput()) {
             $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
             $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
-
             return;
         }
+
+        $xudfFormConfigurationFormGUI->setValuesByPost();
+
+
+        $udf_field_id = (int) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_UDF_FIELD);
+
+        $content_element = new ContentElement(
+            $this->getObjId(),
+            $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_TITLE),
+            $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_DESCRIPTION),
+            0,
+            $udf_field_id ?: null,
+            $isSeparator,
+            (bool) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_REQUIRED),
+        );
+
+        $this->content_element_repo->create($content_element);
+
+
         $this->tpl->setOnScreenMessage("success", $this->pl->txt('form_saved'), true);
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
     protected function update(): void
     {
-        $element = new xudfContentElement($this->retrieveElementIdFromPost());
+        $element = $this->content_element_repo->read($this->retrieveElementIdFromPost());
 
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
-        $xudfFormConfigurationFormGUI->setValuesByPost();
-        if (!$xudfFormConfigurationFormGUI->saveForm()) {
+        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element->getId(), $element->isSeparator());
+
+        if (!$xudfFormConfigurationFormGUI->checkInput()) {
             $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
             $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
-
             return;
         }
+
+        $xudfFormConfigurationFormGUI->setValuesByPost();
+
+        $udf_field_id = (int) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_UDF_FIELD);
+
+        $element
+            ->setTitle($xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_TITLE))
+            ->setDescription($xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_DESCRIPTION))
+            ->setUdfField($element->getUdfField())
+            ->setUdfField($udf_field_id ?: null)
+            ->setRequired((bool) $xudfFormConfigurationFormGUI->getInput(xudfFormConfigurationFormGUI::F_REQUIRED));
+
+        $this->content_element_repo->update($element);
+
         $this->tpl->setOnScreenMessage("success", $this->pl->txt('form_saved'), true);
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
@@ -178,9 +206,10 @@ class xudfFormConfigurationGUI extends xudfGUI
             xudfFormConfigurationFormGUI::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
-        $element = xudfContentElement::find($elementId);
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
-        $xudfFormConfigurationFormGUI->fillForm();
+        $element = $this->content_element_repo->read($elementId);
+
+        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element->getId(), $element->isSeparator());
+        $xudfFormConfigurationFormGUI->fillForm($element);
         $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
     }
 
@@ -190,7 +219,7 @@ class xudfFormConfigurationGUI extends xudfGUI
             xudfFormConfigurationFormGUI::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
-        $element = new xudfContentElement($elementId);
+        $element = $this->content_element_repo->read($elementId);
 
         $text = $this->lng->txt('title') . ": {$element->getTitle()}<br>";
         $text .= $this->lng->txt('description') . ": {$element->getDescription()}<br>";
@@ -208,8 +237,7 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function confirmDelete(): void
     {
-        $element = new xudfContentElement($this->retrieveElementIdFromPost());
-        $element->delete();
+        $this->content_element_repo->deleteById($this->retrieveElementIdFromPost());
         $this->tpl->setOnScreenMessage("success", $this->pl->txt('msg_successfully_deleted'), true);
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
@@ -226,12 +254,12 @@ class xudfFormConfigurationGUI extends xudfGUI
         );
 
         foreach ($ids as $id) {
-            $element = xudfContentElement::find($id);
+            $element = $this->content_element_repo->read($id);
             if (!$element) {
                 continue;
             }
             $element->setSort($sort);
-            $element->update();
+            $this->content_element_repo->update($element);
             $sort += 10;
         }
     }
