@@ -18,11 +18,21 @@
 
 declare(strict_types=1);
 
+namespace ILIAS\Plugin\UdfEditor\Table;
+
+use Exception;
+use ilFormPropertyGUI;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Model\LogEntry;
 use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
+use ilObjUser;
+use ilSelectInputGUI;
+use ilSession;
+use ilTable2GUI;
+use ilUdfEditorPlugin;
+use xudfLogGUI;
 
-class xudfLogTableGUI extends ilTable2GUI
+class LogEntryTable extends ilTable2GUI
 {
     public const string ID_PREFIX = 'xudf_log_table_';
     public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
@@ -118,7 +128,7 @@ class xudfLogTableGUI extends ilTable2GUI
     {
         // Not set (null) on first visit, false on reset filter, string if is set
         return (
-            ilsession::has("form_{$this->getId()}_$field_id")
+            ilSession::has("form_{$this->getId()}_$field_id")
             && ilSession::get("form_{$this->getId()}_$field_id") !== false
         );
     }
