@@ -31,7 +31,7 @@ use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 
 class DBUpdateSteps implements ilDatabaseUpdateSteps
 {
-    public const string PREFIX = 'step_';
+    public const string PREFIX = "step_";
 
     private ilDBInterface $db;
 
@@ -81,7 +81,7 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
         }
 
         $this->db->manipulateF(
-            'DELETE FROM copg_pobj_def WHERE component=%s',
+            "DELETE FROM copg_pobj_def WHERE component=%s",
             [ilDBConstants::T_TEXT],
             ["Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor"]
         );
@@ -233,27 +233,27 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
 
     public function step_4(): void
     {
-        $this->db->modifyTableColumn('copg_pobj_def', 'component', ['length' => 120]);
-        $sql_query = $this->db->query('SELECT * FROM copg_pobj_def WHERE parent_type = "xudf"');
+        $this->db->modifyTableColumn("copg_pobj_def", "component", ["length" => 120]);
+        $sql_query = $this->db->query("SELECT * FROM copg_pobj_def WHERE parent_type = 'xudf'");
         if ($this->db->numRows($sql_query) === 0) {
-            $this->db->insert('copg_pobj_def', [
-                'parent_type' => [ilDBConstants::T_TEXT, 'xudf'],
-                'class_name' => [ilDBConstants::T_TEXT, 'xudfPageObject'],
-                'directory' => [ilDBConstants::T_TEXT, 'classes/Content/PageEditor'],
-                'component' => [ilDBConstants::T_TEXT, 'Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor']
+            $this->db->insert("copg_pobj_def", [
+                "parent_type" => [ilDBConstants::T_TEXT, "xudf"],
+                "class_name" => [ilDBConstants::T_TEXT, "xudfPageObject"],
+                "directory" => [ilDBConstants::T_TEXT, "classes/Content/PageEditor"],
+                "component" => [ilDBConstants::T_TEXT, "Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor"]
             ]);
         }
     }
 
     public function step_5(): void
     {
-        $sql_query = $this->db->query('SELECT * FROM copg_pobj_def WHERE parent_type = "xudf"');
-        if ($this->db->numRows($sql_query) === 0) {
-            $this->db->insert('copg_pobj_def', [
-                'parent_type' => [ilDBConstants::T_TEXT, 'xudf'],
-                'class_name' => [ilDBConstants::T_TEXT, 'xudfPageObject'],
-                'directory' => [ilDBConstants::T_TEXT, 'classes/Content/PageEditor'],
-                'component' => [ilDBConstants::T_TEXT, 'Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor']
+        $result = $this->db->query("SELECT * FROM copg_pobj_def WHERE parent_type = 'xudf'");
+        if ($this->db->numRows($result) === 0) {
+            $this->db->insert("copg_pobj_def", [
+                "parent_type" => [ilDBConstants::T_TEXT, "xudf"],
+                "class_name" => [ilDBConstants::T_TEXT, "xudfPageObject"],
+                "directory" => [ilDBConstants::T_TEXT, "classes/Content/PageEditor"],
+                "component" => [ilDBConstants::T_TEXT, "Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor"]
             ]);
         }
     }
@@ -278,7 +278,7 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
         if ($this->db->tableExists("udf_field_id_map")) {
             $result = $this->db->query("SELECT * FROM udf_field_id_map");
             while ($row = $this->db->fetchAssoc($result)) {
-                $old_to_new_id_map[(int) $row['old_field_id']] = $row['field_id'];
+                $old_to_new_id_map[(int) $row["old_field_id"]] = $row["field_id"];
             }
         }
 
@@ -302,7 +302,7 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
         );
 
         $prepared_statement = $this->db->prepareManip(
-            'UPDATE xudf_element SET udf_field = ? WHERE id = ?',
+            "UPDATE xudf_element SET udf_field = ? WHERE id = ?",
             [
                 ilDBConstants::T_TEXT,
                 ilDBConstants::T_INTEGER
