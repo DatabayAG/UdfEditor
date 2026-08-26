@@ -163,7 +163,6 @@ class LogEntryRepository
         return (bool) $this->db->fetchAssoc($result)["does_exist"];
     }
 
-
     private function map(array $row): LogEntry
     {
         return (new LogEntry(

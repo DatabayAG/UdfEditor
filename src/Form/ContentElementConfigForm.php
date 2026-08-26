@@ -81,7 +81,6 @@ class ContentElementConfigForm extends ilPropertyFormGUI
             $this->initUdfFieldForm();
         }
 
-
         $this->addCommandButton(
             $this->element_id
                 ? xudfFormConfigurationGUI::CMD_UPDATE

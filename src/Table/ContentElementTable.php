@@ -115,7 +115,6 @@ class ContentElementTable extends ilTable2GUI
             }
         }
 
-
         $fieldName = $field ? $field->getLabel($this->lng) : $this->pl->txt('field_not_found');
 
         $field_type = null;

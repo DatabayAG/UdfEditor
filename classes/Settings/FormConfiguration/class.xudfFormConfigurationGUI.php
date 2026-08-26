@@ -163,7 +163,6 @@ class xudfFormConfigurationGUI extends xudfGUI
 
         $form->setValuesByPost();
 
-
         $udf_field_id = $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
 
         $content_element = new ContentElement(
@@ -177,7 +176,6 @@ class xudfFormConfigurationGUI extends xudfGUI
         );
 
         $this->content_element_repo->create($content_element);
-
 
         $this->ui_util->sendSuccess($this->pl->txt('form_saved'));
         $this->ctrl->redirect($this, self::CMD_STANDARD);

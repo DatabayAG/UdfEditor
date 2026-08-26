@@ -39,7 +39,6 @@ class xudfPageObjectGUI extends ilPageObjectGUI
 
         parent::__construct(xudfPageObject::PARENT_TYPE, $parent_gui->getObjId());
 
-
         global $DIC;
         $tpl = $DIC->ui()->mainTemplate();
         $tpl->setCurrentBlock("SyntaxStyle");

@@ -272,7 +272,6 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
             return;
         }
 
-
         $old_to_new_id_map = [];
 
         if ($this->db->tableExists("udf_field_id_map")) {
