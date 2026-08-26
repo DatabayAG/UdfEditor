@@ -33,7 +33,7 @@ class ContentElement implements JsonSerializable
         private string $title,
         private string $description = "",
         private int $sort = 0,
-        private ?int $udf_field = null,
+        private ?string $udf_field = null,
         private bool $separator = false,
         private bool $required = false
     ) {
@@ -100,12 +100,12 @@ class ContentElement implements JsonSerializable
         return $this;
     }
 
-    public function getUdfField(): ?int
+    public function getUdfField(): ?string
     {
         return $this->udf_field;
     }
 
-    public function setUdfField(?int $udf_field): self
+    public function setUdfField(?string $udf_field): self
     {
         $this->udf_field = $udf_field;
         return $this;

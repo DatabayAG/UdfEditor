@@ -98,7 +98,7 @@ class ContentElementRepository
                     "title" => [ilDBConstants::T_TEXT, $content_element->getTitle()],
                     "description" => [ilDBConstants::T_TEXT, $content_element->getDescription()],
                     "sort" => [ilDBConstants::T_INTEGER, $content_element->getSort()],
-                    "udf_field" => [ilDBConstants::T_INTEGER, $content_element->getUdfField()],
+                    "udf_field" => [ilDBConstants::T_TEXT, $content_element->getUdfField()],
                     "is_separator" => [ilDBConstants::T_INTEGER, $content_element->isSeparator()],
                     "is_required" => [ilDBConstants::T_INTEGER, $content_element->isRequired()],
                 ]
@@ -114,7 +114,7 @@ class ContentElementRepository
                     "title" => [ilDBConstants::T_TEXT, $content_element->getTitle()],
                     "description" => [ilDBConstants::T_TEXT, $content_element->getDescription()],
                     "sort" => [ilDBConstants::T_INTEGER, $content_element->getSort()],
-                    "udf_field" => [ilDBConstants::T_INTEGER, $content_element->getUdfField()],
+                    "udf_field" => [ilDBConstants::T_TEXT, $content_element->getUdfField()],
                     "is_separator" => [ilDBConstants::T_INTEGER, $content_element->isSeparator()],
                     "is_required" => [ilDBConstants::T_INTEGER, $content_element->isRequired()],
                 ],
@@ -163,7 +163,7 @@ class ContentElementRepository
             (string) $row["title"],
             (string) $row["description"],
             (int) $row["sort"],
-            $row["udf_field"] ? (int) $row["udf_field"] : null,
+            $row["udf_field"] ?: null,
             (bool) $row["is_separator"],
             (bool) $row["is_required"],
         ))->setId((int) $row["id"]);

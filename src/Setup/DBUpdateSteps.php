@@ -262,4 +262,60 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
     {
         Repository::getInstance()->installTables();
     }
+
+    public function step_7(): void
+    {
+        if (
+            !$this->db->tableExists("xudf_element")
+            || !$this->db->tableColumnExists("xudf_element", "udf_field")
+        ) {
+            return;
+        }
+
+
+        $old_to_new_id_map = [];
+
+        if ($this->db->tableExists("udf_field_id_map")) {
+            $result = $this->db->query("SELECT * FROM udf_field_id_map");
+            while ($row = $this->db->fetchAssoc($result)) {
+                $old_to_new_id_map[(int) $row['old_field_id']] = $row['field_id'];
+            }
+        }
+
+        $result = $this->db->query("SELECT id, udf_field FROM xudf_element WHERE udf_field IS NOT NULL");
+        $current_udf_field_map = [];
+        while ($row = $this->db->fetchAssoc($result)) {
+            $udf_field_id = $row["udf_field"];
+            if (is_string($udf_field_id) || !is_numeric($udf_field_id)) {
+                continue; // Skip fields that may already be in uuid format
+            }
+            $current_udf_field_map[(int) $row["id"]] = (int) $udf_field_id;
+        }
+
+        $this->db->modifyTableColumn(
+            "xudf_element",
+            "udf_field",
+            [
+                "type" => ilDBConstants::T_TEXT,
+                "length" => 64,
+            ]
+        );
+
+        $prepared_statement = $this->db->prepareManip(
+            'UPDATE xudf_element SET udf_field = ? WHERE id = ?',
+            [
+                ilDBConstants::T_TEXT,
+                ilDBConstants::T_INTEGER
+            ]
+        );
+
+        foreach ($current_udf_field_map as $id => $udf_field_id) {
+            $new_udf_id = $old_to_new_id_map[$udf_field_id] ?? null;
+
+            $this->db->execute($prepared_statement, [
+                $new_udf_id,
+                $id
+            ]);
+        }
+    }
 }
