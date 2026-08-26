@@ -10,6 +10,7 @@ use ILIAS\UI\Implementation\Render\ComponentRenderer;
 use ILIAS\UI\Implementation\Render\Loader;
 use ILIAS\UI\Implementation\Render\RendererFactory;
 use ILIAS\UI\Renderer;
+use ilImagePathResolver;
 use Pimple\Container;
 use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\InputGUIWrapperUIInputComponent;
 use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\Renderer as InputGUIWrapperUIInputComponentRenderer;
@@ -48,7 +49,7 @@ class CustomInputGUIsLoaderDetector implements Loader
                     );
                 }
                 return $rendererObj;
-            } catch (Throwable) {
+            } catch (Throwable $ex) {
                 return $renderer($dic);
             }
         };
@@ -96,7 +97,7 @@ class CustomInputGUIsLoaderDetector implements Loader
                     $this->dic["ui.template_factory"],
                     $this->dic->language(),
                     $this->dic["ui.javascript_binding"],
-                    $this->dic["ui.pathresolver"],
+                    new ilImagePathResolver(),
                     new Factory(),
                     $this->dic["help.text_retriever"],
                     $this->dic["ui.upload_limit_resolver"]

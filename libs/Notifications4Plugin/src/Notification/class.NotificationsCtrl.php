@@ -74,8 +74,9 @@ class NotificationsCtrl implements DataRetrieval
         array $visible_column_ids,
         Range $range,
         Order $order,
-        ?array $filter_data,
-        ?array $additional_parameters
+        mixed $additional_viewcontrol_data,
+        mixed $filter_data,
+        mixed $additional_parameters
     ): Generator {
         $notifications = $this->orderRows(self::notifications4plugin()->notifications()->getNotifications(), $order);
 
@@ -129,7 +130,7 @@ class NotificationsCtrl implements DataRetrieval
         return $notifications;
     }
 
-    public function getTotalRowCount(?array $filter_data, ?array $additional_parameters): ?int
+    public function getTotalRowCount(mixed $additional_viewcontrol_data, mixed $filter_data, mixed $additional_parameters): ?int
     {
         $notifications = self::notifications4plugin()->notifications()->getNotifications();
         return count($notifications);
