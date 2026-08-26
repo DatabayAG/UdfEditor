@@ -19,6 +19,7 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Model\LogEntry;
 use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 
 class xudfLogTableGUI extends ilTable2GUI
@@ -83,7 +84,9 @@ class xudfLogTableGUI extends ilTable2GUI
         if ($filter_user !== null) {
             $log_entries = $this->log_entry_repo->readAllByUserId((int) $filter_user);
         }
-        $this->setData($log_entries);
+        $this->setData(array_map(static function (LogEntry $log_entry): array {
+            return $log_entry->jsonSerialize();
+        }, $log_entries));
     }
 
     public function initFilter(): void

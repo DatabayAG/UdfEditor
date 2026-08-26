@@ -21,8 +21,9 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\UdfEditor\Model;
 
 use ilDateTime;
+use JsonSerializable;
 
-class LogEntry
+class LogEntry implements JsonSerializable
 {
     private int $id;
 
@@ -69,5 +70,19 @@ class LogEntry
     {
         $this->values = $values;
         return $this;
+    }
+
+    /**
+     * @return array{id: int, obj_id: int, usr_id: int, timestamp: ilDateTime, values: array}
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            "id" => $this->getId(),
+            "obj_id" => $this->getObjId(),
+            "usr_id" => $this->getUsrId(),
+            "timestamp" => $this->getTimestamp(),
+            "values" => $this->getValues(),
+        ];
     }
 }
