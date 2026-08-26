@@ -19,12 +19,13 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Exception\UnknownUdfTypeException;
 use ILIAS\Plugin\UdfEditor\Model\LogEntry;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
-use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
-use ILIAS\Plugin\UdfEditor\Exception\UnknownUdfTypeException;
 use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
+use ILIAS\User\Context;
+use ILIAS\User\Profile\Profile;
 
 class xudfContentFormGUI extends ilPropertyFormGUI
 {
@@ -33,6 +34,8 @@ class xudfContentFormGUI extends ilPropertyFormGUI
     private ContentElementRepository $content_element_repo;
     private LogEntryRepository $log_entry_repo;
     private UiUtil $ui_util;
+    private Profile $user_profile;
+    private ilUdfEditorPlugin $plugin;
 
     /**
      * @throws UnknownUdfTypeException|ilCtrlException
@@ -44,9 +47,12 @@ class xudfContentFormGUI extends ilPropertyFormGUI
         global $DIC;
         $this->dic = $DIC;
         $this->ui_util = new UiUtil();
+        $this->plugin = ilUdfEditorPlugin::getInstance();
 
         $this->content_element_repo = new ContentElementRepository();
         $this->log_entry_repo = new LogEntryRepository();
+
+        $this->user_profile = $this->dic["user"]->getProfile();
 
         $this->setFormAction($this->dic->ctrl()->getFormAction($this->parent_gui));
         $this->initForm($editable);
@@ -54,7 +60,6 @@ class xudfContentFormGUI extends ilPropertyFormGUI
 
     /**
      * @throws arException
-     * @throws UDFNotFoundException
      * @throws UnknownUdfTypeException
      */
     protected function initForm($editable): void
@@ -66,40 +71,12 @@ class xudfContentFormGUI extends ilPropertyFormGUI
                 $input->setInfo($element->getDescription());
                 $this->addItem($input);
             } else {
-                try {
-                    $definition = $element->getUdfFieldDefinition();
-                } catch (UDFNotFoundException $e) {
-                    $this->dic->logger()->root()->alert($e->getMessage());
-                    $this->dic->logger()->root()->alert($e->getTraceAsString());
+                $field = $element->getUserDefinedField();
+                if (!$field) {
                     continue;
                 }
 
-                switch ($definition['field_type']) {
-                    case 1:
-                        $input = new ilTextInputGUI($element->getTitle(), (string) $element->getUdfField());
-                        break;
-                    case 2:
-                        $input = new ilSelectInputGUI($element->getTitle(), (string) $element->getUdfField());
-                        $options = ['' => $this->dic->language()->txt('please_choose')];
-                        foreach ($definition['field_values'] as $key => $values) {
-                            $options[$values] = $values;
-                        }
-                        $input->setOptions($options);
-                        break;
-                    case 3:
-                        $input = new ilTextAreaInputGUI($element->getTitle(), (string) $element->getUdfField());
-                        break;
-                    case 51:
-                        $input = ilCustomUserFieldsHelper::getInstance()->getFormPropertyForDefinition($definition, true);
-                        break;
-                    default:
-                        throw new UnknownUdfTypeException('field_type ' . $definition['field_type'] . ' of udf field with id ' . $element->getUdfField() . ' is unknown to the udfeditor plugin');
-                }
-
-                if ($input === null) {
-                    continue;
-                }
-
+                $input = $field->getLegacyInput($this->lng, Context::User);
                 $input->setInfo($element->getDescription());
                 $input->setRequired($element->isRequired());
                 $input->setDisabled(!$editable);
@@ -114,27 +91,18 @@ class xudfContentFormGUI extends ilPropertyFormGUI
 
     public function fillForm(): void
     {
-        $udf_data = $this->dic->user()->getUserDefinedData();
         $values = [];
 
         foreach ($this->content_element_repo->readAllByObjId($this->obj_id) as $element) {
-            $udfFieldId = $element->getUdfField();
-            $values[$udfFieldId] = $udf_data['f_' . $udfFieldId] ?? "";
-
-            try {
-                $udfFieldDefinition = $element->getUdfFieldDefinition();
-            } catch (UDFNotFoundException $ex) {
-                $this->ui_util->sendFailure($ex->getMessage());
-                $udfFieldDefinition = null;
+            $field = $element->getUserDefinedField();
+            if (!$field) {
+                $this->ui_util->sendFailure(sprintf(
+                    $this->plugin->txt("udf.not_found"),
+                    $element->getUdfField()
+                ));
             }
 
-            if (
-                $udfFieldDefinition
-                && isset($udfFieldDefinition['field_type'])
-                && $udfFieldDefinition['field_type'] === 51
-            ) {
-                $values["udf_" . $udfFieldId] = $udf_data['f_' . $udfFieldId] ?? "";
-            }
+            $values[$element->getUdfField()] = $field?->retrieveValueFromUser($this->user) ?? "";
         }
         $this->setValuesByArray($values);
     }
@@ -145,8 +113,9 @@ class xudfContentFormGUI extends ilPropertyFormGUI
             return false;
         }
 
+        $user = $this->user;
+
         $log_values = [];
-        $udf_data = $this->dic->user()->getUserDefinedData();
 
         foreach ($this->content_element_repo->readAllByObjId($this->obj_id) as $element) {
             $value = $this->getInput((string) $element->getUdfField());
@@ -155,15 +124,21 @@ class xudfContentFormGUI extends ilPropertyFormGUI
                 $value = $this->getInput("udf_" . $element->getUdfField());
             }
 
-            $udf_data[$element->getUdfField()] = $value;
+            $field = $element->getUserDefinedField();
+            $user = $field?->addValueToUserObject(
+                $user,
+                Context::UserAdministration,
+                $value,
+                new ilPropertyFormGUI()
+            );
             $log_values[$element->getTitle()] = $value;
         }
-        $this->dic->user()->setUserDefinedData($udf_data);
-        $this->dic->user()->update();
+
+        $user->update();
 
         $this->log_entry_repo->create(new LogEntry(
             $this->obj_id,
-            $this->dic->user()->getId(),
+            $user->getId(),
             new ilDateTime(time(), IL_CAL_UNIX),
             $log_values
         ));

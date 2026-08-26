@@ -4,10 +4,6 @@ add_separator#:#Add Separator
 udf_type#:#UDF Type
 udf_required#:#UDF Required
 udf_field#:#UDF
-udf_field_type_1#:#Text
-udf_field_type_2#:#Selector
-udf_field_type_3#:#Textarea
-udf_field_type_51#:#Cascading
 show_infotab#:#Show Tab "Info"
 always_edit#:#Directly editable
 always_edit_info#:#Users dont need to turn on editmode if form is already filled completely
@@ -54,7 +50,11 @@ to_ilias_object#:#to ILIAS object
 to_url#:#to URL
 to_caller#:#back to origin
 
-
+udf.not_found#:#The user defined field with the ID '%s' could not be found.
+udf.type.text#:#Text
+udf.type.select#:#Selector
+udf.type.textarea#:#Textarea
+udf.type.cascading#:#Cascading
 
 notification#:#Notification
 notifications4plugin_actions#:#Actions

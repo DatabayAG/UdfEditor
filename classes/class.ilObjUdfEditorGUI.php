@@ -21,7 +21,6 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
-use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -245,12 +244,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         $info->addSection($this->plugin->txt('info_section_title'));
         $fields_string = '';
         foreach ($this->content_element_repo->readAllByObjId($this->getObjId()) as $element) {
-            try {
-                $fields_string .= $element->getTitle() . '<br>';
-            } catch (UDFNotFoundException $e) {
-                $this->dic->logger()->root()->alert($e->getMessage());
-                $this->dic->logger()->root()->alert($e->getTraceAsString());
-            }
+            $fields_string .= $element->getTitle() . '<br>';
         }
         $info->addProperty($this->plugin->txt('info_section_subtitle'), $fields_string ?: '-');
     }

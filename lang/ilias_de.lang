@@ -4,10 +4,6 @@ add_separator#:#Separator hinzufügen
 udf_type#:#UDF-Typ
 udf_required#:#UDF-Verpflichtend
 udf_field#:#UDF
-udf_field_type_1#:#Text
-udf_field_type_2#:#Auswahlliste
-udf_field_type_3#:#Textbereich
-udf_field_type_51#:#Kaskadiert
 show_infotab#:#Tab "Info" anzeigen
 always_edit#:#Direkt bearbeitbar
 always_edit_info#:#Wenn alle Felder bereits gefüllt sind, entfällt das Einschalten des Bearbeitungsmodus
@@ -53,7 +49,11 @@ to_ilias_object#:#ILIAS-Objekt
 to_url#:#URL
 to_caller#:#Zurück zur aufrufenden Seite
 
-
+udf.not_found#:#Das Benutzerdefinierte Feld mit der ID '%s' konnte nicht gefunden werden.
+udf.type.text#:#Text
+udf.type.select#:#Auswahlliste
+udf.type.textarea#:#Textbereich
+udf.type.cascading#:#Kaskadiert
 
 notification#:#Benachrichtigung
 notifications4plugin_actions#:#Aktionen

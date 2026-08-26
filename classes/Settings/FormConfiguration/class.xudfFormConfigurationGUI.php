@@ -24,6 +24,7 @@ use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCt
 use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Plugin\UdfEditor\Table\ContentElementTable;
 use ILIAS\Refinery\Factory;
+use ILIAS\User\Profile\Profile;
 
 /**
  * @ilCtrl_isCalledBy xudfFormConfigurationGUI: ilObjUdfEditorGUI
@@ -43,6 +44,7 @@ class xudfFormConfigurationGUI extends xudfGUI
     public const string CMD_REORDER = 'reorder';
     protected WrapperFactory $httpWrapper;
     protected Factory $refinery;
+    private Profile $user_profile;
 
     public function __construct(ilObjUdfEditorGUI $parent_gui)
     {
@@ -50,6 +52,8 @@ class xudfFormConfigurationGUI extends xudfGUI
         parent::__construct($parent_gui);
         $this->httpWrapper = $DIC->http()->wrapper();
         $this->refinery = $DIC->refinery();
+
+        $this->user_profile = $DIC["user"]->getProfile();
     }
 
     protected function performCommand(string $cmd): void
@@ -107,8 +111,14 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function addUdfField(): void
     {
-        $udf_fields = ilUserDefinedFields::_getInstance()->getDefinitions();
-        if (!count($udf_fields)) {
+        $any_custom_field = false;
+        foreach ($this->user_profile->getFields() as $field) {
+            if (!$field->isCustom()) {
+                continue;
+            }
+            $any_custom_field = true;
+        }
+        if (!$any_custom_field) {
             $this->ui_util->sendFailure($this->pl->txt('msg_no_udfs'));
             $this->ctrl->redirect($this, self::CMD_STANDARD);
         }
@@ -154,7 +164,7 @@ class xudfFormConfigurationGUI extends xudfGUI
         $form->setValuesByPost();
 
 
-        $udf_field_id = (int) $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
+        $udf_field_id = $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
 
         $content_element = new ContentElement(
             $this->getObjId(),
@@ -187,7 +197,7 @@ class xudfFormConfigurationGUI extends xudfGUI
 
         $form->setValuesByPost();
 
-        $udf_field_id = (int) $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
+        $udf_field_id = $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
 
         $element
             ->setTitle($form->getInput(ContentElementConfigForm::F_TITLE))

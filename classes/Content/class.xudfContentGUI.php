@@ -18,10 +18,8 @@
 
 declare(strict_types=1);
 
-use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
-use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Plugin\UdfEditor\Model\Settings;
 
 /**
@@ -89,12 +87,18 @@ class xudfContentGUI extends xudfGUI
         );
 
         if (!$edit && count($content_elements)) {
-            $udf_values = $this->dic->user()->getUserDefinedData();
-
             foreach ($content_elements as $element) {
-                if (!$element->isSeparator() && !isset($udf_values["f_{$element->getUdfField()}"])) {
-                    $editable = true;
-                    break;
+                if (!$element->isSeparator()) {
+                    $field = $element->getUserDefinedField();
+
+                    if (!$field) {
+                        continue;
+                    }
+
+                    if (!$field->retrieveValueFromUser($this->user)) {
+                        $editable = true;
+                        break;
+                    }
                 }
             }
             if (!$editable) {
@@ -146,16 +150,9 @@ class xudfContentGUI extends xudfGUI
             $sender->setBcc($xudfSettings->getAdditionalNotification());
 
             $user_defined_data = [];
-            $udf_data = $this->dic->user()->getUserDefinedData();
             foreach ($this->content_element_repo->readAllByObjId($this->getObjId()) as $element) {
-                /** @var ContentElement $element */
-                try {
-                    $user_defined_data[$element->getTitle()] = $udf_data['f_' . $element->getUdfField()] ?? "";
-                } catch (UDFNotFoundException $e) {
-                    $this->dic->logger()->root()->alert($e->getMessage());
-                    $this->dic->logger()->root()->alert($e->getTraceAsString());
-                    continue;
-                }
+                $field = $element->getUserDefinedField();
+                $user_defined_data[$element->getTitle()] = $field?->retrieveValueFromUser($this->dic->user()) ?? "";
             }
 
             $placeholders = [

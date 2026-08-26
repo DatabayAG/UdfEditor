@@ -25,10 +25,14 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
+use ILIAS\User\Context;
+use ILIAS\User\Profile\Profile;
 use ilObjUdfEditor;
+use ilSelectInputGUI;
 use ilTable2GUI;
+use ilTextAreaInputGUI;
+use ilTextInputGUI;
 use ilUdfEditorPlugin;
-use ilUserDefinedFields;
 use ilUtil;
 use xudfFormConfigurationGUI;
 
@@ -40,6 +44,7 @@ class ContentElementTable extends ilTable2GUI
     private readonly Container $dic;
     private ContentElementRepository $content_element_repo;
     private UiUtil $ui_util;
+    private Profile $user_profile;
 
     public function __construct(object $parent_gui, string $parent_cmd)
     {
@@ -48,6 +53,7 @@ class ContentElementTable extends ilTable2GUI
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->content_element_repo = new ContentElementRepository();
         $this->ui_util = new UiUtil();
+        $this->user_profile = $this->dic["user"]->getProfile();
 
         parent::__construct($parent_gui, $parent_cmd);
 
@@ -98,18 +104,43 @@ class ContentElementTable extends ilTable2GUI
     {
         $separator = $a_set['separator'];
 
+        $field = null;
+
         if (!$separator) {
-            $udf_definition = $a_set['udf_field']
-                ? ilUserDefinedFields::_getInstance()->getDefinition($a_set['udf_field'])
+            $field = $a_set['udf_field']
+                ? $this->user_profile->getFieldByIdentifier($a_set['udf_field'])
                 : null;
-            if (!$udf_definition) {
+            if (!$field) {
                 $this->showMissingUdfMessage();
             }
         }
 
-        $fieldName = $udf_definition['field_name'] ?? $this->pl->txt('field_not_found');
-        $fieldType = isset($udf_definition['field_type'])
-            ? $this->pl->txt('udf_field_type_' . $udf_definition['field_type'])
+
+        $fieldName = $field ? $field->getLabel($this->lng) : $this->pl->txt('field_not_found');
+
+        $field_type = null;
+        if ($field) {
+            $legacy_input = $field->getLegacyInput($this->lng, Context::User);
+
+            switch (get_class($legacy_input)) {
+                case ilTextInputGUI::class:
+                    $field_type = "text";
+                    break;
+                case ilSelectInputGUI::class:
+                    $field_type = "select";
+                    break;
+                case ilTextAreaInputGUI::class:
+                    $field_type = "textarea";
+                    break;
+                    /*case ilCascadingSelectInputGUI::class:
+                        $field_type = "cascading";
+                        break;
+                    */
+            }
+        }
+
+        $field_type_text = $field_type
+            ? $this->pl->txt("udf_field_type_$field_type")
             : $this->pl->txt('field_not_found');
 
         $this->tpl->setVariable('ID', $a_set['id']);
@@ -126,7 +157,7 @@ class ContentElementTable extends ilTable2GUI
             'UDF_TYPE',
             $separator
                 ? '&nbsp'
-                : $fieldType
+                : $field_type_text
         );
 
         if ($separator) {

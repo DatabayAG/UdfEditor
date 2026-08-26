@@ -23,12 +23,12 @@ namespace ILIAS\Plugin\UdfEditor\Form;
 use ilCheckboxInputGUI;
 use ilHiddenInputGUI;
 use ILIAS\Plugin\UdfEditor\Model\ContentElement;
+use ILIAS\User\Profile\Profile;
 use ilLanguage;
 use ilPropertyFormGUI;
 use ilSelectInputGUI;
 use ilTextInputGUI;
 use ilUdfEditorPlugin;
-use ilUserDefinedFields;
 use xudfFormConfigurationGUI;
 use xudfGUI;
 
@@ -44,6 +44,7 @@ class ContentElementConfigForm extends ilPropertyFormGUI
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
+    private Profile $user_profile;
 
     public function __construct(
         protected xudfFormConfigurationGUI $parent_gui,
@@ -56,6 +57,8 @@ class ContentElementConfigForm extends ilPropertyFormGUI
         $this->pl = ilUdfEditorPlugin::getInstance();
         $this->setTitle($this->lng->txt($element_id ? 'edit' : 'create'));
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
+
+        $this->user_profile = $DIC["user"]->getProfile();
 
         $this->initForm();
     }
@@ -93,12 +96,14 @@ class ContentElementConfigForm extends ilPropertyFormGUI
         // UDF FIELD
         $input = new ilSelectInputGUI($this->pl->txt(self::F_UDF_FIELD), self::F_UDF_FIELD);
 
-        /** @var ilUserDefinedFields $udf_fields */
-        $udf_fields = ilUserDefinedFields::_getInstance()->getDefinitions();
         $options = [];
-        foreach ($udf_fields as $udf_field) {
-            $options[$udf_field['field_id']] = $udf_field['field_name'];
+        foreach ($this->user_profile->getFields() as $field) {
+            if (!$field->isCustom()) {
+                continue;
+            }
+            $options[$field->getIdentifier()] = $field->getLabel($this->lng);
         }
+
         $input->setOptions($options);
         $input->setRequired(true);
         $this->addItem($input);

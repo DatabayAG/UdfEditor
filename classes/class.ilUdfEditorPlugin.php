@@ -23,8 +23,6 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
-use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
-use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 use ILIAS\Plugin\UdfEditor\Setup\Migration\DBUpdateSteps;
 
 class ilUdfEditorPlugin extends ilRepositoryObjectPlugin

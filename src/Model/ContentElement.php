@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\UdfEditor\Model;
 
-use ILIAS\Plugin\UdfEditor\Exception\UDFNotFoundException;
-use ilUserDefinedFields;
+use ILIAS\User\Profile\Fields\Field;
+use ILIAS\User\Profile\Profile;
 use JsonSerializable;
 
 class ContentElement implements JsonSerializable
@@ -57,16 +57,10 @@ class ContentElement implements JsonSerializable
 
     public function getTitle(): string
     {
-        if (!$this->isSeparator()) {
-            try {
-                $udfFieldDefinition = $this->getUdfFieldDefinition();
-            } catch (UDFNotFoundException) {
-                $udfFieldDefinition = null;
-            }
-            if ($udfFieldDefinition) {
-                return $udfFieldDefinition['field_name'];
-
-            }
+        $field = $this->getUserDefinedField();
+        if ($field) {
+            global $DIC;
+            return $field->getLabel($DIC->language());
         }
 
         return $this->title;
@@ -133,17 +127,27 @@ class ContentElement implements JsonSerializable
         return $this;
     }
 
-    /**
-     * @throws UDFNotFoundException
-     */
-    public function getUdfFieldDefinition(): array
+    public function getUserDefinedField(bool $log_error = true): ?Field
     {
-        $definition = ilUserDefinedFields::_getInstance()->getDefinition($this->getUdfField());
-        if (empty($definition)) {
-            throw new UDFNotFoundException('udf with id ' . $this->getUdfField() . ' could not be found and was probably deleted');
+        global $DIC;
+
+        /** @var Profile $profile */
+        $profile = $DIC['user']->getProfile();
+
+        if ($this->isSeparator() || !$this->getUdfField()) {
+            return null;
         }
 
-        return $definition;
+        $field = $profile->getFieldByIdentifier($this->getUdfField());
+        if (!$field) {
+            if ($log_error) {
+                $DIC->logger()->root()->error("No UDF could be found using the ID '{$this->getUdfField()}'. It may have been deleted");
+            }
+
+            return null;
+        }
+
+        return $field;
     }
 
     public function jsonSerialize(): array
