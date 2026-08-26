@@ -25,6 +25,7 @@ use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDete
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
+use ILIAS\Plugin\UdfEditor\Setup\Migration\DBUpdateSteps;
 
 class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {
@@ -87,16 +88,24 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         return str_replace(ILIAS_ABSOLUTE_PATH . "/public/", "", realpath($this->getDirectory()));
     }
 
+    public function install(): void
+    {
+        (new DBUpdateSteps())->install($this->db);
+        parent::install();
+    }
+
+    public function update(): bool
+    {
+        //DbUpdateSteps should be excuded before the parent update so potential exceptions result in no il_plugin db changes
+        (new DBUpdateSteps())->install($this->db);
+
+        return parent::update();
+    }
+
     protected function uninstallCustom(): void
     {
-        global $DIC;
-        $DIC->database()->dropTable(SettingsRepository::TABLE_NAME, false);
-        $DIC->database()->dropTable(ContentElementRepository::TABLE_NAME, false);
-        $DIC->database()->manipulateF(
-            'DELETE FROM copg_pobj_def WHERE component=%s',
-            ['text'],
-            ['Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor']
-        );
+        (new DBUpdateSteps())->uninstall($this->db);
+
         self::notifications4plugin()->dropTables();
     }
 
