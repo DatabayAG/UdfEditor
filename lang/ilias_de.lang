@@ -10,7 +10,7 @@ udf_field_type_3#:#Textbereich
 udf_field_type_51#:#Kaskadiert
 show_infotab#:#Tab "Info" anzeigen
 always_edit#:#Direkt bearbeitbar
-always_edit_info#:#Wenn alle Felder bereits gefüllt sind, entfällt das Einschalten des Bearbeitungsmodus 
+always_edit_info#:#Wenn alle Felder bereits gefüllt sind, entfällt das Einschalten des Bearbeitungsmodus
 delete_confirmation_text#:#Sind Sie sicher, dass Sie folgendes Element löschen möchten?
 msg_successfully_deleted#:#Element erfolgreich gelöscht.
 msg_no_udfs#:#Auf dieser Plattform existieren noch keine Benutzerdefinierten Felder. Diese können in der Benutzeradministration erstellt werden.
@@ -52,6 +52,9 @@ stay_in_form#:#Im Formular bleiben
 to_ilias_object#:#ILIAS-Objekt
 to_url#:#URL
 to_caller#:#Zurück zur aufrufenden Seite
+
+
+
 notification#:#Benachrichtigung
 notifications4plugin_actions#:#Aktionen
 notifications4plugin_add#:#Hinzugefügen
