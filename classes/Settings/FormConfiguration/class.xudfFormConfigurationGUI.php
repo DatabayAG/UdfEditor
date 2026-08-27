@@ -31,17 +31,17 @@ use ILIAS\User\Profile\Profile;
  */
 class xudfFormConfigurationGUI extends xudfGUI
 {
-    public const string SUBTAB_SETTINGS = 'settings';
-    public const string SUBTAB_FORM_CONFIGURATION = 'form_configuration';
-    public const string CMD_FORM_CONFIGURATION = 'index';
-    public const string CMD_ADD_UDF_FIELD = 'addUdfField';
-    public const string CMD_ADD_SEPARATOR = 'addSeparator';
-    public const string CMD_CREATE = 'create';
-    public const string CMD_EDIT = 'edit';
-    public const string CMD_UPDATE = 'update';
-    public const string CMD_DELETE = 'delete';
-    public const string CMD_CONFIRM_DELETE = 'confirmDelete';
-    public const string CMD_REORDER = 'reorder';
+    public const string SUBTAB_SETTINGS = "settings";
+    public const string SUBTAB_FORM_CONFIGURATION = "form_configuration";
+    public const string CMD_FORM_CONFIGURATION = "index";
+    public const string CMD_ADD_UDF_FIELD = "addUdfField";
+    public const string CMD_ADD_SEPARATOR = "addSeparator";
+    public const string CMD_CREATE = "create";
+    public const string CMD_EDIT = "edit";
+    public const string CMD_UPDATE = "update";
+    public const string CMD_DELETE = "delete";
+    public const string CMD_CONFIRM_DELETE = "confirmDelete";
+    public const string CMD_REORDER = "reorder";
     protected WrapperFactory $httpWrapper;
     protected Factory $refinery;
     private Profile $user_profile;
@@ -93,12 +93,12 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function initToolbar(): void
     {
         $add_udf_field = ilLinkButton::getInstance();
-        $add_udf_field->setCaption($this->pl->txt('add_udf_field'), false);
+        $add_udf_field->setCaption($this->pl->txt("add_udf_field"), false);
         $add_udf_field->setUrl($this->ctrl->getLinkTarget($this, self::CMD_ADD_UDF_FIELD));
         $this->toolbar->addButtonInstance($add_udf_field);
 
         $add_separator = $add_udf_field = ilLinkButton::getInstance();
-        $add_separator->setCaption($this->pl->txt('add_separator'), false);
+        $add_separator->setCaption($this->pl->txt("add_separator"), false);
         $add_separator->setUrl($this->ctrl->getLinkTarget($this, self::CMD_ADD_SEPARATOR));
         $this->toolbar->addButtonInstance($add_separator);
     }
@@ -119,7 +119,7 @@ class xudfFormConfigurationGUI extends xudfGUI
             $any_custom_field = true;
         }
         if (!$any_custom_field) {
-            $this->ui_util->sendFailure($this->pl->txt('msg_no_udfs'));
+            $this->ui_util->sendFailure($this->pl->txt("msg_no_udfs"));
             $this->ctrl->redirect($this, self::CMD_STANDARD);
         }
         $form = new ContentElementConfigForm($this);
@@ -156,7 +156,7 @@ class xudfFormConfigurationGUI extends xudfGUI
         $form = new ContentElementConfigForm($this, null, $isSeparator);
 
         if (!$form->checkInput()) {
-            $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));
+            $this->ui_util->sendFailure($this->pl->txt("msg_incomplete"));
             $this->tpl->setContent($form->getHTML());
             return;
         }
@@ -177,7 +177,7 @@ class xudfFormConfigurationGUI extends xudfGUI
 
         $this->content_element_repo->create($content_element);
 
-        $this->ui_util->sendSuccess($this->pl->txt('form_saved'));
+        $this->ui_util->sendSuccess($this->pl->txt("form_saved"));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
@@ -188,7 +188,7 @@ class xudfFormConfigurationGUI extends xudfGUI
         $form = new ContentElementConfigForm($this, $element->getId(), $element->isSeparator());
 
         if (!$form->checkInput()) {
-            $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));
+            $this->ui_util->sendFailure($this->pl->txt("msg_incomplete"));
             $this->tpl->setContent($form->getHTML());
             return;
         }
@@ -206,7 +206,7 @@ class xudfFormConfigurationGUI extends xudfGUI
 
         $this->content_element_repo->update($element);
 
-        $this->ui_util->sendSuccess($this->pl->txt('form_saved'));
+        $this->ui_util->sendSuccess($this->pl->txt("form_saved"));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
@@ -231,16 +231,16 @@ class xudfFormConfigurationGUI extends xudfGUI
         );
         $element = $this->content_element_repo->read($elementId);
 
-        $text = $this->lng->txt('title') . ": {$element->getTitle()}<br>";
-        $text .= $this->lng->txt('description') . ": {$element->getDescription()}<br>";
-        $text .= $this->lng->txt('type') . ": " . ($element->isSeparator() ? 'Separator' : $this->pl->txt('udf_field'));
+        $text = $this->lng->txt("title") . ": {$element->getTitle()}<br>";
+        $text .= $this->lng->txt("description") . ": {$element->getDescription()}<br>";
+        $text .= $this->lng->txt("type") . ": " . ($element->isSeparator() ? "Separator" : $this->pl->txt("udf_field"));
 
         $confirmationGUI = new ilConfirmationGUI();
-        $confirmationGUI->addItem('element_id', (string) $elementId, $text);
+        $confirmationGUI->addItem("element_id", (string) $elementId, $text);
         $confirmationGUI->setFormAction($this->ctrl->getFormAction($this));
-        $confirmationGUI->setHeaderText($this->pl->txt('delete_confirmation_text'));
-        $confirmationGUI->setConfirm($this->lng->txt('delete'), self::CMD_CONFIRM_DELETE);
-        $confirmationGUI->setCancel($this->lng->txt('cancel'), self::CMD_STANDARD);
+        $confirmationGUI->setHeaderText($this->pl->txt("delete_confirmation_text"));
+        $confirmationGUI->setConfirm($this->lng->txt("delete"), self::CMD_CONFIRM_DELETE);
+        $confirmationGUI->setCancel($this->lng->txt("cancel"), self::CMD_STANDARD);
 
         $this->tpl->setContent($confirmationGUI->getHTML());
     }
@@ -248,7 +248,7 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function confirmDelete(): void
     {
         $this->content_element_repo->deleteById($this->retrieveElementIdFromPost());
-        $this->ui_util->sendSuccess($this->pl->txt('msg_successfully_deleted'));
+        $this->ui_util->sendSuccess($this->pl->txt("msg_successfully_deleted"));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 

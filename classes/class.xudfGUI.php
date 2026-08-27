@@ -28,7 +28,7 @@ use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationsC
 
 abstract class xudfGUI
 {
-    public const string CMD_STANDARD = 'index';
+    public const string CMD_STANDARD = "index";
 
     protected ilCtrlInterface $ctrl;
 

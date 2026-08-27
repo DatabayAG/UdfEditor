@@ -30,14 +30,14 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {
     use Notifications4PluginTrait;
 
-    public const string ID = 'xudf';
+    public const string ID = "xudf";
 
     protected static bool $init_notifications = false;
     protected static ?ilUdfEditorPlugin $instance = null;
 
     public function getPluginName(): string
     {
-        return 'UdfEditor';
+        return "UdfEditor";
     }
 
     public static function initNotifications(): void
@@ -66,7 +66,7 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
             global $DIC;
 
             /** @var $component_factory ilComponentFactory */
-            $component_factory = $DIC['component.factory'];
+            $component_factory = $DIC["component.factory"];
             /** @var $plugin ilUdfEditorPlugin */
             $plugin = $component_factory->getPlugin(self::ID);
 

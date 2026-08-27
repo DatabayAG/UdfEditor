@@ -34,12 +34,12 @@ use xudfGUI;
 
 class ContentElementConfigForm extends ilPropertyFormGUI
 {
-    public const string F_TITLE = 'title';
-    public const string F_DESCRIPTION = 'description';
-    public const string F_UDF_FIELD = 'udf_field';
-    public const string F_IS_SEPARATOR = 'is_separator';
-    public const string F_ELEMENT_ID = 'element_id';
-    public const string F_REQUIRED = 'is_required';
+    public const string F_TITLE = "title";
+    public const string F_DESCRIPTION = "description";
+    public const string F_UDF_FIELD = "udf_field";
+    public const string F_IS_SEPARATOR = "is_separator";
+    public const string F_ELEMENT_ID = "element_id";
+    public const string F_REQUIRED = "is_required";
 
     protected ilLanguage $lng;
 
@@ -55,7 +55,7 @@ class ContentElementConfigForm extends ilPropertyFormGUI
         global $DIC;
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->setTitle($this->lng->txt($element_id ? 'edit' : 'create'));
+        $this->setTitle($this->lng->txt($element_id ? "edit" : "create"));
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 
         $this->user_profile = $DIC["user"]->getProfile();
@@ -85,9 +85,9 @@ class ContentElementConfigForm extends ilPropertyFormGUI
             $this->element_id
                 ? xudfFormConfigurationGUI::CMD_UPDATE
                 : xudfFormConfigurationGUI::CMD_CREATE,
-            $this->lng->txt('save')
+            $this->lng->txt("save")
         );
-        $this->addCommandButton(xudfGUI::CMD_STANDARD, $this->lng->txt('cancel'));
+        $this->addCommandButton(xudfGUI::CMD_STANDARD, $this->lng->txt("cancel"));
     }
 
     protected function initUdfFieldForm(): void

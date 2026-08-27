@@ -35,8 +35,8 @@ use xudfLogGUI;
 
 class LogEntryTable extends ilTable2GUI
 {
-    public const string ID_PREFIX = 'xudf_log_table_';
-    public const string ROW_TEMPLATE = 'tpl.log_table_row.html';
+    public const string ID_PREFIX = "xudf_log_table_";
+    public const string ROW_TEMPLATE = "tpl.log_table_row.html";
     /**
      * @var ilFormPropertyGUI[]
      *
@@ -66,14 +66,14 @@ class LogEntryTable extends ilTable2GUI
             || str_starts_with($this->parent_cmd, "resetFilter"))
         ) {
             $this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
-            $this->setTitle($this->dic->language()->txt('history'));
+            $this->setTitle($this->dic->language()->txt("history"));
             $this->setRowTemplate($this->plugin->assetsFile(PluginAsset::TEMPLATES, static::ROW_TEMPLATE, false));
 
             $this->initFilter();
 
-            $this->addColumn($this->plugin->txt('values'));
-            $this->addColumn($this->dic->language()->txt('user'), 'user');
-            $this->addColumn($this->dic->language()->txt('date'), 'timestamp');
+            $this->addColumn($this->plugin->txt("values"));
+            $this->addColumn($this->dic->language()->txt("user"), "user");
+            $this->addColumn($this->dic->language()->txt("date"), "timestamp");
             $this->initData();
         } else {
             // Speed up, not init data on applyFilter or resetFilter, only filter
@@ -135,34 +135,34 @@ class LogEntryTable extends ilTable2GUI
 
     protected function fillRow(array $row): void
     {
-        $this->tpl->setVariable('VALUES', $this->formatValues($row['values']));
-        $this->tpl->setVariable('USER', ilObjUser::_lookupFullname($row['usr_id']) . ', [' . ilObjUser::_lookupLogin($row['usr_id']) . ']');
-        $this->tpl->setVariable('DATE', $row['timestamp']->get(IL_CAL_FKT_DATE, 'd.m.Y H:i:s'));
+        $this->tpl->setVariable("VALUES", $this->formatValues($row["values"]));
+        $this->tpl->setVariable("USER", ilObjUser::_lookupFullname($row["usr_id"]) . ", [" . ilObjUser::_lookupLogin($row["usr_id"]) . "]");
+        $this->tpl->setVariable("DATE", $row["timestamp"]->get(IL_CAL_FKT_DATE, "d.m.Y H:i:s"));
     }
 
     protected function formatValues(array $values): string
     {
         // this should be a template, but i'm too lazy
-        $string = '<table class="xudf_log_values">';
-        $string .= '<tr><th>' . $this->plugin->txt('udf_field') . '</th><th>' . $this->dic->language()->txt('value') . '</th></tr>';
+        $string = "<table class='xudf_log_values'>";
+        $string .= "<tr><th>" . $this->plugin->txt("udf_field") . "</th><th>" . $this->dic->language()->txt("value") . "</th></tr>";
         foreach ($values as $title => $value) {
-            $string .= '<tr>';
-            $string .= '<td>' . $title . '</td>';
-            $string .= '<td>' . $value . '</td>';
-            $string .= '</tr>';
+            $string .= "<tr>";
+            $string .= "<td>" . $title . "</td>";
+            $string .= "<td>" . $value . "</td>";
+            $string .= "</tr>";
         }
 
-        return $string . '</table>';
+        return $string . "</table>";
     }
 
     protected function getUserFilterOptions(): array
     {
         $result = $this->dic->database()->query(
-            'SELECT DISTINCT(usr_id) FROM ' . LogEntryRepository::TABLE_NAME
+            "SELECT DISTINCT(usr_id) FROM " . LogEntryRepository::TABLE_NAME
         );
-        $options = ['' => '-'];
+        $options = ["" => "-"];
         while ($rec = $this->dic->database()->fetchAssoc($result)) {
-            $options[$rec['usr_id']] = ilObjUser::_lookupFullname($rec['usr_id']) . ', [' . ilObjUser::_lookupLogin($rec['usr_id']) . ']';
+            $options[$rec["usr_id"]] = ilObjUser::_lookupFullname($rec["usr_id"]) . ", [" . ilObjUser::_lookupLogin($rec["usr_id"]) . "]";
         }
 
         return $options;

@@ -22,7 +22,6 @@ use ILIAS\Plugin\UdfEditor\Enum\RedirectType;
 use ILIAS\Plugin\UdfEditor\Form\ContentElementViewForm;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
-use ILIAS\Plugin\UdfEditor\Model\Settings;
 
 /**
  * @ilCtrl_isCalledBy xudfContentGUI: ilObjUdfEditorGUI
@@ -31,16 +30,16 @@ class xudfContentGUI extends xudfGUI
 {
     use Notifications4PluginTrait;
 
-    public const string SUBTAB_SHOW = 'show';
-    public const string SUBTAB_EDIT_PAGE = 'edit_page';
+    public const string SUBTAB_SHOW = "show";
+    public const string SUBTAB_EDIT_PAGE = "edit_page";
 
-    public const string CMD_RETURN_TO_PARENT = 'returnToParent';
+    public const string CMD_RETURN_TO_PARENT = "returnToParent";
 
     protected function setSubtabs(): void
     {
         if (ilObjUdfEditorAccess::hasWriteAccess()) {
             $this->dic->tabs()->addSubTab(self::SUBTAB_SHOW, $this->lng->txt(self::SUBTAB_SHOW), $this->dic->ctrl()->getLinkTarget($this));
-            $this->dic->tabs()->addSubTab(self::SUBTAB_EDIT_PAGE, $this->lng->txt(self::SUBTAB_EDIT_PAGE), $this->dic->ctrl()->getLinkTargetByClass(xudfPageObjectGUI::class, 'edit'));
+            $this->dic->tabs()->addSubTab(self::SUBTAB_EDIT_PAGE, $this->lng->txt(self::SUBTAB_EDIT_PAGE), $this->dic->ctrl()->getLinkTargetByClass(xudfPageObjectGUI::class, "edit"));
             $this->dic->tabs()->setSubTabActive(self::SUBTAB_SHOW);
         }
     }
@@ -53,9 +52,9 @@ class xudfContentGUI extends xudfGUI
         $this->setSubtabs();
         $next_class = $this->dic->ctrl()->getNextClass();
         switch ($next_class) {
-            case 'xudfpageobjectgui':
+            case "xudfpageobjectgui":
                 if (!ilObjUdfEditorAccess::hasWriteAccess()) {
-                    $this->ui_util->sendFailure($this->pl->txt('access_denied'));
+                    $this->ui_util->sendFailure($this->pl->txt("access_denied"));
                     $this->dic->ctrl()->returnToParent($this);
                 }
                 $this->dic->tabs()->activateSubTab(self::SUBTAB_EDIT_PAGE);
@@ -69,10 +68,10 @@ class xudfContentGUI extends xudfGUI
                 break;
         }
         // these are automatically rendered by the pageobject gui
-        $this->dic->tabs()->removeTab('edit');
-        $this->dic->tabs()->removeTab('history');
-        $this->dic->tabs()->removeTab('clipboard');
-        $this->dic->tabs()->removeTab('pg');
+        $this->dic->tabs()->removeTab("edit");
+        $this->dic->tabs()->removeTab("history");
+        $this->dic->tabs()->removeTab("clipboard");
+        $this->dic->tabs()->removeTab("pg");
     }
 
     protected function index(): void
@@ -107,13 +106,13 @@ class xudfContentGUI extends xudfGUI
                 // return button
                 $button = ilLinkButton::getInstance();
                 $button->setPrimary(true);
-                $button->setCaption('back');
+                $button->setCaption("back");
                 $button->setUrl($this->dic->ctrl()->getLinkTarget($this, self::CMD_RETURN_TO_PARENT));
                 $this->toolbar->addButtonInstance($button);
                 // edit button
                 $button = ilLinkButton::getInstance();
-                $button->setCaption('edit');
-                $this->dic->ctrl()->setParameter($this, 'edit', 1);
+                $button->setCaption("edit");
+                $this->dic->ctrl()->setParameter($this, "edit", 1);
                 $button->setUrl($this->dic->ctrl()->getLinkTarget($this, self::CMD_STANDARD));
                 $this->toolbar->addButtonInstance($button);
             }
@@ -129,13 +128,13 @@ class xudfContentGUI extends xudfGUI
         $form = new ContentElementViewForm($this);
         $form->setValuesByPost();
         if (!$form->saveForm()) {
-            $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));
+            $this->ui_util->sendFailure($this->pl->txt("msg_incomplete"));
             $page_obj_gui = new xudfPageObjectGUI($this);
             $this->tpl->setContent($page_obj_gui->getHTML() . $form->getHTML());
             return;
         }
         $this->checkAndSendNotification();
-        $this->ui_util->sendSuccess($this->pl->txt('content_form_saved'));
+        $this->ui_util->sendSuccess($this->pl->txt("content_form_saved"));
         $this->redirectAfterSave();
         $this->dic->ctrl()->redirect($this, self::CMD_STANDARD);
     }
@@ -178,15 +177,15 @@ class xudfContentGUI extends xudfGUI
             "ref_id",
             $this->refinery->kindlyTo()->int()
         );
-        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $this->tree->getParentId($refId));
+        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->tree->getParentId($refId));
         $this->dic->ctrl()->redirectByClass(ilRepositoryGUI::class);
     }
 
     protected function returnToCaller(): void
     {
-        if (ilSession::has('xudfreturn')) {
-            $backlink = ilSession::get('xudfreturn');
-            ilSession::clear('xudfreturn');
+        if (ilSession::has("xudfreturn")) {
+            $backlink = ilSession::get("xudfreturn");
+            ilSession::clear("xudfreturn");
             ilUtil::redirect($backlink);
         } else {
             $this->ctrl->redirect($this);
@@ -197,21 +196,21 @@ class xudfContentGUI extends xudfGUI
     {
         switch ($this->getObject()->getSettings()->getRedirectType()) {
             case RedirectType::STAY_IN_FORM:
-                if (ilSession::has('xudfreturn')) {
-                    ilSession::clear('xudfreturn');
+                if (ilSession::has("xudfreturn")) {
+                    ilSession::clear("xudfreturn");
                 }
                 $this->ctrl->redirect($this);
                 break;
             case RedirectType::TO_ILIAS_OBJECT:
-                if (ilSession::has('xudfreturn')) {
-                    ilSession::clear('xudfreturn');
+                if (ilSession::has("xudfreturn")) {
+                    ilSession::clear("xudfreturn");
                 }
                 $ref_id = $this->getObject()->getSettings()->getRedirectValue();
-                $this->ctrl->redirectToUrl('goto.php?target=' . ilObject::_lookupType((int) $ref_id, true) . '_' . $ref_id);
+                $this->ctrl->redirectToUrl("goto.php?target=" . ilObject::_lookupType((int) $ref_id, true) . "_" . $ref_id);
                 break;
             case RedirectType::TO_URL:
-                if (ilSession::has('xudfreturn')) {
-                    ilSession::clear('xudfreturn');
+                if (ilSession::has("xudfreturn")) {
+                    ilSession::clear("xudfreturn");
                 }
                 $url = $this->getObject()->getSettings()->getRedirectValue();
                 $this->ctrl->redirectToURL($url);

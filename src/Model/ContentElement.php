@@ -132,7 +132,7 @@ class ContentElement implements JsonSerializable
         global $DIC;
 
         /** @var Profile $profile */
-        $profile = $DIC['user']->getProfile();
+        $profile = $DIC["user"]->getProfile();
 
         if ($this->isSeparator() || !$this->getUdfField()) {
             return null;

@@ -62,7 +62,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
             [
                 "permission" => "write",
                 "cmd" => ilObjUdfEditorGUI::CMD_SETTINGS,
-                "lang_var" => 'settings'
+                "lang_var" => "settings"
             ]
         ];
 
@@ -81,7 +81,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
     {
         $alert = [];
         foreach ((array) $this->getCustomProperties([]) as $prop) {
-            if ($prop['alert'] == true) {
+            if ($prop["alert"] == true) {
                 $alert[] = $prop;
             }
         }
@@ -109,11 +109,11 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 
         if (!$settings->isOnline()) {
             $props[] = [
-                'alert' => true,
-                'newline' => true,
-                'property' => 'Status',
-                'value' => 'Offline',
-                'propertyNameVisible' => true
+                "alert" => true,
+                "newline" => true,
+                "property" => "Status",
+                "value" => "Offline",
+                "propertyNameVisible" => true
             ];
         }
 

@@ -31,11 +31,11 @@ class xudfSettingsGUI extends xudfGUI
 {
     use Notifications4PluginTrait;
 
-    public const string SUBTAB_SETTINGS = 'settings';
-    public const string SUBTAB_FORM_CONFIGURATION = 'form_configuration';
+    public const string SUBTAB_SETTINGS = "settings";
+    public const string SUBTAB_FORM_CONFIGURATION = "form_configuration";
     public const string SUBTAB_MAIL_TEMPLATE = NotificationsCtrl::TAB_NOTIFICATIONS;
 
-    public const string CMD_UPDATE = 'update';
+    public const string CMD_UPDATE = "update";
 
     /**
      * @throws ilCtrlException
@@ -93,11 +93,11 @@ class xudfSettingsGUI extends xudfGUI
         $xudfSettingsFormGUI = new xudfSettingsFormGUI($this);
         $xudfSettingsFormGUI->setValuesByPost();
         if (!$xudfSettingsFormGUI->saveForm()) {
-            $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));
+            $this->ui_util->sendFailure($this->pl->txt("msg_incomplete"));
             $this->tpl->setContent($xudfSettingsFormGUI->getHTML());
             return;
         }
-        $this->ui_util->sendSuccess($this->pl->txt('form_saved'));
+        $this->ui_util->sendSuccess($this->pl->txt("form_saved"));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 

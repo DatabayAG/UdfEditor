@@ -84,7 +84,7 @@ class ContentElementViewForm extends ilPropertyFormGUI
         }
 
         if ($editable) {
-            $this->addCommandButton(xudfSettingsGUI::CMD_UPDATE, $this->dic->language()->txt('save'));
+            $this->addCommandButton(xudfSettingsGUI::CMD_UPDATE, $this->dic->language()->txt("save"));
         }
     }
 
