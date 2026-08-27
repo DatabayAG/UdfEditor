@@ -22,6 +22,7 @@ namespace ILIAS\Plugin\UdfEditor\Table;
 
 use Exception;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Enum\PluginAsset;
 use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
@@ -58,14 +59,14 @@ class ContentElementTable extends ilTable2GUI
         parent::__construct($parent_gui, $parent_cmd);
 
         $this->setFormAction($this->dic->ctrl()->getFormAction($parent_gui));
-        $this->setRowTemplate($this->pl->getDirectory() . '/templates/default/tpl.form_configuration_table_row.html');
+        $this->setRowTemplate($this->pl->assetsFile(PluginAsset::TEMPLATES, "tpl.form_configuration_table_row.html", false));
 
-        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/jquery-ui.min.js');
-        $this->dic->ui()->mainTemplate()->addCss($this->pl->getRelativeDirectory() . '/templates/default/jquery-ui.min.css');
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->assetsFile(PluginAsset::JS, "jquery-ui.min.js"));
+        $this->dic->ui()->mainTemplate()->addCss($this->pl->assetsFile(PluginAsset::CSS, "jquery-ui.min.css"));
 
-        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/sortable.js');
-        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->getRelativeDirectory() . '/templates/default/waiter.js');
-        $this->dic->ui()->mainTemplate()->addCss($this->pl->getRelativeDirectory() . '/templates/default/waiter.css');
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->assetsFile(PluginAsset::JS, "sortable.js"));
+        $this->dic->ui()->mainTemplate()->addJavaScript($this->pl->assetsFile(PluginAsset::JS, "waiter.js"));
+        $this->dic->ui()->mainTemplate()->addCss($this->pl->assetsFile(PluginAsset::CSS, "waiter.css"));
         $this->dic->ui()->mainTemplate()->addOnLoadCode("xoctWaiter.init();");
 
         $base_link = $this->dic->ctrl()->getLinkTarget($parent_gui, xudfFormConfigurationGUI::CMD_REORDER, '', true);

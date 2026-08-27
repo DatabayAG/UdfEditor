@@ -21,6 +21,7 @@ declare(strict_types=1);
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Enum\PluginAsset;
 use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 use ILIAS\Plugin\UdfEditor\Setup\Migration\DBUpdateSteps;
@@ -81,11 +82,6 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         self::initNotifications();
     }
 
-    public function getRelativeDirectory(): string
-    {
-        return str_replace(ILIAS_ABSOLUTE_PATH . "/public/", "", realpath($this->getDirectory()));
-    }
-
     public function install(): void
     {
         (new DBUpdateSteps())->install($this->db);
@@ -114,5 +110,16 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
             return $renderer;
         }
         return CustomInputGUIsLoaderDetector::exchangeUIRendererAfterInitialization($renderer, $dic);
+    }
+
+    public function assetsFile(PluginAsset $asset_type, string $file, bool $relative = true): string
+    {
+        $base_path = $relative ? $this->getRelativeDirectory() : $this->getDirectory();
+        return $base_path . "/assets/" . $asset_type->value . "/" . $file;
+    }
+
+    public static function _getIcon(string $a_type): string
+    {
+        return self::getInstance()->assetsFile(PluginAsset::IMAGES, "icon_$a_type.svg");
     }
 }

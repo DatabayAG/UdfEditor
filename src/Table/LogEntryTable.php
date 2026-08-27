@@ -23,6 +23,7 @@ namespace ILIAS\Plugin\UdfEditor\Table;
 use Exception;
 use ilFormPropertyGUI;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\UdfEditor\Enum\PluginAsset;
 use ILIAS\Plugin\UdfEditor\Model\LogEntry;
 use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 use ilObjUser;
@@ -60,14 +61,14 @@ class LogEntryTable extends ilTable2GUI
         $this->plugin = ilUdfEditorPlugin::getInstance();
         $this->log_entry_repo = new LogEntryRepository();
 
-        $this->dic->ui()->mainTemplate()->addCss($this->plugin->getRelativeDirectory() . '/templates/default/log_table.css');
+        $this->dic->ui()->mainTemplate()->addCss($this->plugin->assetsFile(PluginAsset::CSS, "log_table.css"));
 
         if (!(str_starts_with($this->parent_cmd, "applyFilter")
             || str_starts_with($this->parent_cmd, "resetFilter"))
         ) {
             $this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
             $this->setTitle($this->dic->language()->txt('history'));
-            $this->setRowTemplate(static::ROW_TEMPLATE, $this->plugin->getDirectory());
+            $this->setRowTemplate($this->plugin->assetsFile(PluginAsset::TEMPLATES, static::ROW_TEMPLATE, false));
 
             $this->initFilter();
 

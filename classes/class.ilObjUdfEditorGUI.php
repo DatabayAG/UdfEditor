@@ -195,11 +195,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         if ($render_locator) {
             $this->setLocator();
         }
-        $this->tpl->setTitleIcon(str_replace(
-            ILIAS_ABSOLUTE_PATH . "/public/",
-            "",
-            realpath(ilObjUdfEditor::_getIcon($this->object_id))
-        ));
+        $this->tpl->setTitleIcon(ilUdfEditorPlugin::_getIcon(ilUdfEditorPlugin::PLUGIN_ID));
         $this->tpl->setTitle($this->object->getTitle());
         $this->tpl->setDescription($this->object->getDescription());
 
