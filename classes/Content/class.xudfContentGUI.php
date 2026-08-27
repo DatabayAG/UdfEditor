@@ -18,6 +18,7 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Form\ContentElementViewForm;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 use ILIAS\Plugin\UdfEditor\Model\Settings;
@@ -117,14 +118,14 @@ class xudfContentGUI extends xudfGUI
             }
         }
         $page_obj_gui = new xudfPageObjectGUI($this);
-        $form = new xudfContentFormGUI($this, $editable || $edit);
+        $form = new ContentElementViewForm($this, $editable || $edit);
         $form->fillForm();
         $this->tpl->setContent($page_obj_gui->getHTML() . $form->getHTML());
     }
 
     protected function update(): void
     {
-        $form = new xudfContentFormGUI($this);
+        $form = new ContentElementViewForm($this);
         $form->setValuesByPost();
         if (!$form->saveForm()) {
             $this->ui_util->sendFailure($this->pl->txt('msg_incomplete'));

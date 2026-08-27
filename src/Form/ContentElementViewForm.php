@@ -18,6 +18,10 @@
 
 declare(strict_types=1);
 
+namespace ILIAS\Plugin\UdfEditor\Form;
+
+use ilDateTime;
+use ilFormSectionHeaderGUI;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Model\LogEntry;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
@@ -25,8 +29,12 @@ use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
 use ILIAS\User\Context;
 use ILIAS\User\Profile\Profile;
+use ilPropertyFormGUI;
+use ilUdfEditorPlugin;
+use xudfContentGUI;
+use xudfSettingsGUI;
 
-class xudfContentFormGUI extends ilPropertyFormGUI
+class ContentElementViewForm extends ilPropertyFormGUI
 {
     protected int $obj_id;
     private readonly Container $dic;
@@ -36,9 +44,6 @@ class xudfContentFormGUI extends ilPropertyFormGUI
     private Profile $user_profile;
     private ilUdfEditorPlugin $plugin;
 
-    /**
-     * @throws ilCtrlException
-     */
     public function __construct(protected xudfContentGUI $parent_gui, bool $editable = true)
     {
         parent::__construct();
@@ -57,10 +62,6 @@ class xudfContentFormGUI extends ilPropertyFormGUI
         $this->initForm($editable);
     }
 
-    /**
-     * @throws arException
-     * @throws
-     */
     protected function initForm($editable): void
     {
         foreach ($this->content_element_repo->readAllByObjId($this->obj_id, true, true) as $element) {
@@ -68,7 +69,6 @@ class xudfContentFormGUI extends ilPropertyFormGUI
                 $input = new ilFormSectionHeaderGUI();
                 $input->setTitle($element->getTitle());
                 $input->setInfo($element->getDescription());
-                $this->addItem($input);
             } else {
                 $field = $element->getUserDefinedField();
                 if (!$field) {
@@ -79,8 +79,8 @@ class xudfContentFormGUI extends ilPropertyFormGUI
                 $input->setInfo($element->getDescription());
                 $input->setRequired($element->isRequired());
                 $input->setDisabled(!$editable);
-                $this->addItem($input);
             }
+            $this->addItem($input);
         }
 
         if ($editable) {
