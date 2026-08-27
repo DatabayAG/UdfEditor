@@ -22,6 +22,7 @@ namespace ILIAS\Plugin\UdfEditor\Repository;
 
 use ilDBConstants;
 use ilDBInterface;
+use ILIAS\Plugin\UdfEditor\Enum\RedirectType;
 use ILIAS\Plugin\UdfEditor\Model\Settings;
 
 class SettingsRepository
@@ -67,7 +68,7 @@ class SettingsRepository
                     "show_info_tab" => [ilDBConstants::T_INTEGER, $settings->isShowInfoTab()],
                     "mail_notification" => [ilDBConstants::T_INTEGER, $settings->isMailNotification()],
                     "additional_notification" => [ilDBConstants::T_TEXT, $settings->getAdditionalNotification()],
-                    "redirect_type" => [ilDBConstants::T_TEXT, $settings->getRedirectType()],
+                    "redirect_type" => [ilDBConstants::T_TEXT, $settings->getRedirectType()->value],
                     "redirect_value" => [ilDBConstants::T_TEXT, $settings->getRedirectValue()],
                     "notification_name" => [ilDBConstants::T_TEXT, $settings->getNotificationName()],
                     "always_edit" => [ilDBConstants::T_INTEGER, $settings->isAlwaysEdit()]
@@ -84,7 +85,7 @@ class SettingsRepository
                     "show_info_tab" => [ilDBConstants::T_INTEGER, $settings->isShowInfoTab()],
                     "mail_notification" => [ilDBConstants::T_INTEGER, $settings->isMailNotification()],
                     "additional_notification" => [ilDBConstants::T_TEXT, $settings->getAdditionalNotification()],
-                    "redirect_type" => [ilDBConstants::T_TEXT, $settings->getRedirectType()],
+                    "redirect_type" => [ilDBConstants::T_TEXT, $settings->getRedirectType()->value],
                     "redirect_value" => [ilDBConstants::T_TEXT, $settings->getRedirectValue()],
                     "notification_name" => [ilDBConstants::T_TEXT, $settings->getNotificationName()],
                     "always_edit" => [ilDBConstants::T_INTEGER, $settings->isAlwaysEdit()]
@@ -135,7 +136,7 @@ class SettingsRepository
             (bool) $row["show_info_tab"],
             (bool) $row["mail_notification"],
             $row["additional_notification"],
-            $row["redirect_type"],
+            RedirectType::tryFrom($row["redirect_type"]) ?? RedirectType::STAY_IN_FORM,
             $row["redirect_value"],
             $row["notification_name"],
             (bool) $row["always_edit"],

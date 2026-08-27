@@ -18,6 +18,7 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Enum\RedirectType;
 use ILIAS\Plugin\UdfEditor\Form\ContentElementViewForm;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
@@ -195,27 +196,27 @@ class xudfContentGUI extends xudfGUI
     protected function redirectAfterSave(): void
     {
         switch ($this->getObject()->getSettings()->getRedirectType()) {
-            case Settings::REDIRECT_STAY_IN_FORM:
+            case RedirectType::STAY_IN_FORM:
                 if (ilSession::has('xudfreturn')) {
                     ilSession::clear('xudfreturn');
                 }
                 $this->ctrl->redirect($this);
                 break;
-            case Settings::REDIRECT_TO_ILIAS_OBJECT:
+            case RedirectType::TO_ILIAS_OBJECT:
                 if (ilSession::has('xudfreturn')) {
                     ilSession::clear('xudfreturn');
                 }
                 $ref_id = $this->getObject()->getSettings()->getRedirectValue();
                 $this->ctrl->redirectToUrl('goto.php?target=' . ilObject::_lookupType((int) $ref_id, true) . '_' . $ref_id);
                 break;
-            case Settings::REDIRECT_TO_URL:
+            case RedirectType::TO_URL:
                 if (ilSession::has('xudfreturn')) {
                     ilSession::clear('xudfreturn');
                 }
                 $url = $this->getObject()->getSettings()->getRedirectValue();
                 $this->ctrl->redirectToURL($url);
                 break;
-            case Settings::REDIRECT_TO_CALLER:
+            case RedirectType::TO_CALLER:
                 $this->returnToCaller();
                 break;
         }

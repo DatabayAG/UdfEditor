@@ -20,22 +20,17 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\UdfEditor\Model;
 
+use ILIAS\Plugin\UdfEditor\Enum\RedirectType;
+
 class Settings
 {
-    public const string DB_TABLE_NAME = 'xudf_setting';
-
-    public const string REDIRECT_STAY_IN_FORM = 'stay_in_form';
-    public const string REDIRECT_TO_ILIAS_OBJECT = 'to_ilias_object';
-    public const string REDIRECT_TO_URL = 'to_url';
-    public const string REDIRECT_TO_CALLER = 'to_caller';
-
     public function __construct(
         private readonly int $obj_id,
         private bool $online = false,
         private bool $show_info_tab = false,
         private bool $mail_notification = false,
         private string $additional_notification = "",
-        private string $redirect_type = self::REDIRECT_STAY_IN_FORM,
+        private RedirectType $redirect_type = RedirectType::STAY_IN_FORM,
         private string $redirect_value = "",
         private string $notification_name = "",
         private bool $always_edit = false,
@@ -91,12 +86,12 @@ class Settings
         return $this;
     }
 
-    public function getRedirectType(): string
+    public function getRedirectType(): RedirectType
     {
         return $this->redirect_type;
     }
 
-    public function setRedirectType(string $redirect_type): self
+    public function setRedirectType(RedirectType $redirect_type): self
     {
         $this->redirect_type = $redirect_type;
         return $this;

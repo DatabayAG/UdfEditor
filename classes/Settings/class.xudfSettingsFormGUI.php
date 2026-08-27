@@ -18,6 +18,7 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Enum\RedirectType;
 use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 use ILIAS\Plugin\UdfEditor\Model\Settings;
 
@@ -39,10 +40,10 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
 
     protected static array $redirect_type_to_postvar
         = [
-            Settings::REDIRECT_STAY_IN_FORM => false,
-            Settings::REDIRECT_TO_ILIAS_OBJECT => self::F_REF_ID,
-            Settings::REDIRECT_TO_URL => self::F_URL,
-            Settings::REDIRECT_TO_CALLER => false
+            RedirectType::STAY_IN_FORM->value => false,
+            RedirectType::TO_ILIAS_OBJECT->value => self::F_REF_ID,
+            RedirectType::TO_URL->value => self::F_URL,
+            RedirectType::TO_CALLER->value => false
         ];
 
     protected ilLanguage $lng;
@@ -104,15 +105,15 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $input = new ilRadioGroupInputGUI($this->pl->txt(self::F_REDIRECT_TYPE), self::F_REDIRECT_TYPE);
         $input->setInfo($this->pl->txt(self::F_REDIRECT_TYPE . '_info'));
 
-        $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_STAY_IN_FORM), Settings::REDIRECT_STAY_IN_FORM);
+        $opt = new ilRadioOption($this->pl->txt(RedirectType::STAY_IN_FORM->toTranslationKey()), RedirectType::STAY_IN_FORM->value);
         $input->addOption($opt);
 
-        $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_TO_ILIAS_OBJECT), Settings::REDIRECT_TO_ILIAS_OBJECT);
+        $opt = new ilRadioOption($this->pl->txt(RedirectType::TO_ILIAS_OBJECT->toTranslationKey()), RedirectType::TO_ILIAS_OBJECT->value);
         $obj_input = new ilRepositorySelector2InputGUI('', self::F_REF_ID, false, $this);
         $opt->addSubItem($obj_input);
         $input->addOption($opt);
 
-        $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_TO_URL), Settings::REDIRECT_TO_URL);
+        $opt = new ilRadioOption($this->pl->txt(RedirectType::TO_URL->toTranslationKey()), RedirectType::TO_URL->value);
         $url_input = new ilTextInputGUI('', self::F_URL);
         $opt->addSubItem($url_input);
         $input->addOption($opt);
@@ -121,7 +122,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $serverParams = $this->http->request()->getServerParams();
 
         if (isset($serverParams['HTTP_REFERER']) && str_contains($serverParams['HTTP_REFERER'], 'ref_id')) {
-            $opt = new ilRadioOption($this->pl->txt(Settings::REDIRECT_TO_CALLER), Settings::REDIRECT_TO_CALLER);
+            $opt = new ilRadioOption($this->pl->txt(RedirectType::TO_CALLER->toTranslationKey()), RedirectType::TO_CALLER->value);
             $input->addOption($opt);
         }
 
@@ -140,9 +141,9 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
             self::F_ALWAYS_EDIT => $this->xudfSetting->isAlwaysEdit(),
             self::F_MAIL_NOTIFICATION => $this->xudfSetting->isMailNotification(),
             self::F_ADDITIONAL_NOTIFICATION => $this->xudfSetting->getAdditionalNotification(),
-            self::F_REDIRECT_TYPE => $this->xudfSetting->getRedirectType()
+            self::F_REDIRECT_TYPE => $this->xudfSetting->getRedirectType()->value
         ];
-        $redirect_value_postvar = self::$redirect_type_to_postvar[$this->xudfSetting->getRedirectType()];
+        $redirect_value_postvar = self::$redirect_type_to_postvar[$this->xudfSetting->getRedirectType()->value];
         if ($redirect_value_postvar !== false) {
             $values[$redirect_value_postvar] = $this->xudfSetting->getRedirectValue();
         }
@@ -165,12 +166,12 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $this->xudfSetting->setAlwaysEdit((bool) $this->getInput(self::F_ALWAYS_EDIT));
         $this->xudfSetting->setMailNotification((bool) $this->getInput(self::F_MAIL_NOTIFICATION));
         $this->xudfSetting->setAdditionalNotification($this->getInput(self::F_ADDITIONAL_NOTIFICATION));
-        $this->xudfSetting->setRedirectType($this->getInput(self::F_REDIRECT_TYPE));
+        $this->xudfSetting->setRedirectType(RedirectType::tryFrom($this->getInput(self::F_REDIRECT_TYPE)) ?? RedirectType::STAY_IN_FORM);
         switch ($this->xudfSetting->getRedirectType()) {
-            case Settings::REDIRECT_TO_ILIAS_OBJECT:
+            case RedirectType::TO_ILIAS_OBJECT:
                 $this->xudfSetting->setRedirectValue($this->getInput(self::F_REF_ID));
                 break;
-            case Settings::REDIRECT_TO_URL:
+            case RedirectType::TO_URL:
                 $this->xudfSetting->setRedirectValue($this->getInput(self::F_URL));
                 break;
             default:

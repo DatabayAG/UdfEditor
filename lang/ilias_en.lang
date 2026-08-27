@@ -44,10 +44,11 @@ is_required#:#Mandatory Field
 values#:#Values
 redirect_type#:#Redirect after save
 redirect_type_info#:#Choose here where a user should be redirected to after saving the form.
-stay_in_form#:#stay in form
-to_ilias_object#:#to ILIAS object
-to_url#:#to URL
-to_caller#:#back to origin
+
+redirect.type.stay_in_form#:#stay in form
+redirect.type.to_ilias_object#:#to ILIAS object
+redirect.type.to_url#:#to URL
+redirect.type.to_caller#:#back to origin
 
 udf.not_found.error#:#The user defined field with the ID '%s' could not be found.
 udf.not_found.label#:#[Field not found]
