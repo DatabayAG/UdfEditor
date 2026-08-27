@@ -70,63 +70,66 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
     protected function initForm(): void
     {
         // TITLE
-        $input = new ilTextInputGUI($this->lng->txt(self::F_TITLE), self::F_TITLE);
-        $input->setRequired(true);
-        $this->addItem($input);
+        $title = new ilTextInputGUI($this->lng->txt(self::F_TITLE), self::F_TITLE);
+        $title->setRequired(true);
+        $this->addItem($title);
 
         // DESCRIPTION
-        $input = new ilTextInputGUI($this->lng->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
-        $this->addItem($input);
+        $description = new ilTextInputGUI($this->lng->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
+        $this->addItem($description);
 
         // ONLINE
-        $input = new ilCheckboxInputGUI($this->lng->txt(self::F_ONLINE), self::F_ONLINE);
-        $this->addItem($input);
+        $online = new ilCheckboxInputGUI($this->lng->txt(self::F_ONLINE), self::F_ONLINE);
+        $this->addItem($online);
 
         // SHOW INFOTAB
-        $input = new ilCheckboxInputGUI($this->pl->txt(self::F_SHOW_INFOTAB), self::F_SHOW_INFOTAB);
-        $this->addItem($input);
+        $show_info_tab = new ilCheckboxInputGUI($this->pl->txt(self::F_SHOW_INFOTAB), self::F_SHOW_INFOTAB);
+        $this->addItem($show_info_tab);
 
         // Configure Edit Mode
-        $input = new ilCheckboxInputGUI($this->pl->txt(self::F_ALWAYS_EDIT), self::F_ALWAYS_EDIT);
-        $input->setInfo($this->pl->txt(self::F_ALWAYS_EDIT . '_info'));
-        $this->addItem($input);
+        $edit_mode = new ilCheckboxInputGUI($this->pl->txt(self::F_ALWAYS_EDIT), self::F_ALWAYS_EDIT);
+        $edit_mode->setInfo($this->pl->txt(self::F_ALWAYS_EDIT . '_info'));
+        $this->addItem($edit_mode);
 
         // MAIL NOTIFICATION
-        $input = new ilCheckboxInputGUI($this->pl->txt(self::F_MAIL_NOTIFICATION), self::F_MAIL_NOTIFICATION);
-        $input->setInfo($this->pl->txt(self::F_MAIL_NOTIFICATION . '_info'));
-        $this->addItem($input);
+        $mail_notification = new ilCheckboxInputGUI($this->pl->txt(self::F_MAIL_NOTIFICATION), self::F_MAIL_NOTIFICATION);
+        $mail_notification->setInfo($this->pl->txt(self::F_MAIL_NOTIFICATION . '_info'));
+        $this->addItem($mail_notification);
 
-        // MAIL NOTIFICATION
-        $input = new ilTextInputGUI($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION), self::F_ADDITIONAL_NOTIFICATION);
-        $input->setInfo($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION . '_info'));
-        $this->addItem($input);
+        // ADDITIONAL MAIL NOTIFICATION
+        $additional_mail_notification = new ilTextInputGUI($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION), self::F_ADDITIONAL_NOTIFICATION);
+        $additional_mail_notification->setInfo($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION . '_info'));
+        $additional_mail_notification->setRequired(true);
+        $mail_notification->addSubItem($additional_mail_notification);
 
         // REDIRECT TYPE
-        $input = new ilRadioGroupInputGUI($this->pl->txt(self::F_REDIRECT_TYPE), self::F_REDIRECT_TYPE);
-        $input->setInfo($this->pl->txt(self::F_REDIRECT_TYPE . '_info'));
+        $redirect_type = new ilRadioGroupInputGUI($this->pl->txt(self::F_REDIRECT_TYPE), self::F_REDIRECT_TYPE);
+        $redirect_type->setInfo($this->pl->txt(self::F_REDIRECT_TYPE . '_info'));
 
-        $opt = new ilRadioOption($this->pl->txt(RedirectType::STAY_IN_FORM->toTranslationKey()), RedirectType::STAY_IN_FORM->value);
-        $input->addOption($opt);
+        $redirect_type->addOption(new ilRadioOption($this->pl->txt(RedirectType::STAY_IN_FORM->toTranslationKey()), RedirectType::STAY_IN_FORM->value));
 
-        $opt = new ilRadioOption($this->pl->txt(RedirectType::TO_ILIAS_OBJECT->toTranslationKey()), RedirectType::TO_ILIAS_OBJECT->value);
+        $to_ilias_object_option = new ilRadioOption($this->pl->txt(RedirectType::TO_ILIAS_OBJECT->toTranslationKey()), RedirectType::TO_ILIAS_OBJECT->value);
         $obj_input = new ilRepositorySelector2InputGUI('', self::F_REF_ID, false, $this);
-        $opt->addSubItem($obj_input);
-        $input->addOption($opt);
+        $obj_input->setRequired(true);
+        $to_ilias_object_option->addSubItem($obj_input);
+        $redirect_type->addOption($to_ilias_object_option);
 
-        $opt = new ilRadioOption($this->pl->txt(RedirectType::TO_URL->toTranslationKey()), RedirectType::TO_URL->value);
+        $to_url_option = new ilRadioOption($this->pl->txt(RedirectType::TO_URL->toTranslationKey()), RedirectType::TO_URL->value);
         $url_input = new ilTextInputGUI('', self::F_URL);
-        $opt->addSubItem($url_input);
-        $input->addOption($opt);
+        $url_input->setRequired(true);
+        $to_url_option->addSubItem($url_input);
+        $redirect_type->addOption($to_url_option);
+
+
         // only offer redirect to caller if referer contains a ref_id
         // since some proxy scenarios do not pass the complete referer
         $serverParams = $this->http->request()->getServerParams();
 
         if (isset($serverParams['HTTP_REFERER']) && str_contains($serverParams['HTTP_REFERER'], 'ref_id')) {
-            $opt = new ilRadioOption($this->pl->txt(RedirectType::TO_CALLER->toTranslationKey()), RedirectType::TO_CALLER->value);
-            $input->addOption($opt);
+            $redirect_type->addOption(new ilRadioOption($this->pl->txt(RedirectType::TO_CALLER->toTranslationKey()), RedirectType::TO_CALLER->value));
         }
 
-        $this->addItem($input);
+        $this->addItem($redirect_type);
 
         $this->addCommandButton(xudfSettingsGUI::CMD_UPDATE, $this->lng->txt('save'));
     }
