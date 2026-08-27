@@ -19,7 +19,6 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use ILIAS\Plugin\UdfEditor\Exception\UnknownUdfTypeException;
 use ILIAS\Plugin\UdfEditor\Model\LogEntry;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
@@ -38,7 +37,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
     private ilUdfEditorPlugin $plugin;
 
     /**
-     * @throws UnknownUdfTypeException|ilCtrlException
+     * @throws ilCtrlException
      */
     public function __construct(protected xudfContentGUI $parent_gui, bool $editable = true)
     {
@@ -60,7 +59,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
 
     /**
      * @throws arException
-     * @throws UnknownUdfTypeException
+     * @throws
      */
     protected function initForm($editable): void
     {
