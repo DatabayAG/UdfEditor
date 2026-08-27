@@ -37,7 +37,6 @@ xudf_copy#:#Kopieren: UdfEditor kann kopiert werden
 xudf_write#:#Einstellungen bearbeiten: Einstellungen und Inhalte können bearbeitet werden
 xudf_delete#:#Löschen: Objekt kann gelöscht werden
 xudf_edit_permission#:#Rechteeinstellungen ändern: Rechteeinstellungen ändern
-field_not_found#:#[Feld nicht gefunden]
 msg_missing_udf#:#Mindestens ein benutzerdefiniertes Feld konnte nicht gefunden werden und wurde möglicherweise aus dem System gelöscht.
 msg_choose_new_type#:#Der ausgewählte Typ konnte nicht gefunden werden. Bitte wählen Sie einen neuen Typen aus der Liste aus.
 is_required#:#Pflichtfeld
@@ -49,7 +48,9 @@ to_ilias_object#:#ILIAS-Objekt
 to_url#:#URL
 to_caller#:#Zurück zur aufrufenden Seite
 
-udf.not_found#:#Das Benutzerdefinierte Feld mit der ID '%s' konnte nicht gefunden werden.
+udf.not_found.error#:#Das Benutzerdefinierte Feld mit der ID '%s' konnte nicht gefunden werden.
+udf.not_found.label#:#[Feld nicht gefunden]
+
 udf.type.text#:#Text
 udf.type.select#:#Auswahlliste
 udf.type.textarea#:#Textbereich

@@ -96,7 +96,7 @@ class xudfContentFormGUI extends ilPropertyFormGUI
             $field = $element->getUserDefinedField();
             if (!$field) {
                 $this->ui_util->sendFailure(sprintf(
-                    $this->plugin->txt("udf.not_found"),
+                    $this->plugin->txt("udf.not_found.error"),
                     $element->getUdfField()
                 ));
             }

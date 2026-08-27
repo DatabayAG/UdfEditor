@@ -116,7 +116,7 @@ class ContentElementTable extends ilTable2GUI
             }
         }
 
-        $fieldName = $field ? $field->getLabel($this->lng) : $this->pl->txt('field_not_found');
+        $fieldName = $field ? $field->getLabel($this->lng) : $this->pl->txt('udf.not_found.label');
 
         $field_type = null;
         if ($field) {
@@ -140,8 +140,8 @@ class ContentElementTable extends ilTable2GUI
         }
 
         $field_type_text = $field_type
-            ? $this->pl->txt("udf_field_type_$field_type")
-            : $this->pl->txt('field_not_found');
+            ? $this->pl->txt("udf.type.$field_type")
+            : $this->pl->txt('udf.not_found.label');
 
         $this->tpl->setVariable('ID', $a_set['id']);
         $this->tpl->setVariable(
