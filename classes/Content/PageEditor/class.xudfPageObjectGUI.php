@@ -30,14 +30,14 @@ class xudfPageObjectGUI extends ilPageObjectGUI
         $this->checkAndAddCOPageDefinition();
 
         // we always need a page object - create on demand
-        if (!xudfPageObject::_exists(xudfPageObject::PARENT_TYPE, $parent_gui->getObjId())) {
+        if (!xudfPageObject::_exists(ilUdfEditorPlugin::ID, $parent_gui->getObjId())) {
             $page_obj = new xudfPageObject();
             $page_obj->setId($parent_gui->getObjId());
             $page_obj->setParentId($parent_gui->getObjId());
             $page_obj->create();
         }
 
-        parent::__construct(xudfPageObject::PARENT_TYPE, $parent_gui->getObjId());
+        parent::__construct(ilUdfEditorPlugin::ID, $parent_gui->getObjId());
 
         global $DIC;
         $tpl = $DIC->ui()->mainTemplate();
