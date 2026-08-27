@@ -150,7 +150,6 @@ class ilObjUdfEditor extends ilObjectPlugin
         }
 
         $notification = self::notifications4plugin()->notifications()->getNotificationByName($settings->getNotificationName());
-
         if ($notification === null) {
             $notification = self::notifications4plugin()->notifications()->factory()->newInstance();
 
@@ -160,15 +159,17 @@ class ilObjUdfEditor extends ilObjectPlugin
 
             $notification->setSubject("ILIAS: {{ object.getTitle }}", "default");
 
-            $notification->setText("Sehr geehrte/r {{ user.getFullname }},
-
-Sie haben im Objekt „{{ object.getTitle }}“ die folgenden Angaben ausgewählt:
-
-{% for key, value in user_defined_data %}
-{{ key }} : {{ value }}
-
-{% endfor %}
-{{ \"now\"|date('d.m.Y H:i') }}", "default");
+            $notification->setText(
+                "Sehr geehrte/r {{ user.getFullname }},"
+                . "\n"
+                . "Sie haben im Objekt „{{ object.getTitle }}“ die folgenden Angaben ausgewählt:"
+                . "\n"
+                . "{% for key, value in user_defined_data %}"
+                . "{{ key }} : {{ value }}"
+                . "\n"
+                . "{% endfor %}"
+                . "{{ \"now\"|date('d.m.Y H:i') }}",
+                "default");
 
             self::notifications4plugin()->notifications()->storeNotification($notification);
         }
