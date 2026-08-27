@@ -99,7 +99,6 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         // ADDITIONAL MAIL NOTIFICATION
         $additional_mail_notification = new ilTextInputGUI($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION), self::F_ADDITIONAL_NOTIFICATION);
         $additional_mail_notification->setInfo($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION . "_info"));
-        $additional_mail_notification->setRequired(true);
         $mail_notification->addSubItem($additional_mail_notification);
 
         // REDIRECT TYPE
