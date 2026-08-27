@@ -31,7 +31,6 @@ require_once __DIR__ . "/../vendor/autoload.php";
  */
 class ilObjUdfEditorGUI extends ilObjectPluginGUI
 {
-    public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
     public const string TAB_CONTENT = 'content';
     public const string TAB_INFO = 'info';
     public const string TAB_SETTINGS = 'settings';
@@ -195,7 +194,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         if ($render_locator) {
             $this->setLocator();
         }
-        $this->tpl->setTitleIcon(ilUdfEditorPlugin::_getIcon(ilUdfEditorPlugin::PLUGIN_ID));
+        $this->tpl->setTitleIcon(ilUdfEditorPlugin::_getIcon(ilUdfEditorPlugin::ID));
         $this->tpl->setTitle($this->object->getTitle());
         $this->tpl->setDescription($this->object->getDescription());
 
@@ -257,7 +256,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
     public function getType(): string
     {
-        return ilUdfEditorPlugin::PLUGIN_ID;
+        return ilUdfEditorPlugin::ID;
     }
 
     protected function supportsCloning(): bool

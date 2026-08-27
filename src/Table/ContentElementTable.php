@@ -39,8 +39,6 @@ use xudfFormConfigurationGUI;
 
 class ContentElementTable extends ilTable2GUI
 {
-    public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
-
     protected ilUdfEditorPlugin $pl;
     private readonly Container $dic;
     private ContentElementRepository $content_element_repo;

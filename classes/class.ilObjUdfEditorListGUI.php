@@ -71,7 +71,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 
     public function initType(): void
     {
-        $this->setType(ilUdfEditorPlugin::PLUGIN_ID);
+        $this->setType(ilUdfEditorPlugin::ID);
     }
 
     /**

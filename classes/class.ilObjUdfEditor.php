@@ -44,7 +44,7 @@ class ilObjUdfEditor extends ilObjectPlugin
 
     protected function initType(): void
     {
-        $this->type = ilUdfEditorPlugin::PLUGIN_ID;
+        $this->type = ilUdfEditorPlugin::ID;
     }
 
     protected function doCreate(bool $clone_mode = false): void

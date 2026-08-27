@@ -36,7 +36,6 @@ use xudfLogGUI;
 class LogEntryTable extends ilTable2GUI
 {
     public const string ID_PREFIX = 'xudf_log_table_';
-    public const string PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
     public const string ROW_TEMPLATE = 'tpl.log_table_row.html';
     /**
      * @var ilFormPropertyGUI[]

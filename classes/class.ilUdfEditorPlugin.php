@@ -30,8 +30,7 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {
     use Notifications4PluginTrait;
 
-    public const string PLUGIN_ID = 'xudf';
-    public const string PLUGIN_CLASS_NAME = self::class;
+    public const string ID = 'xudf';
 
     protected static bool $init_notifications = false;
     protected static ?ilUdfEditorPlugin $instance = null;
@@ -46,7 +45,7 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         if (!self::$init_notifications) {
             self::$init_notifications = true;
 
-            self::notifications4plugin()->withTableNamePrefix(self::PLUGIN_ID)
+            self::notifications4plugin()->withTableNamePrefix(self::ID)
                 ->withPlugin(self::getInstance())
                 ->withPlaceholderTypes([
                     "object" => "object " . ilObjUdfEditor::class,
@@ -69,7 +68,7 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
             /** @var $component_factory ilComponentFactory */
             $component_factory = $DIC['component.factory'];
             /** @var $plugin ilUdfEditorPlugin */
-            $plugin = $component_factory->getPlugin(self::PLUGIN_ID);
+            $plugin = $component_factory->getPlugin(self::ID);
 
             self::$instance = $plugin;
         }

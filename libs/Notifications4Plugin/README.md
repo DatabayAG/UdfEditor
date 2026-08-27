@@ -55,7 +55,7 @@ First you need to init the `Notification` and `NotificationLanguage` active reco
 prefix. Please add this very early in your plugin code
 
 ```php
-self::notifications4plugin()->withTableNamePrefix(ilXPlugin::PLUGIN_ID)->withPlugin(self::plugin())->withPlaceholderTypes([
+self::notifications4plugin()->withTableNamePrefix(ilXPlugin::ID)->withPlugin(self::plugin())->withPlaceholderTypes([
     'user' => 'object ' . ilObjUser::class,
     'course' => 'object ' . ilObjCourse::class,
     'id' => 'int'
