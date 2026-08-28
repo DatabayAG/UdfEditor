@@ -52,11 +52,11 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         $this->dic = $DIC;
         $this->ui_util = new UiUtil();
 
-        $serverParams = $this->request->getServerParams();
+        $server_params = $this->request->getServerParams();
 
-        if (isset($serverParams["HTTP_REFERER"])) {
+        if (isset($server_params["HTTP_REFERER"])) {
             $rref = 0;
-            $a_referer = explode("&", $serverParams["HTTP_REFERER"]);
+            $a_referer = explode("&", $server_params["HTTP_REFERER"]);
             if (count($a_referer)) {
                 foreach ($a_referer as $entry) {
                     $a_entry = explode("=", $entry);
@@ -66,7 +66,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                 }
             }
             if ($rref != $this->ref_id && $rref != 0) {
-                ilSession::set("xudfreturn", $serverParams["HTTP_REFERER"]);
+                ilSession::set("xudfreturn", $server_params["HTTP_REFERER"]);
             }
         }
 
@@ -92,8 +92,8 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_CONTENT);
-                    $xvmpGUI = new xudfContentGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfContentGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(xudfSettingsGUI::class):
@@ -106,8 +106,8 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_SETTINGS);
-                    $xvmpGUI = new xudfSettingsGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfSettingsGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(xudfFormConfigurationGUI::class):
@@ -120,8 +120,8 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_SETTINGS);
-                    $xvmpGUI = new xudfFormConfigurationGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfFormConfigurationGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(xudfLogGUI::class):
@@ -134,8 +134,8 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_HISTORY);
-                    $xvmpGUI = new xudfLogGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfLogGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(ilInfoScreenGUI::class):

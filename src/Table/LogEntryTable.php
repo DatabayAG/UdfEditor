@@ -86,9 +86,9 @@ class LogEntryTable extends ilTable2GUI
      */
     protected function initData(): void
     {
-        /** @var ilSelectInputGUI $userFilter */
-        $userFilter = $this->filter_cache["user"];
-        $filter_user = $userFilter->getValue();
+        /** @var ilSelectInputGUI $user_filter */
+        $user_filter = $this->filter_cache["user"];
+        $filter_user = $user_filter->getValue();
 
         $log_entries = $this->log_entry_repo->readAllByObjId($this->parent_obj->getObjId());
         if ($filter_user !== null) {
@@ -103,14 +103,14 @@ class LogEntryTable extends ilTable2GUI
     {
         $this->setDisableFilterHiding(true);
 
-        $userFilter = new ilSelectInputGUI($this->lng->txt("user"), "user");
-        $userFilter->setOptions($this->getUserFilterOptions());
-        $this->filter_cache["user"] = $userFilter;
+        $user_filter = new ilSelectInputGUI($this->lng->txt("user"), "user");
+        $user_filter->setOptions($this->getUserFilterOptions());
+        $this->filter_cache["user"] = $user_filter;
 
-        $this->addFilterItem($userFilter);
+        $this->addFilterItem($user_filter);
 
-        if ($this->hasSessionValue($userFilter->getFieldId())) {
-            $userFilter->readFromSession();
+        if ($this->hasSessionValue($user_filter->getFieldId())) {
+            $user_filter->readFromSession();
         }
     }
 

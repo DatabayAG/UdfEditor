@@ -114,7 +114,7 @@ class ContentElementTable extends ilTable2GUI
             }
         }
 
-        $fieldName = $field ? $field->getLabel($this->lng) : $this->pl->txt("udf.not_found.label");
+        $field_name = $field ? $field->getLabel($this->lng) : $this->pl->txt("udf.not_found.label");
 
         $field_type = null;
         if ($field) {
@@ -146,7 +146,7 @@ class ContentElementTable extends ilTable2GUI
             "TITLE",
             $separator
                 ? $a_set["title"]
-                : $fieldName
+                : $field_name
         );
         $this->tpl->setVariable("DESCRIPTION", $a_set["description"]);
         $this->tpl->setVariable("TYPE", $separator ? "Separator" : $this->pl->txt("udf_field"));
@@ -161,11 +161,11 @@ class ContentElementTable extends ilTable2GUI
         if ($separator) {
             $udf_required = "&nbsp";
         } elseif ($a_set["required"]) {
-            $imagePath = ilUtil::getImagePath("standard/icon_ok.svg");
-            $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_ok'>";
+            $image_path = ilUtil::getImagePath("standard/icon_ok.svg");
+            $udf_required = "<img style='width: 1rem' src='$image_path' alt='icon_ok'>";
         } else {
-            $imagePath = ilUtil::getImagePath("standard/icon_not_ok.svg");
-            $udf_required = "<img style='width: 1rem' src='$imagePath' alt='icon_not_ok'>";
+            $image_path = ilUtil::getImagePath("standard/icon_not_ok.svg");
+            $udf_required = "<img style='width: 1rem' src='$image_path' alt='icon_not_ok'>";
         }
 
         $this->tpl->setVariable("IS_REQUIRED", $udf_required);
@@ -184,22 +184,22 @@ class ContentElementTable extends ilTable2GUI
 
     protected function buildActions($id): string
     {
-        $uiFactory = $this->dic->ui()->factory();
-        $uiRenderer = $this->dic->ui()->renderer();
+        $ui_factory = $this->dic->ui()->factory();
+        $ui_renderer = $this->dic->ui()->renderer();
 
         $this->dic->ctrl()->setParameter($this->parent_obj, "element_id", $id);
         $actions = [
-            $uiFactory->link()->standard(
+            $ui_factory->link()->standard(
                 $this->dic->language()->txt("edit"),
                 $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_EDIT)
             ),
-            $uiFactory->link()->standard(
+            $ui_factory->link()->standard(
                 $this->dic->language()->txt("delete"),
                 $this->dic->ctrl()->getLinkTarget($this->parent_obj, xudfFormConfigurationGUI::CMD_DELETE)
             )
         ];
 
-        $actionDropdown = $uiFactory->dropdown()->standard($actions)->withLabel($this->dic->language()->txt("actions"));
-        return $uiRenderer->render($actionDropdown);
+        $action_dropdown = $ui_factory->dropdown()->standard($actions)->withLabel($this->dic->language()->txt("actions"));
+        return $ui_renderer->render($action_dropdown);
     }
 }

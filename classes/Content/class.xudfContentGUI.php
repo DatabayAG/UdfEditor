@@ -58,8 +58,8 @@ class xudfContentGUI extends xudfGUI
                     $this->dic->ctrl()->returnToParent($this);
                 }
                 $this->dic->tabs()->activateSubTab(self::SUBTAB_EDIT_PAGE);
-                $xudfPageObjectGUI = new xudfPageObjectGUI($this);
-                $html = $this->dic->ctrl()->forwardCommand($xudfPageObjectGUI);
+                $xudf_page_object_gui = new xudfPageObjectGUI($this);
+                $html = $this->dic->ctrl()->forwardCommand($xudf_page_object_gui);
                 $this->tpl->setContent($html);
                 break;
             default:
@@ -79,7 +79,7 @@ class xudfContentGUI extends xudfGUI
         $editable = $this->getObject()->getSettings()->isAlwaysEdit();
         $content_elements = $this->content_element_repo->readAllByObjId($this->getObjId(), true);
 
-        $edit = $this->httpWrapper->query()->retrieve(
+        $edit = $this->http_wrapper->query()->retrieve(
             "edit",
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->bool(),
@@ -141,14 +141,14 @@ class xudfContentGUI extends xudfGUI
 
     protected function checkAndSendNotification(): void
     {
-        $xudfSettings = $this->getObject()->getSettings();
+        $xudf_settings = $this->getObject()->getSettings();
 
-        if ($xudfSettings->isMailNotification()) {
+        if ($xudf_settings->isMailNotification()) {
             $notification = $this->getObject()->getNotification();
 
             $sender = self::notifications4plugin()->sender()->factory()->internalMail(ANONYMOUS_USER_ID, $this->dic->user()->getId());
 
-            $sender->setBcc($xudfSettings->getAdditionalNotification());
+            $sender->setBcc($xudf_settings->getAdditionalNotification());
 
             $user_defined_data = [];
             foreach ($this->content_element_repo->readAllByObjId($this->getObjId()) as $element) {
@@ -173,11 +173,11 @@ class xudfContentGUI extends xudfGUI
 
     protected function returnToParent(): void
     {
-        $refId = $this->httpWrapper->query()->retrieve(
+        $ref_id = $this->http_wrapper->query()->retrieve(
             "ref_id",
             $this->refinery->kindlyTo()->int()
         );
-        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->tree->getParentId($refId));
+        $this->dic->ctrl()->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->tree->getParentId($ref_id));
         $this->dic->ctrl()->redirectByClass(ilRepositoryGUI::class);
     }
 

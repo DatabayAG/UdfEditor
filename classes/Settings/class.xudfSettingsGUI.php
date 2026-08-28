@@ -46,8 +46,8 @@ class xudfSettingsGUI extends xudfGUI
         $next_class = $this->ctrl->getNextClass();
         switch ($next_class) {
             case strtolower(xudfSettingsFormGUI::class):
-                $xudfSettingsFormGUI = new xudfSettingsFormGUI($this);
-                $this->ctrl->forwardCommand($xudfSettingsFormGUI);
+                $xudf_settings_form_gui = new xudfSettingsFormGUI($this);
+                $this->ctrl->forwardCommand($xudf_settings_form_gui);
                 break;
             default:
                 if ($this->getObject()->getSettings()->isMailNotification()
@@ -83,18 +83,18 @@ class xudfSettingsGUI extends xudfGUI
 
     protected function index(): void
     {
-        $xudfSettingsFormGUI = new xudfSettingsFormGUI($this);
-        $xudfSettingsFormGUI->fillForm();
-        $this->tpl->setContent($xudfSettingsFormGUI->getHTML());
+        $xudf_settings_form_gui = new xudfSettingsFormGUI($this);
+        $xudf_settings_form_gui->fillForm();
+        $this->tpl->setContent($xudf_settings_form_gui->getHTML());
     }
 
     protected function update(): void
     {
-        $xudfSettingsFormGUI = new xudfSettingsFormGUI($this);
-        $xudfSettingsFormGUI->setValuesByPost();
-        if (!$xudfSettingsFormGUI->saveForm()) {
+        $xudf_settings_form_gui = new xudfSettingsFormGUI($this);
+        $xudf_settings_form_gui->setValuesByPost();
+        if (!$xudf_settings_form_gui->saveForm()) {
             $this->ui_util->sendFailure($this->pl->txt("msg_incomplete"));
-            $this->tpl->setContent($xudfSettingsFormGUI->getHTML());
+            $this->tpl->setContent($xudf_settings_form_gui->getHTML());
             return;
         }
         $this->ui_util->sendSuccess($this->pl->txt("form_saved"));

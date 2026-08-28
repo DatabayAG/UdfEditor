@@ -44,7 +44,7 @@ abstract class xudfGUI
     protected ilUdfEditorPlugin $pl;
     protected Container $dic;
     protected ilTree $tree;
-    protected WrapperFactory $httpWrapper;
+    protected WrapperFactory $http_wrapper;
     protected Factory $refinery;
     protected ContentElementRepository $content_element_repo;
     protected UiUtil $ui_util;
@@ -61,7 +61,7 @@ abstract class xudfGUI
         $this->toolbar = $DIC->toolbar();
         $this->tree = $DIC->repositoryTree();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->httpWrapper = $this->dic->http()->wrapper();
+        $this->http_wrapper = $this->dic->http()->wrapper();
         $this->refinery = $this->dic->refinery();
         $this->content_element_repo = new ContentElementRepository();
         $this->ui_util = new UiUtil();
