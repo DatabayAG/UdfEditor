@@ -16,6 +16,7 @@
   },
   "require-dev": {
     "captainhook/captainhook": "^5.10",
+    "captainhook/hook-installer": "^1.0",
     "friendsofphp/php-cs-fixer": "^3.12",
     "rector/rector": "^2.6",
     "roave/security-advisories": "dev-latest"
@@ -33,6 +34,9 @@
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true,
-    "classmap-authoritative": true
+    "classmap-authoritative": true,
+    "allow-plugins": {
+      "captainhook/hook-installer": true
+    }
   }
 }
