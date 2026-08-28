@@ -145,6 +145,15 @@ class ContentElementRepository
         ) === 1;
     }
 
+    public function deleteByObjId(int $obj_id): bool
+    {
+        return $this->db->manipulateF(
+            "DELETE FROM " . self::TABLE_NAME . " WHERE obj_id = %s",
+            [ilDBConstants::T_INTEGER],
+            [$obj_id]
+        ) === 1;
+    }
+
     public function exists(int $id): bool
     {
         $result = $this->db->queryF(

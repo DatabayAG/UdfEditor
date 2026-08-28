@@ -16,6 +16,8 @@
  *
  *********************************************************************/
 
+declare(strict_types=1);
+
 namespace ILIAS\Plugin\UdfEditor\Utils;
 
 use ILIAS\DI\Container;

@@ -23,6 +23,7 @@ use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginT
 use ILIAS\Plugin\UdfEditor\Model\ContentElement;
 use ILIAS\Plugin\UdfEditor\Model\Settings;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
+use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -34,12 +35,14 @@ class ilObjUdfEditor extends ilObjectPlugin
     protected ?Settings $settings = null;
     private ContentElementRepository $content_element_repo;
     private SettingsRepository $settings_repo;
+    private LogEntryRepository $log_entry_repo;
 
     public function __construct(int $a_ref_id = 0)
     {
         parent::__construct($a_ref_id);
         $this->content_element_repo = new ContentElementRepository();
         $this->settings_repo = new SettingsRepository();
+        $this->log_entry_repo = new LogEntryRepository();
     }
 
     protected function initType(): void
@@ -57,6 +60,8 @@ class ilObjUdfEditor extends ilObjectPlugin
     protected function beforeDelete(): bool
     {
         $this->settings_repo->deleteById($this->getId());
+        $this->content_element_repo->deleteByObjId($this->getId());
+        $this->log_entry_repo->deleteById($this->getId());
         return true;
     }
 
@@ -79,6 +84,10 @@ class ilObjUdfEditor extends ilObjectPlugin
     {
         if (!($this->settings instanceof Settings)) {
             $this->settings = $this->settings_repo->read($this->id);
+            if (!($this->settings instanceof Settings)) {
+                $this->settings = new Settings($this->getId());
+                $this->settings_repo->store($this->settings);
+            }
         }
 
         return $this->settings;
@@ -102,7 +111,7 @@ class ilObjUdfEditor extends ilObjectPlugin
 
     protected function cloneContentElements(ilObjUdfEditor $new_obj): void
     {
-        /** @var array<int, array{old: ContentElement, new: ContentElement}> $old_to_new_content_element_map */
+        /** @var list<array{old: ContentElement, new: ContentElement}> $old_to_new_content_element_map */
         $old_to_new_content_element_map = [];
 
         foreach ($this->content_element_repo->readAllByObjId($this->getId(), true) as $old_content_element) {
@@ -112,7 +121,8 @@ class ilObjUdfEditor extends ilObjectPlugin
                 $old_content_element->getDescription(),
                 0,
                 $old_content_element->getUdfField(),
-                $old_content_element->isSeparator()
+                $old_content_element->isSeparator(),
+                $old_content_element->isRequired()
             );
 
             $old_to_new_content_element_map[] = [
@@ -128,9 +138,9 @@ class ilObjUdfEditor extends ilObjectPlugin
             $old = $old_and_new["old"];
             $new = $old_and_new["new"];
 
-            $new->setIsRequired($old->isRequired());
+            $new->setRequired($old->isRequired());
             $new->setSort($old->getSort());
-            $new->update();
+            $this->content_element_repo->update($new);
         }
     }
 

@@ -47,7 +47,7 @@ class SetupAgent implements Agent
         throw new LogicException(self::class . " has no Config.");
     }
 
-    public function getInstallObjective(Config $config = null): Objective
+    public function getInstallObjective(?Config $config = null): Objective
     {
         return new Setup\ObjectiveCollection(
             "ILIAS\Plugin\UdfEditor",
@@ -56,7 +56,7 @@ class SetupAgent implements Agent
         );
     }
 
-    public function getUpdateObjective(Config $config = null): Objective
+    public function getUpdateObjective(?Config $config = null): Objective
     {
         return new Setup\ObjectiveCollection(
             "ILIAS\Plugin\UdfEditor",

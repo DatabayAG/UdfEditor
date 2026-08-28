@@ -27,6 +27,7 @@ use ilDBStepExecutionDB;
 use ilDBStepReader;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Repository;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
+use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
 
 class DBUpdateSteps implements ilDatabaseUpdateSteps
@@ -72,7 +73,8 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
 
         $tables_to_drop = [
             SettingsRepository::TABLE_NAME,
-            ContentElementRepository::TABLE_NAME
+            ContentElementRepository::TABLE_NAME,
+            LogEntryRepository::TABLE_NAME
         ];
 
         foreach ($tables_to_drop as $table_name) {
