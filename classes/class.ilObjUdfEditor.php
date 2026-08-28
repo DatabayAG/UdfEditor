@@ -61,7 +61,7 @@ class ilObjUdfEditor extends ilObjectPlugin
     {
         $this->settings_repo->deleteById($this->getId());
         $this->content_element_repo->deleteByObjId($this->getId());
-        $this->log_entry_repo->deleteById($this->getId());
+        $this->log_entry_repo->deleteByObjId($this->getId());
         return true;
     }
 
