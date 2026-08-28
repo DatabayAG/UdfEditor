@@ -62,10 +62,14 @@ class xudfPageObjectGUI extends ilPageObjectGUI
     protected function checkAndAddCOPageDefinition(): void
     {
         global $DIC;
-        $sql_query = $DIC->database()->query("SELECT * FROM copg_pobj_def WHERE parent_type = 'xudf'");
+        $sql_query = $DIC->database()->queryF(
+            "SELECT * FROM copg_pobj_def WHERE parent_type = %s",
+            [ilDBConstants::T_TEXT],
+            [ilUdfEditorPlugin::ID]
+        );
         if ($DIC->database()->numRows($sql_query) === 0) {
             $DIC->database()->insert("copg_pobj_def", [
-                "parent_type" => [ilDBConstants::T_TEXT, "xudf"],
+                "parent_type" => [ilDBConstants::T_TEXT, ilUdfEditorPlugin::ID],
                 "class_name" => [ilDBConstants::T_TEXT, "xudfPageObject"],
                 "directory" => [ilDBConstants::T_TEXT, "classes/Content/PageEditor"],
                 "component" => [ilDBConstants::T_TEXT, "Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor"]

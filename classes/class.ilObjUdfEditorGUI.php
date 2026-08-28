@@ -202,7 +202,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
             /**
              * @var $list_gui ilObjUdfEditorListGUI
              */
-            $list_gui = ilObjectListGUIFactory::_getListGUIByType("xudf");
+            $list_gui = ilObjectListGUIFactory::_getListGUIByType(ilUdfEditorPlugin::ID);
             $this->tpl->setAlertProperties($list_gui->getAlertProperties());
         }
     }
