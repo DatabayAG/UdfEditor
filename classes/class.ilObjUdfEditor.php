@@ -169,7 +169,8 @@ class ilObjUdfEditor extends ilObjectPlugin
                 . "\n"
                 . "{% endfor %}"
                 . "{{ \"now\"|date('d.m.Y H:i') }}",
-                "default");
+                "default"
+            );
 
             self::notifications4plugin()->notifications()->storeNotification($notification);
         }
