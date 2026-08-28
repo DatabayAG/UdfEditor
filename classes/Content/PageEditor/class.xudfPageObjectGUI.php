@@ -65,10 +65,10 @@ class xudfPageObjectGUI extends ilPageObjectGUI
         $sql_query = $DIC->database()->query("SELECT * FROM copg_pobj_def WHERE parent_type = 'xudf'");
         if ($DIC->database()->numRows($sql_query) === 0) {
             $DIC->database()->insert("copg_pobj_def", [
-                "parent_type" => ["text", "xudf"],
-                "class_name" => ["text", "xudfPageObject"],
-                "directory" => ["text", "classes/Content/PageEditor"],
-                "component" => ["text", "Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor"]
+                "parent_type" => [ilDBConstants::T_TEXT, "xudf"],
+                "class_name" => [ilDBConstants::T_TEXT, "xudfPageObject"],
+                "directory" => [ilDBConstants::T_TEXT, "classes/Content/PageEditor"],
+                "component" => [ilDBConstants::T_TEXT, "Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor"]
             ]);
         }
     }
