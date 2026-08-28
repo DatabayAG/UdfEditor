@@ -41,9 +41,9 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
     private readonly Container $dic;
     protected ilUdfEditorPlugin|ilPlugin|null $plugin = null;
-    private ContentElementRepository $content_element_repo;
-    private SettingsRepository $settings_repo;
-    private UiUtil $ui_util;
+    private readonly ContentElementRepository $content_element_repo;
+    private readonly SettingsRepository $settings_repo;
+    private readonly UiUtil $ui_util;
 
     public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
     {

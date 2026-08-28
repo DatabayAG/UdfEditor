@@ -17,14 +17,10 @@ class TabsInputGUITab
      * @var ilFormPropertyGUI[]|null
      */
     protected ?array $inputs_generated = null;
-    protected string $post_var = "";
-    protected string $title = "";
 
 
-    public function __construct(string $title = "", string $post_var = "")
+    public function __construct(protected string $title = "", protected string $post_var = "")
     {
-        $this->title = $title;
-        $this->post_var = $post_var;
     }
 
 

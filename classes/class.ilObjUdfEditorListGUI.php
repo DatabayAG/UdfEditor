@@ -26,7 +26,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 {
     private bool $payment_enabled = false;
-    private SettingsRepository $settings_repo;
+    private readonly SettingsRepository $settings_repo;
 
     public function __construct(int $a_context = self::CONTEXT_REPOSITORY)
     {

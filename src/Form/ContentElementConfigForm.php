@@ -44,7 +44,7 @@ class ContentElementConfigForm extends ilPropertyFormGUI
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
-    private Profile $user_profile;
+    private readonly Profile $user_profile;
 
     public function __construct(
         protected xudfFormConfigurationGUI $parent_gui,

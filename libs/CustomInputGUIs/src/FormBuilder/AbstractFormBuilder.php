@@ -26,15 +26,13 @@ abstract class AbstractFormBuilder implements FormBuilder
      * @var MessageBox[]
      */
     protected array $messages = [];
-    protected object $parent;
     private readonly Container $dic;
 
 
-    public function __construct(object $parent)
+    public function __construct(protected object $parent)
     {
         global $DIC;
         $this->dic = $DIC;
-        $this->parent = $parent;
     }
 
 

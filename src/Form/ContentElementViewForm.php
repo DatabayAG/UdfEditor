@@ -38,11 +38,11 @@ class ContentElementViewForm extends ilPropertyFormGUI
 {
     protected int $obj_id;
     private readonly Container $dic;
-    private ContentElementRepository $content_element_repo;
-    private LogEntryRepository $log_entry_repo;
-    private UiUtil $ui_util;
-    private Profile $user_profile;
-    private ilUdfEditorPlugin $plugin;
+    private readonly ContentElementRepository $content_element_repo;
+    private readonly LogEntryRepository $log_entry_repo;
+    private readonly UiUtil $ui_util;
+    private readonly Profile $user_profile;
+    private readonly ilUdfEditorPlugin $plugin;
 
     public function __construct(protected xudfContentGUI $parent_gui, bool $editable = true)
     {

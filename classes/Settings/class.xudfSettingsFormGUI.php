@@ -51,7 +51,7 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
     protected ilUdfEditorPlugin $pl;
 
     protected Settings $xudf_setting;
-    private SettingsRepository $settings_repo;
+    private readonly SettingsRepository $settings_repo;
 
     public function __construct(protected xudfSettingsGUI $parent_gui)
     {

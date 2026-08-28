@@ -44,7 +44,7 @@ class xudfFormConfigurationGUI extends xudfGUI
     public const string CMD_REORDER = "reorder";
     protected WrapperFactory $http_wrapper;
     protected Factory $refinery;
-    private Profile $user_profile;
+    private readonly Profile $user_profile;
 
     public function __construct(ilObjUdfEditorGUI $parent_gui)
     {

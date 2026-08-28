@@ -45,7 +45,7 @@ class LogEntryTable extends ilTable2GUI
 
     private readonly Container $dic;
     private readonly ilUdfEditorPlugin $plugin;
-    private LogEntryRepository $log_entry_repo;
+    private readonly LogEntryRepository $log_entry_repo;
 
     /**
      * @param xudfLogGUI|null $parent_obj

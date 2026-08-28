@@ -41,9 +41,9 @@ class ContentElementTable extends ilTable2GUI
 {
     protected ilUdfEditorPlugin $pl;
     private readonly Container $dic;
-    private ContentElementRepository $content_element_repo;
-    private UiUtil $ui_util;
-    private Profile $user_profile;
+    private readonly ContentElementRepository $content_element_repo;
+    private readonly UiUtil $ui_util;
+    private readonly Profile $user_profile;
 
     public function __construct(object $parent_gui, string $parent_cmd)
     {
@@ -120,7 +120,7 @@ class ContentElementTable extends ilTable2GUI
         if ($field) {
             $legacy_input = $field->getLegacyInput($this->lng, Context::User);
 
-            switch (get_class($legacy_input)) {
+            switch ($legacy_input::class) {
                 case ilTextInputGUI::class:
                     $field_type = "text";
                     break;
