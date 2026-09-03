@@ -19,7 +19,9 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use srag\Plugins\UdfEditor\Exception\UDFNotFoundException;
+use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
+use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
+use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -29,41 +31,47 @@ require_once __DIR__ . "/../vendor/autoload.php";
  */
 class ilObjUdfEditorGUI extends ilObjectPluginGUI
 {
-    public const PLUGIN_CLASS_NAME = ilUdfEditorPlugin::class;
-    public const TAB_CONTENT = 'content';
-    public const TAB_INFO = 'info';
-    public const TAB_SETTINGS = 'settings';
-    public const TAB_HISTORY = 'log_history';
-    public const TAB_PERMISSIONS = 'permissions';
-    public const CMD_INDEX = 'index';
-    public const CMD_SETTINGS = 'showSettings';
+    public const string TAB_CONTENT = "content";
+    public const string TAB_INFO = "info";
+    public const string TAB_SETTINGS = "settings";
+    public const string TAB_HISTORY = "log_history";
+    public const string TAB_PERMISSIONS = "permissions";
+    public const string CMD_INDEX = "index";
+    public const string CMD_SETTINGS = "showSettings";
 
-    private Container $dic;
+    private readonly Container $dic;
     protected ilUdfEditorPlugin|ilPlugin|null $plugin = null;
+    private readonly ContentElementRepository $content_element_repo;
+    private readonly SettingsRepository $settings_repo;
+    private readonly UiUtil $ui_util;
 
     public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
     {
         parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
         global $DIC;
         $this->dic = $DIC;
+        $this->ui_util = new UiUtil();
 
-        $serverParams = $this->request->getServerParams();
+        $server_params = $this->request->getServerParams();
 
-        if (isset($serverParams['HTTP_REFERER'])) {
+        if (isset($server_params["HTTP_REFERER"])) {
             $rref = 0;
-            $a_referer = explode('&', $serverParams['HTTP_REFERER']);
+            $a_referer = explode("&", $server_params["HTTP_REFERER"]);
             if (count($a_referer)) {
                 foreach ($a_referer as $entry) {
-                    $a_entry = explode('=', $entry);
-                    if ($a_entry[0] === 'ref_id' && isset($a_entry[1])) {
+                    $a_entry = explode("=", $entry);
+                    if ($a_entry[0] === "ref_id" && isset($a_entry[1])) {
                         $rref = $a_entry[1];
                     }
                 }
             }
             if ($rref != $this->ref_id && $rref != 0) {
-                ilSession::set('xudfreturn', $serverParams['HTTP_REFERER']);
+                ilSession::set("xudfreturn", $server_params["HTTP_REFERER"]);
             }
         }
+
+        $this->content_element_repo = new ContentElementRepository();
+        $this->settings_repo = new SettingsRepository();
     }
 
     public function executeCommand(): void
@@ -71,7 +79,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         $next_class = $this->dic->ctrl()->getNextClass();
         $cmd = $this->dic->ctrl()->getCmd();
         if (!ilObjUdfEditorAccess::hasReadAccess() && $next_class != strtolower(ilInfoScreenGUI::class) && $cmd !== "infoScreen") {
-            $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+            $this->ui_util->sendFailure($this->plugin->txt("access_denied"));
             $this->dic->ctrl()->returnToParent($this);
         }
         $this->tpl->loadStandardTemplate();
@@ -84,13 +92,13 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_CONTENT);
-                    $xvmpGUI = new xudfContentGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfContentGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(xudfSettingsGUI::class):
                     if (!ilObjUdfEditorAccess::hasWriteAccess()) {
-                        $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+                        $this->ui_util->sendFailure($this->plugin->txt("access_denied"));
                         $this->dic->ctrl()->returnToParent($this);
                     }
                     if (!$this->dic->ctrl()->isAsynch()) {
@@ -98,13 +106,13 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_SETTINGS);
-                    $xvmpGUI = new xudfSettingsGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfSettingsGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(xudfFormConfigurationGUI::class):
                     if (!ilObjUdfEditorAccess::hasWriteAccess()) {
-                        $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+                        $this->ui_util->sendFailure($this->plugin->txt("access_denied"));
                         $this->dic->ctrl()->returnToParent($this);
                     }
                     if (!$this->dic->ctrl()->isAsynch()) {
@@ -112,13 +120,13 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_SETTINGS);
-                    $xvmpGUI = new xudfFormConfigurationGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfFormConfigurationGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(xudfLogGUI::class):
                     if (!ilObjUdfEditorAccess::hasWriteAccess()) {
-                        $this->tpl->setOnScreenMessage("failure", $this->plugin->txt('access_denied'), true);
+                        $this->ui_util->sendFailure($this->plugin->txt("access_denied"));
                         $this->dic->ctrl()->returnToParent($this);
                     }
                     if (!$this->dic->ctrl()->isAsynch()) {
@@ -126,8 +134,8 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                         $this->setTabs();
                     }
                     $this->dic->tabs()->activateTab(self::TAB_HISTORY);
-                    $xvmpGUI = new xudfLogGUI($this);
-                    $this->dic->ctrl()->forwardCommand($xvmpGUI);
+                    $xvmp_gui = new xudfLogGUI($this);
+                    $this->dic->ctrl()->forwardCommand($xvmp_gui);
                     $this->tpl->printToStdout();
                     break;
                 case strtolower(ilInfoScreenGUI::class):
@@ -146,7 +154,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                     break;
                 default:
                     // workaround for object deletion; 'parent::executeCommand()' shows the template and leads to "Headers already sent" error
-                    if ($next_class == "" && $cmd === 'deleteObject') {
+                    if ($next_class == "" && $cmd === "deleteObject") {
                         $this->deleteObject();
                         break;
                     }
@@ -154,7 +162,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                     break;
             }
         } catch (Exception $e) {
-            $this->tpl->setOnScreenMessage("failure", $e->getMessage());
+            $this->ui_util->sendFailure($e->getMessage());
             if (!$this->creation_mode) {
                 $this->tpl->printToStdout();
             }
@@ -186,19 +194,15 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
         if ($render_locator) {
             $this->setLocator();
         }
-        $this->tpl->setTitleIcon(str_replace(
-            ILIAS_ABSOLUTE_PATH . "/public/",
-            "",
-            realpath(ilObjUdfEditor::_getIcon($this->object_id))
-        ));
+        $this->tpl->setTitleIcon(ilUdfEditorPlugin::_getIcon(ilUdfEditorPlugin::ID));
         $this->tpl->setTitle($this->object->getTitle());
         $this->tpl->setDescription($this->object->getDescription());
 
-        if (!xudfSetting::find($this->obj_id)->isOnline()) {
+        if (!$this->settings_repo->read($this->obj_id)?->isOnline()) {
             /**
              * @var $list_gui ilObjUdfEditorListGUI
              */
-            $list_gui = ilObjectListGUIFactory::_getListGUIByType('xudf');
+            $list_gui = ilObjectListGUIFactory::_getListGUIByType(ilUdfEditorPlugin::ID);
             $this->tpl->setAlertProperties($list_gui->getAlertProperties());
         }
     }
@@ -210,8 +214,8 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
         $this->dic->tabs()->addTab(self::TAB_CONTENT, $this->dic->language()->txt(self::TAB_CONTENT), $this->dic->ctrl()->getLinkTargetByClass(xudfContentGUI::class, xudfContentGUI::CMD_STANDARD));
 
-        if (xudfSetting::find($this->obj_id)->isShowInfoTab()) {
-            $this->dic->tabs()->addTab(self::TAB_INFO, $this->dic->language()->txt(self::TAB_INFO . '_short'), $this->dic->ctrl()->getLinkTargetByClass(ilInfoScreenGUI::class));
+        if ($this->settings_repo->read($this->obj_id)?->isShowInfoTab()) {
+            $this->dic->tabs()->addTab(self::TAB_INFO, $this->dic->language()->txt(self::TAB_INFO . "_short"), $this->dic->ctrl()->getLinkTargetByClass(ilInfoScreenGUI::class));
         }
 
         if (ilObjUdfEditorAccess::hasWriteAccess()) {
@@ -219,12 +223,12 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
                 ->tabs()
                 ->addTab(self::TAB_SETTINGS, $this->dic->language()->txt(self::TAB_SETTINGS), $this->dic->ctrl()->getLinkTargetByClass(xudfSettingsGUI::class, xudfSettingsGUI::CMD_STANDARD));
 
-            $this->dic->tabs()->addTab(self::TAB_HISTORY, $this->dic->language()->txt('history'), $this->dic->ctrl()->getLinkTargetByClass(xudfLogGUI::class, xudfLogGUI::CMD_STANDARD));
+            $this->dic->tabs()->addTab(self::TAB_HISTORY, $this->dic->language()->txt("history"), $this->dic->ctrl()->getLinkTargetByClass(xudfLogGUI::class, xudfLogGUI::CMD_STANDARD));
         }
 
         if ($this->checkPermissionBool("edit_permission")) {
             $this->dic->tabs()->addTab("perm_settings", $lng->txt("perm_settings"), $this->dic->ctrl()->getLinkTargetByClass([
-                get_class($this),
+                static::class,
                 "ilpermissiongui",
             ], "perm"));
         }
@@ -232,18 +236,12 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
     public function addInfoItems(ilInfoScreenGUI $info): void
     {
-        $info->addSection($this->plugin->txt('info_section_title'));
-        $fields_string = '';
-        foreach (xudfContentElement::where(['obj_id' => $this->getObjId(), 'is_separator' => 0])->get() as $element) {
-            /** @var $element xudfContentElement */
-            try {
-                $fields_string .= $element->getTitle() . '<br>';
-            } catch (UDFNotFoundException $e) {
-                $this->dic->logger()->root()->alert($e->getMessage());
-                $this->dic->logger()->root()->alert($e->getTraceAsString());
-            }
+        $info->addSection($this->plugin->txt("info_section_title"));
+        $fields_string = "";
+        foreach ($this->content_element_repo->readAllByObjId($this->getObjId()) as $element) {
+            $fields_string .= $element->getTitle() . "<br>";
         }
-        $info->addProperty($this->plugin->txt('info_section_subtitle'), $fields_string ? $fields_string : '-');
+        $info->addProperty($this->plugin->txt("info_section_subtitle"), $fields_string ?: "-");
     }
 
     public function getAfterCreationCmd(): string
@@ -258,7 +256,7 @@ class ilObjUdfEditorGUI extends ilObjectPluginGUI
 
     public function getType(): string
     {
-        return ilUdfEditorPlugin::PLUGIN_ID;
+        return ilUdfEditorPlugin::ID;
     }
 
     protected function supportsCloning(): bool

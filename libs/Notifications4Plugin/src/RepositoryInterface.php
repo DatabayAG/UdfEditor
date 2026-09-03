@@ -1,10 +1,10 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin;
 
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\RepositoryInterface as NotificationRepositoryInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\RepositoryInterface as ParserRepositoryInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender\RepositoryInterface as SenderRepositoryInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\RepositoryInterface as NotificationRepositoryInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\RepositoryInterface as ParserRepositoryInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Sender\RepositoryInterface as SenderRepositoryInterface;
 
 interface RepositoryInterface
 {

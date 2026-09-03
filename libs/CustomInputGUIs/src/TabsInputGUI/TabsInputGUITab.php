@@ -1,42 +1,26 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI;
 
 use ilFormPropertyGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
 
 class TabsInputGUITab
 {
-    /**
-     * @var bool
-     */
-    protected $active = false;
-    /**
-     * @var string
-     */
-    protected $info = "";
+    protected bool $active = false;
+    protected string $info = "";
     /**
      * @var ilFormPropertyGUI[]
      */
-    protected $inputs = [];
+    protected array $inputs = [];
     /**
      * @var ilFormPropertyGUI[]|null
      */
-    protected $inputs_generated = null;
-    /**
-     * @var string
-     */
-    protected $post_var = "";
-    /**
-     * @var string
-     */
-    protected $title = "";
+    protected ?array $inputs_generated = null;
 
 
-    public function __construct(string $title = "", string $post_var = "")
+    public function __construct(protected string $title = "", protected string $post_var = "")
     {
-        $this->title = $title;
-        $this->post_var = $post_var;
     }
 
 

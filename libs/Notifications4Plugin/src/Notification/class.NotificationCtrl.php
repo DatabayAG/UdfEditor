@@ -1,39 +1,34 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 require_once __DIR__ . "/../../../../vendor/autoload.php";
 
 use ilConfirmationGUI;
 use ILIAS\DI\Container;
 use ilObjUser;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class NotificationCtrl
 {
     use Notifications4PluginTrait;
 
-    public const CMD_ADD_NOTIFICATION = "addNotification";
-    public const CMD_BACK = "back";
-    public const CMD_CREATE_NOTIFICATION = "createNotification";
-    public const CMD_DELETE_NOTIFICATION = "deleteNotification";
-    public const CMD_DELETE_NOTIFICATION_CONFIRM = "deleteNotificationConfirm";
-    public const CMD_DUPLICATE_NOTIFICATION = "duplicateNotification";
-    public const CMD_EDIT_NOTIFICATION = "editNotification";
-    public const CMD_UPDATE_NOTIFICATION = "updateNotification";
-    public const GET_PARAM_NOTIFICATION_ID = "notification_id";
-    /**
-     * @var Notification
-     */
-    protected $notification;
+    public const string CMD_ADD_NOTIFICATION = "addNotification";
+    public const string CMD_BACK = "back";
+    public const string CMD_CREATE_NOTIFICATION = "createNotification";
+    public const string CMD_DELETE_NOTIFICATION = "deleteNotification";
+    public const string CMD_DELETE_NOTIFICATION_CONFIRM = "deleteNotificationConfirm";
+    public const string CMD_DUPLICATE_NOTIFICATION = "duplicateNotification";
+    public const string CMD_EDIT_NOTIFICATION = "editNotification";
+    public const string CMD_UPDATE_NOTIFICATION = "updateNotification";
+    public const string GET_PARAM_NOTIFICATION_ID = "notification_id";
+    protected Notification $notification;
     private Container $dic;
-    private object $parentGui;
 
 
-    public function __construct(object $parentGui)
+    public function __construct(private readonly object $parentGui)
     {
         global $DIC;
-        $this->parentGui = $parentGui;
         $this->dic = $DIC;
     }
 

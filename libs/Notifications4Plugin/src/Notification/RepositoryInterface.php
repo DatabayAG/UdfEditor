@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 interface RepositoryInterface
 {
@@ -41,10 +41,9 @@ interface RepositoryInterface
 
 
     /**
-     * @param string $name |null
      * @deprecated
      */
-    public function migrateFromOldGlobalPlugin(string $name = null): ?NotificationInterface;
+    public function migrateFromOldGlobalPlugin(?string $name = null): ?NotificationInterface;
 
 
     public function storeNotification(NotificationInterface $notification): void;

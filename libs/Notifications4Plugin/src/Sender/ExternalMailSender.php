@@ -1,11 +1,11 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Sender;
 
 use ILIAS\DI\Container;
 use ilMimeMail;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class ExternalMailSender implements Sender
 {
@@ -39,10 +39,6 @@ class ExternalMailSender implements Sender
      * @var string
      */
     protected $subject = "";
-    /**
-     * @var string|array
-     */
-    protected $to;
 
     private Container $dic;
 
@@ -51,12 +47,11 @@ class ExternalMailSender implements Sender
      * @param string $from E-Mail from address. If omitted, the ILIAS setting "external noreply address" is used
      * @param string|array $to E-Mail address or array of addresses
      */
-    public function __construct(string $from = "", $to = "")
+    public function __construct(string $from = "", protected $to = "")
     {
         global $DIC;
         $this->dic = $DIC;
         $this->from = $from;
-        $this->to = $to;
         $this->mailer = new ilMimeMail();
     }
 
@@ -159,7 +154,7 @@ class ExternalMailSender implements Sender
 
     public function send(): void
     {
-        $from = ($this->from) ? $this->from : $this->dic->ilias()->getSetting("mail_external_sender_noreply");
+        $from = $this->from ?: $this->dic->ilias()->getSetting("mail_external_sender_noreply");
         $this->mailer->From($this->dic->mailMimeSenderFactory()->userByEmailAddress($from));
 
         $this->mailer->To($this->to);

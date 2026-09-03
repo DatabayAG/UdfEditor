@@ -19,34 +19,41 @@
 declare(strict_types=1);
 
 use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Plugin\UdfEditor\Form\ContentElementConfigForm;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
+use ILIAS\Plugin\UdfEditor\Model\ContentElement;
+use ILIAS\Plugin\UdfEditor\Table\ContentElementTable;
 use ILIAS\Refinery\Factory;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationCtrl;
+use ILIAS\User\Profile\Profile;
 
 /**
  * @ilCtrl_isCalledBy xudfFormConfigurationGUI: ilObjUdfEditorGUI
  */
 class xudfFormConfigurationGUI extends xudfGUI
 {
-    public const SUBTAB_SETTINGS = 'settings';
-    public const SUBTAB_FORM_CONFIGURATION = 'form_configuration';
-    public const CMD_FORM_CONFIGURATION = 'index';
-    public const CMD_ADD_UDF_FIELD = 'addUdfField';
-    public const CMD_ADD_SEPARATOR = 'addSeparator';
-    public const CMD_CREATE = 'create';
-    public const CMD_EDIT = 'edit';
-    public const CMD_UPDATE = 'update';
-    public const CMD_DELETE = 'delete';
-    public const CMD_CONFIRM_DELETE = 'confirmDelete';
-    public const CMD_REORDER = 'reorder';
-    protected WrapperFactory $httpWrapper;
+    public const string SUBTAB_SETTINGS = "settings";
+    public const string SUBTAB_FORM_CONFIGURATION = "form_configuration";
+    public const string CMD_FORM_CONFIGURATION = "index";
+    public const string CMD_ADD_UDF_FIELD = "addUdfField";
+    public const string CMD_ADD_SEPARATOR = "addSeparator";
+    public const string CMD_CREATE = "create";
+    public const string CMD_EDIT = "edit";
+    public const string CMD_UPDATE = "update";
+    public const string CMD_DELETE = "delete";
+    public const string CMD_CONFIRM_DELETE = "confirmDelete";
+    public const string CMD_REORDER = "reorder";
+    protected WrapperFactory $http_wrapper;
     protected Factory $refinery;
+    private readonly Profile $user_profile;
 
     public function __construct(ilObjUdfEditorGUI $parent_gui)
     {
         global $DIC;
         parent::__construct($parent_gui);
-        $this->httpWrapper = $DIC->http()->wrapper();
+        $this->http_wrapper = $DIC->http()->wrapper();
         $this->refinery = $DIC->refinery();
+
+        $this->user_profile = $DIC["user"]->getProfile();
     }
 
     protected function performCommand(string $cmd): void
@@ -69,10 +76,10 @@ class xudfFormConfigurationGUI extends xudfGUI
         $this->ctrl->setParameterByClass(
             self::class,
             NotificationCtrl::GET_PARAM_NOTIFICATION_ID,
-            $this->getObject()->getSettings()->getNotification()->getId()
+            $this->getObject()->getNotification()->getId()
         );
 
-        if ($this->getObject()->getSettings()->hasMailNotification()) {
+        if ($this->getObject()->getSettings()->isMailNotification()) {
             $this->tabs->addSubTab(
                 xudfSettingsGUI::SUBTAB_MAIL_TEMPLATE,
                 $this->pl->txt("notification"),
@@ -86,45 +93,49 @@ class xudfFormConfigurationGUI extends xudfGUI
     protected function initToolbar(): void
     {
         $add_udf_field = ilLinkButton::getInstance();
-        $add_udf_field->setCaption($this->pl->txt('add_udf_field'), false);
+        $add_udf_field->setCaption($this->pl->txt("add_udf_field"), false);
         $add_udf_field->setUrl($this->ctrl->getLinkTarget($this, self::CMD_ADD_UDF_FIELD));
         $this->toolbar->addButtonInstance($add_udf_field);
 
         $add_separator = $add_udf_field = ilLinkButton::getInstance();
-        $add_separator->setCaption($this->pl->txt('add_separator'), false);
+        $add_separator->setCaption($this->pl->txt("add_separator"), false);
         $add_separator->setUrl($this->ctrl->getLinkTarget($this, self::CMD_ADD_SEPARATOR));
         $this->toolbar->addButtonInstance($add_separator);
     }
 
     protected function index(): void
     {
-        $xudfFormConfigurationTableGUI = new xudfFormConfigurationTableGUI($this, self::CMD_STANDARD);
-        $this->tpl->setContent($xudfFormConfigurationTableGUI->getHTML());
+        $table = new ContentElementTable($this, self::CMD_STANDARD);
+        $this->tpl->setContent($table->getHTML());
     }
 
     protected function addUdfField(): void
     {
-        $udf_fields = ilUserDefinedFields::_getInstance()->getDefinitions();
-        if (!count($udf_fields)) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_no_udfs'), true);
+        $any_custom_field = false;
+        foreach ($this->user_profile->getFields() as $field) {
+            if (!$field->isCustom()) {
+                continue;
+            }
+            $any_custom_field = true;
+        }
+        if (!$any_custom_field) {
+            $this->ui_util->sendFailure($this->pl->txt("msg_no_udfs"));
             $this->ctrl->redirect($this, self::CMD_STANDARD);
         }
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, new xudfContentElement());
-        $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $form = new ContentElementConfigForm($this);
+        $this->tpl->setContent($form->getHTML());
     }
 
     protected function addSeparator(): void
     {
-        $element = new xudfContentElement();
-        $element->setIsSeparator(true);
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
-        $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $form = new ContentElementConfigForm($this, null, true);
+        $this->tpl->setContent($form->getHTML());
     }
 
     protected function retrieveElementIdFromPost(): int
     {
-        return $this->httpWrapper->post()->retrieve(
-            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
+        return $this->http_wrapper->post()->retrieve(
+            ContentElementConfigForm::F_ELEMENT_ID,
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(0)
@@ -134,90 +145,117 @@ class xudfFormConfigurationGUI extends xudfGUI
 
     protected function create(): void
     {
-        $element = new xudfContentElement($this->retrieveElementIdFromPost());
-        $isSeparator = $this->httpWrapper->post()->retrieve(
-            xudfFormConfigurationFormGUI::F_IS_SEPARATOR,
+        $is_separator = $this->http_wrapper->post()->retrieve(
+            ContentElementConfigForm::F_IS_SEPARATOR,
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->bool(),
                 $this->refinery->always(false)
             ])
         );
-        $element->setIsSeparator($isSeparator);
 
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
-        $xudfFormConfigurationFormGUI->setValuesByPost();
-        if (!$xudfFormConfigurationFormGUI->saveForm()) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
-            $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $form = new ContentElementConfigForm($this, null, $is_separator);
 
+        if (!$form->checkInput()) {
+            $this->ui_util->sendFailure($this->pl->txt("msg_incomplete"));
+            $this->tpl->setContent($form->getHTML());
             return;
         }
-        $this->tpl->setOnScreenMessage("success", $this->pl->txt('form_saved'), true);
+
+        $form->setValuesByPost();
+
+        $udf_field_id = $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
+
+        $content_element = new ContentElement(
+            $this->getObjId(),
+            $form->getInput(ContentElementConfigForm::F_TITLE),
+            $form->getInput(ContentElementConfigForm::F_DESCRIPTION),
+            0,
+            $udf_field_id ?: null,
+            $is_separator,
+            (bool) $form->getInput(ContentElementConfigForm::F_REQUIRED),
+        );
+
+        $this->content_element_repo->create($content_element);
+
+        $this->ui_util->sendSuccess($this->pl->txt("form_saved"));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
     protected function update(): void
     {
-        $element = new xudfContentElement($this->retrieveElementIdFromPost());
+        $element = $this->content_element_repo->read($this->retrieveElementIdFromPost());
 
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
-        $xudfFormConfigurationFormGUI->setValuesByPost();
-        if (!$xudfFormConfigurationFormGUI->saveForm()) {
-            $this->tpl->setOnScreenMessage("failure", $this->pl->txt('msg_incomplete'));
-            $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $form = new ContentElementConfigForm($this, $element->getId(), $element->isSeparator());
 
+        if (!$form->checkInput()) {
+            $this->ui_util->sendFailure($this->pl->txt("msg_incomplete"));
+            $this->tpl->setContent($form->getHTML());
             return;
         }
-        $this->tpl->setOnScreenMessage("success", $this->pl->txt('form_saved'), true);
+
+        $form->setValuesByPost();
+
+        $udf_field_id = $form->getInput(ContentElementConfigForm::F_UDF_FIELD);
+
+        $element
+            ->setTitle($form->getInput(ContentElementConfigForm::F_TITLE))
+            ->setDescription($form->getInput(ContentElementConfigForm::F_DESCRIPTION))
+            ->setUdfField($element->getUdfField())
+            ->setUdfField($udf_field_id ?: null)
+            ->setRequired((bool) $form->getInput(ContentElementConfigForm::F_REQUIRED));
+
+        $this->content_element_repo->update($element);
+
+        $this->ui_util->sendSuccess($this->pl->txt("form_saved"));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
     protected function edit(): void
     {
-        $elementId = $this->httpWrapper->query()->retrieve(
-            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
+        $element_id = $this->http_wrapper->query()->retrieve(
+            ContentElementConfigForm::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
-        $element = xudfContentElement::find($elementId);
-        $xudfFormConfigurationFormGUI = new xudfFormConfigurationFormGUI($this, $element);
-        $xudfFormConfigurationFormGUI->fillForm();
-        $this->tpl->setContent($xudfFormConfigurationFormGUI->getHTML());
+        $element = $this->content_element_repo->read($element_id);
+
+        $form = new ContentElementConfigForm($this, $element->getId(), $element->isSeparator());
+        $form->fillForm($element);
+        $this->tpl->setContent($form->getHTML());
     }
 
     protected function delete(): void
     {
-        $elementId = $this->httpWrapper->query()->retrieve(
-            xudfFormConfigurationFormGUI::F_ELEMENT_ID,
+        $element_id = $this->http_wrapper->query()->retrieve(
+            ContentElementConfigForm::F_ELEMENT_ID,
             $this->refinery->kindlyTo()->int()
         );
-        $element = new xudfContentElement($elementId);
+        $element = $this->content_element_repo->read($element_id);
 
-        $text = $this->lng->txt('title') . ": {$element->getTitle()}<br>";
-        $text .= $this->lng->txt('description') . ": {$element->getDescription()}<br>";
-        $text .= $this->lng->txt('type') . ": " . ($element->isSeparator() ? 'Separator' : $this->pl->txt('udf_field'));
+        $text = $this->lng->txt("title") . ": {$element->getTitle()}<br>";
+        $text .= $this->lng->txt("description") . ": {$element->getDescription()}<br>";
+        $text .= $this->lng->txt("type") . ": " . ($element->isSeparator() ? "Separator" : $this->pl->txt("udf_field"));
 
-        $confirmationGUI = new ilConfirmationGUI();
-        $confirmationGUI->addItem('element_id', (string) $elementId, $text);
-        $confirmationGUI->setFormAction($this->ctrl->getFormAction($this));
-        $confirmationGUI->setHeaderText($this->pl->txt('delete_confirmation_text'));
-        $confirmationGUI->setConfirm($this->lng->txt('delete'), self::CMD_CONFIRM_DELETE);
-        $confirmationGUI->setCancel($this->lng->txt('cancel'), self::CMD_STANDARD);
+        $confirmation_gui = new ilConfirmationGUI();
+        $confirmation_gui->addItem("element_id", (string) $element_id, $text);
+        $confirmation_gui->setFormAction($this->ctrl->getFormAction($this));
+        $confirmation_gui->setHeaderText($this->pl->txt("delete_confirmation_text"));
+        $confirmation_gui->setConfirm($this->lng->txt("delete"), self::CMD_CONFIRM_DELETE);
+        $confirmation_gui->setCancel($this->lng->txt("cancel"), self::CMD_STANDARD);
 
-        $this->tpl->setContent($confirmationGUI->getHTML());
+        $this->tpl->setContent($confirmation_gui->getHTML());
     }
 
     protected function confirmDelete(): void
     {
-        $element = new xudfContentElement($this->retrieveElementIdFromPost());
-        $element->delete();
-        $this->tpl->setOnScreenMessage("success", $this->pl->txt('msg_successfully_deleted'), true);
+        $this->content_element_repo->deleteById($this->retrieveElementIdFromPost());
+        $this->ui_util->sendSuccess($this->pl->txt("msg_successfully_deleted"));
         $this->ctrl->redirect($this, self::CMD_STANDARD);
     }
 
     protected function reorder(): void
     {
         $sort = 10;
-        $ids = $this->httpWrapper->post()->retrieve(
+        $ids = $this->http_wrapper->post()->retrieve(
             "ids",
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()),
@@ -226,12 +264,12 @@ class xudfFormConfigurationGUI extends xudfGUI
         );
 
         foreach ($ids as $id) {
-            $element = xudfContentElement::find($id);
+            $element = $this->content_element_repo->read($id);
             if (!$element) {
                 continue;
             }
             $element->setSort($sort);
-            $element->update();
+            $this->content_element_repo->update($element);
             $sort += 10;
         }
     }

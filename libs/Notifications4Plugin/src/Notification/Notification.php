@@ -1,96 +1,86 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 use ActiveRecord;
 use ilDateTime;
 use ILIAS\DI\Container;
 use ILIAS\UI\Component\Component;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\twigParser;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\twigParser;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class Notification extends ActiveRecord implements NotificationInterface
 {
     use Notifications4PluginTrait;
 
-    public const TABLE_NAME_SUFFIX = "not";
+    public const string TABLE_NAME_SUFFIX = "not";
     /**
-     * @var ilDateTime
      * @con_has_field    true
      * @con_fieldtype    timestamp
      * @con_is_notnull   true
      */
-    protected $created_at;
+    protected ilDateTime $created_at;
     /**
-     * @var string
      * @con_has_field    true
      * @con_fieldtype    text
      * @con_length       4000
      * @con_is_notnull   true
      */
-    protected $description = "";
+    protected string $description = "";
     /**
-     * @var int
      * @con_has_field    true
      * @con_fieldtype    integer
      * @con_length       8
      * @con_is_notnull   true
      * @con_is_primary   true
      */
-    protected $id = 0;
+    protected ?int $id = null;
     /**
-     * @var string
      * @con_has_field    true
      * @con_fieldtype    text
      * @con_length       1024
      * @con_is_notnull   true
      * @con_is_unique    true
      */
-    protected $name = "";
+    protected string $name = "";
     /**
-     * @var string
      * @con_has_field    true
      * @con_fieldtype    text
      * @con_is_notnull   true
      */
-    protected $parser = twigParser::class;
+    protected string $parser = twigParser::class;
     /**
-     * @var array
      * @con_has_field    true
      * @con_fieldtype    text
      * @con_is_notnull   true
      */
-    protected $parser_options = self::DEFAULT_PARSER_OPTIONS;
+    protected array $parser_options = self::DEFAULT_PARSER_OPTIONS;
     /**
-     * @var array
      * @con_has_field    true
      * @con_fieldtype    text
      * @con_is_notnull   true
      */
-    protected $subject = [];
+    protected array $subject = [];
     /**
-     * @var array
      * @con_has_field    true
      * @con_fieldtype    text
      * @con_is_notnull   true
      */
-    protected $text = [];
+    protected array $text = [];
     /**
-     * @var string
      * @con_has_field    true
      * @con_fieldtype    text
      * @con_length       1024
      * @con_is_notnull   true
      */
-    protected $title = "";
+    protected string $title = "";
     /**
-     * @var ilDateTime
      * @con_has_field    true
      * @con_fieldtype    timestamp
      * @con_is_notnull   true
      */
-    protected $updated_at;
+    protected ilDateTime $updated_at;
 
     private Container $dic;
 
@@ -207,7 +197,7 @@ class Notification extends ActiveRecord implements NotificationInterface
     }
 
 
-    public function getParserOption(string $key)
+    public function getParserOption(string $key): mixed
     {
         return $this->parser_options[$key];
     }
@@ -289,7 +279,7 @@ class Notification extends ActiveRecord implements NotificationInterface
     }
 
 
-    public function setParserOption(string $key, $value): void
+    public function setParserOption(string $key, mixed $value): void
     {
         $this->parser_options[$key] = $value;
     }
@@ -314,15 +304,10 @@ class Notification extends ActiveRecord implements NotificationInterface
     {
         $field_value = $this->{$field_name};
 
-        switch ($field_name) {
-            case "subject":
-            case "text":
-            case "parser_options":
-                return json_encode($field_value);
-
-            default:
-                return parent::sleep($field_name);
-        }
+        return match ($field_name) {
+            "subject", "text", "parser_options" => json_encode($field_value, JSON_THROW_ON_ERROR),
+            default => parent::sleep($field_name),
+        };
     }
 
     /**
@@ -331,14 +316,9 @@ class Notification extends ActiveRecord implements NotificationInterface
      */
     public function wakeUp($field_name, $field_value): mixed
     {
-        switch ($field_name) {
-            case "subject":
-            case "text":
-            case "parser_options":
-                return json_decode($field_value, true);
-
-            default:
-                return parent::wakeUp($field_name, $field_value);
-        }
+        return match ($field_name) {
+            "subject", "text", "parser_options" => json_decode($field_value, true, 512, JSON_THROW_ON_ERROR),
+            default => parent::wakeUp($field_name, $field_value),
+        };
     }
 }

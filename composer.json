@@ -12,17 +12,19 @@
   "minimum-stability": "beta",
   "prefer-stable": true,
   "require": {
-    "php": "^8.2 || ^8.3"
+    "php": "^8.3 || ^8.4"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
+    "captainhook/captainhook": "^5.10",
+    "captainhook/hook-installer": "^1.0",
     "friendsofphp/php-cs-fixer": "^3.12",
-    "captainhook/captainhook": "^5.10"
+    "rector/rector": "^2.6",
+    "roave/security-advisories": "dev-latest"
   },
   "autoload": {
     "psr-4": {
-      "srag\\Plugins\\UdfEditor\\": "src/",
-      "srag\\Plugins\\UdfEditor\\Libs\\": "libs/"
+      "ILIAS\\Plugin\\UdfEditor\\": "src/",
+      "ILIAS\\Plugin\\UdfEditor\\Libs\\": "libs/"
     },
     "classmap": [
       "./classes/",
@@ -32,7 +34,9 @@
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true,
-    "classmap-authoritative": true
+    "classmap-authoritative": true,
+    "allow-plugins": {
+      "captainhook/hook-installer": true
+    }
   }
 }
-

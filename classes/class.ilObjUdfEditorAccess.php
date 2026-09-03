@@ -18,13 +18,15 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Utils\UiUtil;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilObjUdfEditorAccess extends ilObjectPluginAccess
 {
     protected static ?ilObjUdfEditorAccess $instance = null;
 
-    public static function getInstance(): ilObjUdfEditorAccess
+    public static function getInstance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -60,21 +62,13 @@ class ilObjUdfEditorAccess extends ilObjectPluginAccess
             $user_id = $this->usr->getId();
         }
 
-        switch ($permission) {
-            case "visible":
-            case "read":
-                return (($this->access->checkAccessOfUser($user_id, $permission, "", $ref_id) && !self::_isOffline($obj_id))
-                    || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id));
-
-            case "delete":
-                return ($this->access->checkAccessOfUser($user_id, "delete", "", $ref_id)
-                    || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id));
-
-            case "write":
-            case "edit_permission":
-            default:
-                return $this->access->checkAccessOfUser($user_id, $permission, "", $ref_id);
-        }
+        return match ($permission) {
+            "visible", "read" => ($this->access->checkAccessOfUser($user_id, $permission, "", $ref_id) && !self::_isOffline($obj_id))
+                || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id),
+            "delete" => $this->access->checkAccessOfUser($user_id, "delete", "", $ref_id)
+                || $this->access->checkAccessOfUser($user_id, "write", "", $ref_id),
+            default => $this->access->checkAccessOfUser($user_id, $permission, "", $ref_id),
+        };
     }
 
     protected static function checkAccess(string $cmd, string $permission, ?int $ref_id = null, ?int $obj_id = null, ?int $user_id = null): bool
@@ -88,7 +82,9 @@ class ilObjUdfEditorAccess extends ilObjectPluginAccess
 
         $ctrl = $DIC->ctrl();
 
-        $DIC->ui()->mainTemplate()->setOnScreenMessage("failure", $DIC->language()->txt("permission_denied"), true);
+        $ui_util = new UiUtil();
+
+        $ui_util->sendFailure($DIC->language()->txt("permission_denied"));
 
         if (is_object($class)) {
             $ctrl->clearParameters($class);

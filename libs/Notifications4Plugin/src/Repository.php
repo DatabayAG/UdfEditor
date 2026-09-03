@@ -1,16 +1,16 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin;
 
 use ilPlugin;
 use LogicException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\Repository as NotificationsRepository;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\RepositoryInterface as NotificationsRepositoryInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\Repository as ParserRepository;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser\RepositoryInterface as ParserRepositoryInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender\Repository as SenderRepository;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender\RepositoryInterface as SenderRepositoryInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Repository as NotificationsRepository;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\RepositoryInterface as NotificationsRepositoryInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\Repository as ParserRepository;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\RepositoryInterface as ParserRepositoryInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Sender\Repository as SenderRepository;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Sender\RepositoryInterface as SenderRepositoryInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 final class Repository implements RepositoryInterface
 {

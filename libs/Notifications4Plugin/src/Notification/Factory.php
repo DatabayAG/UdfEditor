@@ -1,20 +1,17 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 use ilDateTime;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\Form\FormBuilder;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Form\FormBuilder;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 use stdClass;
 
 final class Factory implements FactoryInterface
 {
     use Notifications4PluginTrait;
 
-    /**
-     * @var FactoryInterface|null
-     */
-    protected static $instance = null;
+    protected static ?FactoryInterface $instance = null;
 
 
     private function __construct()

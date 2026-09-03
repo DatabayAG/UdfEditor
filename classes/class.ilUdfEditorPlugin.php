@@ -21,22 +21,23 @@ declare(strict_types=1);
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use ILIAS\DI\Container;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Enum\PluginAsset;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Setup\Migration\DBUpdateSteps;
 
 class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {
     use Notifications4PluginTrait;
 
-    public const PLUGIN_ID = 'xudf';
-    public const PLUGIN_CLASS_NAME = self::class;
+    public const string ID = "xudf";
 
     protected static bool $init_notifications = false;
     protected static ?ilUdfEditorPlugin $instance = null;
 
     public function getPluginName(): string
     {
-        return 'UdfEditor';
+        return "UdfEditor";
     }
 
     public static function initNotifications(): void
@@ -44,7 +45,7 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         if (!self::$init_notifications) {
             self::$init_notifications = true;
 
-            self::notifications4plugin()->withTableNamePrefix(self::PLUGIN_ID)
+            self::notifications4plugin()->withTableNamePrefix(self::ID)
                 ->withPlugin(self::getInstance())
                 ->withPlaceholderTypes([
                     "object" => "object " . ilObjUdfEditor::class,
@@ -59,15 +60,15 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         return true;
     }
 
-    public static function getInstance(): ilUdfEditorPlugin
+    public static function getInstance(): self
     {
         if (!isset(self::$instance)) {
             global $DIC;
 
             /** @var $component_factory ilComponentFactory */
-            $component_factory = $DIC['component.factory'];
+            $component_factory = $DIC["component.factory"];
             /** @var $plugin ilUdfEditorPlugin */
-            $plugin = $component_factory->getPlugin(self::PLUGIN_ID);
+            $plugin = $component_factory->getPlugin(self::ID);
 
             self::$instance = $plugin;
         }
@@ -80,21 +81,24 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
         self::initNotifications();
     }
 
-    public function getRelativeDirectory(): string
+    public function install(): void
     {
-        return str_replace(ILIAS_ABSOLUTE_PATH . "/public/", "", realpath($this->getDirectory()));
+        (new DBUpdateSteps())->install($this->db);
+        parent::install();
+    }
+
+    public function update(): bool
+    {
+        //DbUpdateSteps should be excuded before the parent update so potential exceptions result in no il_plugin db changes
+        (new DBUpdateSteps())->install($this->db);
+
+        return parent::update();
     }
 
     protected function uninstallCustom(): void
     {
-        global $DIC;
-        $DIC->database()->dropTable(xudfSetting::DB_TABLE_NAME, false);
-        $DIC->database()->dropTable(xudfContentElement::DB_TABLE_NAME, false);
-        $DIC->database()->manipulateF(
-            'DELETE FROM copg_pobj_def WHERE component=%s',
-            ['text'],
-            ['Customizing/global/plugins/Services/Repository/RepositoryObject/UdfEditor']
-        );
+        (new DBUpdateSteps())->uninstall($this->db);
+
         self::notifications4plugin()->dropTables();
     }
 
@@ -105,5 +109,16 @@ class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
             return $renderer;
         }
         return CustomInputGUIsLoaderDetector::exchangeUIRendererAfterInitialization($renderer, $dic);
+    }
+
+    public function assetsFile(PluginAsset $asset_type, string $file, bool $relative = true): string
+    {
+        $base_path = $relative ? $this->getRelativeDirectory() : $this->getDirectory();
+        return $base_path . "/assets/" . $asset_type->value . "/" . $file;
+    }
+
+    public static function _getIcon(string $a_type): string
+    {
+        return self::getInstance()->assetsFile(PluginAsset::IMAGES, "icon_$a_type.svg");
     }
 }

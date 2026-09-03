@@ -35,28 +35,13 @@ suddenly your plugin use an older or a newer version of an other plugin!
 So I recommand to use [srag/librariesnamespacechanger](https://packagist.org/packages/srag/librariesnamespacechanger) in
 your plugin.
 
-## Twig PHP 7.4 patch
-
-For make twig work with PHP 7.4, you may need to patch it (At your own risk)
-
-At the follow in your `composer.json`
-
-```json
-  ...
-  "pre-autoload-dump": [
-    ...,
-    "vendor/srag/notifications4plugin/bin/twig_php74_patch.php"
-    ]
-  ...
-```
-
 ## Using trait
 
 Your class in this you want to use Notifications4Plugin needs to use the trait `Notifications4PluginTrait`
 
 ```php
 ...
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Utils\Notifications4PluginTrait;
 ...
 class x {
 ...
@@ -70,7 +55,7 @@ First you need to init the `Notification` and `NotificationLanguage` active reco
 prefix. Please add this very early in your plugin code
 
 ```php
-self::notifications4plugin()->withTableNamePrefix(ilXPlugin::PLUGIN_ID)->withPlugin(self::plugin())->withPlaceholderTypes([
+self::notifications4plugin()->withTableNamePrefix(ilXPlugin::ID)->withPlugin(self::plugin())->withPlaceholderTypes([
     'user' => 'object ' . ilObjUser::class,
     'course' => 'object ' . ilObjCourse::class,
     'id' => 'int'
@@ -83,7 +68,7 @@ Add an update step to your `dbupdate.php`
 ...
 <#x>
 <?php
-\srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Repository::getInstance()->installTables();
+\ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Repository::getInstance()->installTables();
 ?>
 ```
 
@@ -100,7 +85,7 @@ self::notifications4plugin()->notifications()->dropTables();
 /**
  * ...
  *
- * @ilCtrl_isCalledBy srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Notification\NotificationsCtrl: x
+ * @ilCtrl_isCalledBy ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Notification\NotificationsCtrl: x
  */
 class x
 {
@@ -130,7 +115,7 @@ Expand you plugin class for installing languages of the library to your plugin
 Add to your `dbupdate.php` like:
 
 ```php
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Notification\Repository;if (Repository::getInstance()->migrateFromOldGlobalPlugin(x::TEMPLATE_NAME) === null) {
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Notification\Repository;if (Repository::getInstance()->migrateFromOldGlobalPlugin(x::TEMPLATE_NAME) === null) {
 
 	$notification = Repository::getInstance()->factory()->newInstance();
 
@@ -174,7 +159,7 @@ $sender = self::notifications4plugin()->sender()->factory()->internalMail('from_
 $sender = self::notifications4plugin()->sender()->factory()->vcalendar(...);
 
 // Implement a custom sender object
-// Your class must implement the interface `srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Sender\Sender`
+// Your class must implement the interface `ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Sender\Sender`
 ```
 
 ```php
@@ -240,7 +225,7 @@ $text = self::notifications4plugin()->parser()->parseText($parser, $notification
 
 ## Implement a custom parser
 
-Your class must extends `srag\Plugins\UdfEditor\Libs\Notifications4Plugin\x\Parser\AbstractParser`
+Your class must extends `ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\x\Parser\AbstractParser`
 
 You can add it
 

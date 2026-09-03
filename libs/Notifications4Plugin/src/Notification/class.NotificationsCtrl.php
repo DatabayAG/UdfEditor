@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 require_once __DIR__ . "/../../../../vendor/autoload.php";
 
@@ -12,14 +12,14 @@ use ILIAS\UI\Component\Table\DataRetrieval;
 use ILIAS\UI\Component\Table\DataRowBuilder;
 use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 class NotificationsCtrl implements DataRetrieval
 {
     use Notifications4PluginTrait;
 
-    public const CMD_LIST_NOTIFICATIONS = "listNotifications";
-    public const TAB_NOTIFICATIONS = "notifications";
+    public const string CMD_LIST_NOTIFICATIONS = "listNotifications";
+    public const string TAB_NOTIFICATIONS = "notifications";
 
     private Container $dic;
     private Factory $uiFactory;
@@ -74,8 +74,9 @@ class NotificationsCtrl implements DataRetrieval
         array $visible_column_ids,
         Range $range,
         Order $order,
-        ?array $filter_data,
-        ?array $additional_parameters
+        mixed $additional_viewcontrol_data,
+        mixed $filter_data,
+        mixed $additional_parameters
     ): Generator {
         $notifications = $this->orderRows(self::notifications4plugin()->notifications()->getNotifications(), $order);
 
@@ -129,7 +130,7 @@ class NotificationsCtrl implements DataRetrieval
         return $notifications;
     }
 
-    public function getTotalRowCount(?array $filter_data, ?array $additional_parameters): ?int
+    public function getTotalRowCount(mixed $additional_viewcontrol_data, mixed $filter_data, mixed $additional_parameters): ?int
     {
         $notifications = self::notifications4plugin()->notifications()->getNotifications();
         return count($notifications);

@@ -1,20 +1,14 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\TextAreaInputGUI;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TextAreaInputGUI;
 
 use ilTemplate;
 use ilTextAreaInputGUI;
 
 class TextAreaInputGUI extends ilTextAreaInputGUI
 {
-    /**
-     * @var string
-     */
-    protected $inline_style = '';
-    /**
-     * @var int
-     */
-    protected $maxlength = 1000;
+    protected string $inline_style = '';
+    protected int $maxlength = 1000;
 
 
     public function customPrepare(): void

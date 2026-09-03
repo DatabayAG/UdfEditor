@@ -4,10 +4,6 @@ add_separator#:#Add Separator
 udf_type#:#UDF Type
 udf_required#:#UDF Required
 udf_field#:#UDF
-udf_field_type_1#:#Text
-udf_field_type_2#:#Selector
-udf_field_type_3#:#Textarea
-udf_field_type_51#:#Cascading
 show_infotab#:#Show Tab "Info"
 always_edit#:#Directly editable
 always_edit_info#:#Users dont need to turn on editmode if form is already filled completely
@@ -42,17 +38,25 @@ xudf_rep_robj_xudf_perm_upload#:#Upload: User can upload videos
 xudf_write#:#Edit Settings: User can edit content and settings of UdfEditor object
 xudf_delete#:#Delete: User can delete UdfEditor object
 xudf_edit_permission#:#Change Permissions: User can change permission settings
-field_not_found#:#[Field not found]
 msg_missing_udf#:#At least one user defined field could not be found and was possibly deleted from the system.
 msg_choose_new_type#:#The selected type couldn't be found. Please choose a new type from the dropdown list.
 is_required#:#Mandatory Field
 values#:#Values
 redirect_type#:#Redirect after save
 redirect_type_info#:#Choose here where a user should be redirected to after saving the form.
-stay_in_form#:#stay in form
-to_ilias_object#:#to ILIAS object
-to_url#:#to URL
-to_caller#:#back to origin
+
+redirect.type.stay_in_form#:#stay in form
+redirect.type.to_ilias_object#:#to ILIAS object
+redirect.type.to_url#:#to URL
+redirect.type.to_caller#:#back to origin
+
+udf.not_found.error#:#The user defined field with the ID '%s' could not be found.
+udf.not_found.label#:#[Field not found]
+udf.type.text#:#Text
+udf.type.select#:#Selector
+udf.type.textarea#:#Textarea
+udf.type.cascading#:#Cascading
+
 notification#:#Notification
 notifications4plugin_actions#:#Actions
 notifications4plugin_add#:#Add

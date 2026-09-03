@@ -1,23 +1,20 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser;
 
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 final class Repository implements RepositoryInterface
 {
     use Notifications4PluginTrait;
 
-    /**
-     * @var RepositoryInterface|null
-     */
-    protected static $instance = null;
+    protected static ?RepositoryInterface $instance = null;
     /**
      * @var Parser[]
      */
-    protected $parsers = [];
+    protected array $parsers = [];
 
 
     private function __construct()

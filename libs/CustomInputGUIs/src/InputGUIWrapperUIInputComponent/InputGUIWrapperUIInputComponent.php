@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent;
 
 use Closure;
 use ilCheckboxInputGUI;
@@ -12,14 +12,11 @@ use ILIAS\Refinery\Constraint;
 use ILIAS\UI\Implementation\Component\Input\Field\FormInput;
 use ILIAS\UI\Implementation\Component\Input\NameSource;
 use ilRepositorySelector2InputGUI;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items\Items;
 
 class InputGUIWrapperUIInputComponent extends FormInput
 {
-    /**
-     * @var ilFormPropertyGUI
-     */
-    protected $input;
+    protected ilFormPropertyGUI $input;
     private Container $dic;
 
 

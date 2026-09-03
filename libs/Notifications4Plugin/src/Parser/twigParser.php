@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Parser;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser;
 
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -9,8 +9,8 @@ use Twig\Loader\ArrayLoader;
 
 class twigParser extends AbstractParser
 {
-    public const DOC_LINK = "https://twig.symfony.com/doc/1.x/templates.html";
-    public const NAME = "twig";
+    public const string DOC_LINK = "https://twig.symfony.com/doc/1.x/templates.html";
+    public const string NAME = "twig";
 
 
     public function __construct()

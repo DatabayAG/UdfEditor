@@ -4,8 +4,8 @@
 
 | Component | Version(s)                                                                                    | Link                      |
 |-----------|-----------------------------------------------------------------------------------------------|---------------------------|
-| PHP       | ![](https://img.shields.io/badge/8.1-blue.svg) ![](https://img.shields.io/badge/8.2-blue.svg) | [PHP](https://php.net)    |
-| ILIAS     | ![](https://img.shields.io/badge/9.x-orange.svg)                                              | [ILIAS](https://ilias.de) |
+| PHP       | ![](https://img.shields.io/badge/8.3-blue.svg) ![](https://img.shields.io/badge/8.4-blue.svg) | [PHP](https://php.net)    |
+| ILIAS     | ![](https://img.shields.io/badge/11.x-orange.svg)                                             | [ILIAS](https://ilias.de) |
 
 ---
 
@@ -38,6 +38,11 @@
 6. Choose **Activate** from the **Actions** dropdown.
 
 ### Install CascadingSelect plugin (optional)
+
+Because of major UDF changes in ILIAS 11+, 
+the **CascadingSelect** plugin is currently unsupported   
+and since no ILIAS 11 version exists of this plugin as of 27.08.2026 it cannot currently be tested for compatibility.
+
 Start at your ILIAS root directory
 ```bash
 mkdir -p public/Customizing/global/plugins/Services/User/UDFDefinition

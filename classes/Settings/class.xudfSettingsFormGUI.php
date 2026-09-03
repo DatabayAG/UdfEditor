@@ -18,113 +18,119 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Enum\RedirectType;
+use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
+use ILIAS\Plugin\UdfEditor\Model\Settings;
+
 /**
  * @ilCtrl_Calls      xudfSettingsFormGUI: ilFormPropertyDispatchGUI
  */
 class xudfSettingsFormGUI extends ilPropertyFormGUI
 {
-    public const F_TITLE = 'title';
-    public const F_DESCRIPTION = 'description';
-    public const F_ONLINE = 'online';
-    public const F_SHOW_INFOTAB = 'show_infotab';
-    public const F_ALWAYS_EDIT = 'always_edit';
-    public const F_MAIL_NOTIFICATION = 'mail_notification';
-    public const F_ADDITIONAL_NOTIFICATION = 'additional_notification';
-    public const F_REDIRECT_TYPE = 'redirect_type';
-    public const F_REF_ID = 'ref_id_redir';
-    public const F_URL = 'url';
+    public const string F_TITLE = "title";
+    public const string F_DESCRIPTION = "description";
+    public const string F_ONLINE = "online";
+    public const string F_SHOW_INFOTAB = "show_infotab";
+    public const string F_ALWAYS_EDIT = "always_edit";
+    public const string F_MAIL_NOTIFICATION = "mail_notification";
+    public const string F_ADDITIONAL_NOTIFICATION = "additional_notification";
+    public const string F_REDIRECT_TYPE = "redirect_type";
+    public const string F_REF_ID = "ref_id_redir";
+    public const string F_URL = "url";
 
     protected static array $redirect_type_to_postvar
         = [
-            xudfSetting::REDIRECT_STAY_IN_FORM => false,
-            xudfSetting::REDIRECT_TO_ILIAS_OBJECT => self::F_REF_ID,
-            xudfSetting::REDIRECT_TO_URL => self::F_URL,
-            xudfSetting::REDIRECT_TO_CALLER => false
+            RedirectType::STAY_IN_FORM->value => false,
+            RedirectType::TO_ILIAS_OBJECT->value => self::F_REF_ID,
+            RedirectType::TO_URL->value => self::F_URL,
+            RedirectType::TO_CALLER->value => false
         ];
 
     protected ilLanguage $lng;
 
     protected ilUdfEditorPlugin $pl;
 
-    protected xudfSettingsGUI $parent_gui;
+    protected Settings $xudf_setting;
+    private readonly SettingsRepository $settings_repo;
 
-    protected xudfSetting $xudfSetting;
-
-    public function __construct(xudfSettingsGUI $parent_gui)
+    public function __construct(protected xudfSettingsGUI $parent_gui)
     {
         parent::__construct();
         global $DIC;
         $this->lng = $DIC->language();
         $this->pl = ilUdfEditorPlugin::getInstance();
-        $this->parent_gui = $parent_gui;
-        $this->xudfSetting = xudfSetting::find($this->parent_gui->getObjId());
-        $this->setTitle($this->lng->txt('settings'));
-        $this->setFormAction($this->ctrl->getFormAction($parent_gui));
+        $this->settings_repo = new SettingsRepository();
+
+        $this->xudf_setting = $this->settings_repo->read($this->parent_gui->getObjId());
+        $this->setTitle($this->lng->txt("settings"));
+        $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
         $this->initForm();
     }
 
     protected function initForm(): void
     {
         // TITLE
-        $input = new ilTextInputGUI($this->lng->txt(self::F_TITLE), self::F_TITLE);
-        $input->setRequired(true);
-        $this->addItem($input);
+        $title = new ilTextInputGUI($this->lng->txt(self::F_TITLE), self::F_TITLE);
+        $title->setRequired(true);
+        $this->addItem($title);
 
         // DESCRIPTION
-        $input = new ilTextInputGUI($this->lng->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
-        $this->addItem($input);
+        $description = new ilTextInputGUI($this->lng->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
+        $this->addItem($description);
 
         // ONLINE
-        $input = new ilCheckboxInputGUI($this->lng->txt(self::F_ONLINE), self::F_ONLINE);
-        $this->addItem($input);
+        $online = new ilCheckboxInputGUI($this->lng->txt(self::F_ONLINE), self::F_ONLINE);
+        $this->addItem($online);
 
         // SHOW INFOTAB
-        $input = new ilCheckboxInputGUI($this->pl->txt(self::F_SHOW_INFOTAB), self::F_SHOW_INFOTAB);
-        $this->addItem($input);
+        $show_info_tab = new ilCheckboxInputGUI($this->pl->txt(self::F_SHOW_INFOTAB), self::F_SHOW_INFOTAB);
+        $this->addItem($show_info_tab);
 
         // Configure Edit Mode
-        $input = new ilCheckboxInputGUI($this->pl->txt(self::F_ALWAYS_EDIT), self::F_ALWAYS_EDIT);
-        $input->setInfo($this->pl->txt(self::F_ALWAYS_EDIT . '_info'));
-        $this->addItem($input);
+        $edit_mode = new ilCheckboxInputGUI($this->pl->txt(self::F_ALWAYS_EDIT), self::F_ALWAYS_EDIT);
+        $edit_mode->setInfo($this->pl->txt(self::F_ALWAYS_EDIT . "_info"));
+        $this->addItem($edit_mode);
 
         // MAIL NOTIFICATION
-        $input = new ilCheckboxInputGUI($this->pl->txt(self::F_MAIL_NOTIFICATION), self::F_MAIL_NOTIFICATION);
-        $input->setInfo($this->pl->txt(self::F_MAIL_NOTIFICATION . '_info'));
-        $this->addItem($input);
+        $mail_notification = new ilCheckboxInputGUI($this->pl->txt(self::F_MAIL_NOTIFICATION), self::F_MAIL_NOTIFICATION);
+        $mail_notification->setInfo($this->pl->txt(self::F_MAIL_NOTIFICATION . "_info"));
+        $this->addItem($mail_notification);
 
-        // MAIL NOTIFICATION
-        $input = new ilTextInputGUI($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION), self::F_ADDITIONAL_NOTIFICATION);
-        $input->setInfo($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION . '_info'));
-        $this->addItem($input);
+        // ADDITIONAL MAIL NOTIFICATION
+        $additional_mail_notification = new ilTextInputGUI($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION), self::F_ADDITIONAL_NOTIFICATION);
+        $additional_mail_notification->setInfo($this->pl->txt(self::F_ADDITIONAL_NOTIFICATION . "_info"));
+        $mail_notification->addSubItem($additional_mail_notification);
 
         // REDIRECT TYPE
-        $input = new ilRadioGroupInputGUI($this->pl->txt(self::F_REDIRECT_TYPE), self::F_REDIRECT_TYPE);
-        $input->setInfo($this->pl->txt(self::F_REDIRECT_TYPE . '_info'));
+        $redirect_type = new ilRadioGroupInputGUI($this->pl->txt(self::F_REDIRECT_TYPE), self::F_REDIRECT_TYPE);
+        $redirect_type->setInfo($this->pl->txt(self::F_REDIRECT_TYPE . "_info"));
 
-        $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_STAY_IN_FORM), xudfSetting::REDIRECT_STAY_IN_FORM);
-        $input->addOption($opt);
+        $redirect_type->addOption(new ilRadioOption($this->pl->txt(RedirectType::STAY_IN_FORM->toTranslationKey()), RedirectType::STAY_IN_FORM->value));
 
-        $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_ILIAS_OBJECT), xudfSetting::REDIRECT_TO_ILIAS_OBJECT);
-        $obj_input = new ilRepositorySelector2InputGUI('', self::F_REF_ID, false, $this);
-        $opt->addSubItem($obj_input);
-        $input->addOption($opt);
+        $to_ilias_object_option = new ilRadioOption($this->pl->txt(RedirectType::TO_ILIAS_OBJECT->toTranslationKey()), RedirectType::TO_ILIAS_OBJECT->value);
+        $obj_input = new ilRepositorySelector2InputGUI("", self::F_REF_ID, false, $this);
+        $obj_input->setRequired(true);
+        $to_ilias_object_option->addSubItem($obj_input);
+        $redirect_type->addOption($to_ilias_object_option);
 
-        $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_URL), xudfSetting::REDIRECT_TO_URL);
-        $url_input = new ilTextInputGUI('', self::F_URL);
-        $opt->addSubItem($url_input);
-        $input->addOption($opt);
+        $to_url_option = new ilRadioOption($this->pl->txt(RedirectType::TO_URL->toTranslationKey()), RedirectType::TO_URL->value);
+        $url_input = new ilTextInputGUI("", self::F_URL);
+        $url_input->setRequired(true);
+        $to_url_option->addSubItem($url_input);
+        $redirect_type->addOption($to_url_option);
+
+
         // only offer redirect to caller if referer contains a ref_id
         // since some proxy scenarios do not pass the complete referer
-        $serverParams = $this->http->request()->getServerParams();
+        $server_params = $this->http->request()->getServerParams();
 
-        if (isset($serverParams['HTTP_REFERER']) && str_contains($serverParams['HTTP_REFERER'], 'ref_id')) {
-            $opt = new ilRadioOption($this->pl->txt(xudfSetting::REDIRECT_TO_CALLER), xudfSetting::REDIRECT_TO_CALLER);
-            $input->addOption($opt);
+        if (isset($server_params["HTTP_REFERER"]) && str_contains($server_params["HTTP_REFERER"], "ref_id")) {
+            $redirect_type->addOption(new ilRadioOption($this->pl->txt(RedirectType::TO_CALLER->toTranslationKey()), RedirectType::TO_CALLER->value));
         }
 
-        $this->addItem($input);
+        $this->addItem($redirect_type);
 
-        $this->addCommandButton(xudfSettingsGUI::CMD_UPDATE, $this->lng->txt('save'));
+        $this->addCommandButton(xudfSettingsGUI::CMD_UPDATE, $this->lng->txt("save"));
     }
 
     public function fillForm(): void
@@ -132,16 +138,16 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $values = [
             self::F_TITLE => $this->parent_gui->getObject()->getTitle(),
             self::F_DESCRIPTION => $this->parent_gui->getObject()->getDescription(),
-            self::F_ONLINE => $this->xudfSetting->isOnline(),
-            self::F_SHOW_INFOTAB => $this->xudfSetting->isShowInfoTab(),
-            self::F_ALWAYS_EDIT => $this->xudfSetting->isAlwaysEdit(),
-            self::F_MAIL_NOTIFICATION => $this->xudfSetting->hasMailNotification(),
-            self::F_ADDITIONAL_NOTIFICATION => $this->xudfSetting->getAdditionalNotification(),
-            self::F_REDIRECT_TYPE => $this->xudfSetting->getRedirectType()
+            self::F_ONLINE => $this->xudf_setting->isOnline(),
+            self::F_SHOW_INFOTAB => $this->xudf_setting->isShowInfoTab(),
+            self::F_ALWAYS_EDIT => $this->xudf_setting->isAlwaysEdit(),
+            self::F_MAIL_NOTIFICATION => $this->xudf_setting->isMailNotification(),
+            self::F_ADDITIONAL_NOTIFICATION => $this->xudf_setting->getAdditionalNotification(),
+            self::F_REDIRECT_TYPE => $this->xudf_setting->getRedirectType()->value
         ];
-        $redirect_value_postvar = self::$redirect_type_to_postvar[$this->xudfSetting->getRedirectType()];
+        $redirect_value_postvar = self::$redirect_type_to_postvar[$this->xudf_setting->getRedirectType()->value];
         if ($redirect_value_postvar !== false) {
-            $values[$redirect_value_postvar] = $this->xudfSetting->getRedirectValue();
+            $values[$redirect_value_postvar] = $this->xudf_setting->getRedirectValue();
         }
 
         $this->setValuesByArray($values);
@@ -157,23 +163,23 @@ class xudfSettingsFormGUI extends ilPropertyFormGUI
         $this->parent_gui->getObject()->setDescription($this->getInput(self::F_DESCRIPTION));
         $this->parent_gui->getObject()->update();
 
-        $this->xudfSetting->setIsOnline((bool) $this->getInput(self::F_ONLINE));
-        $this->xudfSetting->setShowInfoTab((bool) $this->getInput(self::F_SHOW_INFOTAB));
-        $this->xudfSetting->setAlwaysEdit((bool) $this->getInput(self::F_ALWAYS_EDIT));
-        $this->xudfSetting->setMailNotification((bool) $this->getInput(self::F_MAIL_NOTIFICATION));
-        $this->xudfSetting->setAdditionalNotification($this->getInput(self::F_ADDITIONAL_NOTIFICATION));
-        $this->xudfSetting->setRedirectType($this->getInput(self::F_REDIRECT_TYPE));
-        switch ($this->xudfSetting->getRedirectType()) {
-            case xudfSetting::REDIRECT_TO_ILIAS_OBJECT:
-                $this->xudfSetting->setRedirectValue($this->getInput(self::F_REF_ID));
+        $this->xudf_setting->setIsOnline((bool) $this->getInput(self::F_ONLINE));
+        $this->xudf_setting->setShowInfoTab((bool) $this->getInput(self::F_SHOW_INFOTAB));
+        $this->xudf_setting->setAlwaysEdit((bool) $this->getInput(self::F_ALWAYS_EDIT));
+        $this->xudf_setting->setMailNotification((bool) $this->getInput(self::F_MAIL_NOTIFICATION));
+        $this->xudf_setting->setAdditionalNotification($this->getInput(self::F_ADDITIONAL_NOTIFICATION));
+        $this->xudf_setting->setRedirectType(RedirectType::tryFrom($this->getInput(self::F_REDIRECT_TYPE)) ?? RedirectType::STAY_IN_FORM);
+        switch ($this->xudf_setting->getRedirectType()) {
+            case RedirectType::TO_ILIAS_OBJECT:
+                $this->xudf_setting->setRedirectValue($this->getInput(self::F_REF_ID));
                 break;
-            case xudfSetting::REDIRECT_TO_URL:
-                $this->xudfSetting->setRedirectValue($this->getInput(self::F_URL));
+            case RedirectType::TO_URL:
+                $this->xudf_setting->setRedirectValue($this->getInput(self::F_URL));
                 break;
             default:
                 break;
         }
-        $this->xudfSetting->update();
+        $this->settings_repo->update($this->xudf_setting);
 
         return true;
     }

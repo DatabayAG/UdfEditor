@@ -4,13 +4,9 @@ add_separator#:#Separator hinzufügen
 udf_type#:#UDF-Typ
 udf_required#:#UDF-Verpflichtend
 udf_field#:#UDF
-udf_field_type_1#:#Text
-udf_field_type_2#:#Auswahlliste
-udf_field_type_3#:#Textbereich
-udf_field_type_51#:#Kaskadiert
 show_infotab#:#Tab "Info" anzeigen
 always_edit#:#Direkt bearbeitbar
-always_edit_info#:#Wenn alle Felder bereits gefüllt sind, entfällt das Einschalten des Bearbeitungsmodus 
+always_edit_info#:#Wenn alle Felder bereits gefüllt sind, entfällt das Einschalten des Bearbeitungsmodus
 delete_confirmation_text#:#Sind Sie sicher, dass Sie folgendes Element löschen möchten?
 msg_successfully_deleted#:#Element erfolgreich gelöscht.
 msg_no_udfs#:#Auf dieser Plattform existieren noch keine Benutzerdefinierten Felder. Diese können in der Benutzeradministration erstellt werden.
@@ -41,17 +37,28 @@ xudf_copy#:#Kopieren: UdfEditor kann kopiert werden
 xudf_write#:#Einstellungen bearbeiten: Einstellungen und Inhalte können bearbeitet werden
 xudf_delete#:#Löschen: Objekt kann gelöscht werden
 xudf_edit_permission#:#Rechteeinstellungen ändern: Rechteeinstellungen ändern
-field_not_found#:#[Feld nicht gefunden]
 msg_missing_udf#:#Mindestens ein benutzerdefiniertes Feld konnte nicht gefunden werden und wurde möglicherweise aus dem System gelöscht.
 msg_choose_new_type#:#Der ausgewählte Typ konnte nicht gefunden werden. Bitte wählen Sie einen neuen Typen aus der Liste aus.
 is_required#:#Pflichtfeld
 values#:#Werte
 redirect_type#:#Weiterleitung nach Speichern
 redirect_type_info#:#Wählen Sie hier aus, wohin ein Benutzer nach dem Speichern des Formulares weitergeleitet werden soll.
-stay_in_form#:#Im Formular bleiben
-to_ilias_object#:#ILIAS-Objekt
-to_url#:#URL
-to_caller#:#Zurück zur aufrufenden Seite
+
+redirect.type.stay_in_form#:#Im Formular bleiben
+redirect.type.to_ilias_object#:#ILIAS-Objekt
+redirect.type.to_url#:#URL
+redirect.type.to_caller#:#Zurück zur aufrufenden Seite
+
+
+
+udf.not_found.error#:#Das Benutzerdefinierte Feld mit der ID '%s' konnte nicht gefunden werden.
+udf.not_found.label#:#[Feld nicht gefunden]
+
+udf.type.text#:#Text
+udf.type.select#:#Auswahlliste
+udf.type.textarea#:#Textbereich
+udf.type.cascading#:#Kaskadiert
+
 notification#:#Benachrichtigung
 notifications4plugin_actions#:#Aktionen
 notifications4plugin_add#:#Hinzugefügen

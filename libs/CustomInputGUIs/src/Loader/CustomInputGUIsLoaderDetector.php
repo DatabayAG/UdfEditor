@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\Loader;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader;
 
 use Closure;
 use ILIAS\Data\Factory;
@@ -10,17 +10,15 @@ use ILIAS\UI\Implementation\Render\ComponentRenderer;
 use ILIAS\UI\Implementation\Render\Loader;
 use ILIAS\UI\Implementation\Render\RendererFactory;
 use ILIAS\UI\Renderer;
+use ilImagePathResolver;
 use Pimple\Container;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\InputGUIWrapperUIInputComponent;
-use srag\Plugins\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\Renderer as InputGUIWrapperUIInputComponentRenderer;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\InputGUIWrapperUIInputComponent;
+use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\InputGUIWrapperUIInputComponent\Renderer as InputGUIWrapperUIInputComponentRenderer;
 use Throwable;
 
 class CustomInputGUIsLoaderDetector implements Loader
 {
-    /**
-     * @var bool
-     */
-    protected static $has_fix_ctrl_namespace_current_url = false;
+    protected static bool $has_fix_ctrl_namespace_current_url = false;
     private Container $dic;
     protected Loader $loader;
 
@@ -46,11 +44,12 @@ class CustomInputGUIsLoaderDetector implements Loader
                     }, $rendererObj, DefaultRenderer::class)();
                     return new DefaultRenderer(
                         new self($previous_renderer_loader),
-                        $dic["ui.javascript_binding"]
+                        $dic["ui.javascript_binding"],
+                        $dic->language()
                     );
                 }
                 return $rendererObj;
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 return $renderer($dic);
             }
         };
@@ -98,7 +97,7 @@ class CustomInputGUIsLoaderDetector implements Loader
                     $this->dic["ui.template_factory"],
                     $this->dic->language(),
                     $this->dic["ui.javascript_binding"],
-                    $this->dic["ui.pathresolver"],
+                    new ilImagePathResolver(),
                     new Factory(),
                     $this->dic["help.text_retriever"],
                     $this->dic["ui.upload_limit_resolver"]

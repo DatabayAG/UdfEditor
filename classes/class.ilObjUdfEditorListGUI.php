@@ -18,11 +18,21 @@
 
 declare(strict_types=1);
 
+use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
+use ILIAS\Plugin\UdfEditor\Model\Settings;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 {
     private bool $payment_enabled = false;
+    private readonly SettingsRepository $settings_repo;
+
+    public function __construct(int $a_context = self::CONTEXT_REPOSITORY)
+    {
+        parent::__construct($a_context);
+        $this->settings_repo = new SettingsRepository();
+    }
 
     public function getGuiClass(): string
     {
@@ -52,7 +62,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
             [
                 "permission" => "write",
                 "cmd" => ilObjUdfEditorGUI::CMD_SETTINGS,
-                "lang_var" => 'settings'
+                "lang_var" => "settings"
             ]
         ];
 
@@ -61,7 +71,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
 
     public function initType(): void
     {
-        $this->setType(ilUdfEditorPlugin::PLUGIN_ID);
+        $this->setType(ilUdfEditorPlugin::ID);
     }
 
     /**
@@ -71,7 +81,7 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
     {
         $alert = [];
         foreach ((array) $this->getCustomProperties([]) as $prop) {
-            if ($prop['alert'] == true) {
+            if ($prop["alert"] == true) {
                 $alert[] = $prop;
             }
         }
@@ -91,19 +101,19 @@ class ilObjUdfEditorListGUI extends ilObjectPluginListGUI
         $props = parent::getCustomProperties([]);
 
         try {
-            /** @var xudfSetting $settings */
-            $settings = xudfSetting::find($this->obj_id);
-        } catch (Throwable $ex) {
+            /** @var Settings $settings */
+            $settings = $this->settings_repo->read($this->obj_id);
+        } catch (Throwable) {
             return $props;
         }
 
         if (!$settings->isOnline()) {
             $props[] = [
-                'alert' => true,
-                'newline' => true,
-                'property' => 'Status',
-                'value' => 'Offline',
-                'propertyNameVisible' => true
+                "alert" => true,
+                "newline" => true,
+                "property" => "Status",
+                "value" => "Offline",
+                "propertyNameVisible" => true
             ];
         }
 

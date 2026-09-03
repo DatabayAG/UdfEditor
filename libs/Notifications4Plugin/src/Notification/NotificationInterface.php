@@ -1,12 +1,12 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 use ilDateTime;
 
 interface NotificationInterface
 {
-    public const DEFAULT_PARSER_OPTIONS
+    public const array DEFAULT_PARSER_OPTIONS
         = [
             "autoescape" => false
         ];
@@ -30,10 +30,7 @@ interface NotificationInterface
     public function getParser(): string;
 
 
-    /**
-     * @return mixed
-     */
-    public function getParserOption(string $key);
+    public function getParserOption(string $key): mixed;
 
 
     public function getParserOptions(): array;
@@ -72,10 +69,7 @@ interface NotificationInterface
     public function setParser(string $parser): void;
 
 
-    /**
-     * @param mixed $value
-     */
-    public function setParserOption(string $key, $value): void;
+    public function setParserOption(string $key, mixed $value): void;
 
 
     public function setParserOptions(array $parser_options = self::DEFAULT_PARSER_OPTIONS): void;

@@ -1,9 +1,9 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Sender;
 
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\NotificationInterface;
 
 interface RepositoryInterface
 {

@@ -20,10 +20,8 @@ declare(strict_types=1);
 
 class xudfPageObject extends ilPageObject
 {
-    public const PARENT_TYPE = 'xudf';
-
     public function getParentType(): string
     {
-        return 'xudf';
+        return ilUdfEditorPlugin::ID;
     }
 }

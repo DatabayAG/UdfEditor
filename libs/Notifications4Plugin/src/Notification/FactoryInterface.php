@@ -1,8 +1,8 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Notification\Form\FormBuilder;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Form\FormBuilder;
 use stdClass;
 
 interface FactoryInterface

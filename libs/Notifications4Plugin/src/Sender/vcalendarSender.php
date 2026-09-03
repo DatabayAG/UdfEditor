@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Sender;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Sender;
 
 use ILIAS\DI\Container;
 use ilMail;
@@ -8,8 +8,8 @@ use ilMailbox;
 use ilMimeMail;
 use ilObjUser;
 use ReflectionClass;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Exception\Notifications4PluginException;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
 
 /**
  *
@@ -21,8 +21,8 @@ class vcalendarSender implements Sender
 {
     use Notifications4PluginTrait;
 
-    public const METHOD_CANCEL = "CANCEL";
-    public const METHOD_REQUEST = "REQUEST";
+    public const string METHOD_CANCEL = "CANCEL";
+    public const string METHOD_REQUEST = "REQUEST";
     /**
      * @var array
      */
@@ -68,10 +68,6 @@ class vcalendarSender implements Sender
      */
     protected $subject = "";
     /**
-     * @var string|array
-     */
-    protected $to = "";
-    /**
      * @var string
      */
     protected $uid = "";
@@ -89,15 +85,13 @@ class vcalendarSender implements Sender
      * @param int $startTime Timestamp
      * @param int $endTime Timestamp
      */
-    public function __construct($user_from = 0, $to = "", string $method = self::METHOD_REQUEST, string $uid = "", int $startTime = 0, int $endTime = 0, int $sequence = 0)
+    public function __construct($user_from = 0, protected $to = "", string $method = self::METHOD_REQUEST, string $uid = "", int $startTime = 0, int $endTime = 0, int $sequence = 0)
     {
         global $DIC;
         $this->dic = $DIC;
         if ($user_from) {
             $this->setUserFrom($user_from);
         }
-
-        $this->to = $to;
 
         $this->method = $method;
         $this->uid = $uid;

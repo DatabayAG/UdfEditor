@@ -1,9 +1,9 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Utils;
+namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils;
 
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\Repository as Notifications4PluginRepository;
-use srag\Plugins\UdfEditor\Libs\Notifications4Plugin\RepositoryInterface as Notifications4PluginRepositoryInterface;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Repository as Notifications4PluginRepository;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\RepositoryInterface as Notifications4PluginRepositoryInterface;
 
 trait Notifications4PluginTrait
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items;
+namespace ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\PropertyFormGUI\Items;
 
 use ilDateTime;
 use ilFormPropertyGUI;
@@ -20,10 +20,7 @@ use TypeError;
  */
 final class Items
 {
-    /**
-     * @var bool
-     */
-    protected static $init = false;
+    protected static bool $init = false;
 
 
     private function __construct()
@@ -71,10 +68,7 @@ final class Items
     }
 
 
-    /**
-     * @return mixed
-     */
-    public static function getter(object $object, string $property)
+    public static function getter(object $object, string $property): mixed
     {
         if (method_exists($object, $method = "get" . self::strToCamelCase($property))) {
             return $object->{$method}();
@@ -153,11 +147,9 @@ final class Items
 
 
     /**
-     * @param ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item
-     * @param mixed $value
      * @deprecated
      */
-    public static function setValueToItem($item, $value): void
+    public static function setValueToItem(ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item, mixed $value): void
     {
         if (method_exists($item, "setChecked")) {
             $item->setChecked($value);
@@ -187,21 +179,17 @@ final class Items
     }
 
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    public static function setter(object $object, string $property, $value)
+    public static function setter(object $object, string $property, mixed $value): mixed
     {
         $res = null;
 
         if (method_exists($object, $method = "with" . self::strToCamelCase($property)) || method_exists($object, $method = "set" . self::strToCamelCase($property))) {
             try {
                 $res = $object->{$method}($value);
-            } catch (TypeError $ex) {
+            } catch (TypeError) {
                 try {
                     $res = $object->{$method}(intval($value));
-                } catch (TypeError $ex) {
+                } catch (TypeError) {
                     $res = $object->{$method}(boolval($value));
                 }
             }
