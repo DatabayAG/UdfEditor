@@ -24,7 +24,7 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\UdfEditor\Enum\PluginAsset;
 use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\Loader\CustomInputGUIsLoaderDetector;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Utils\Notifications4PluginTrait;
-use ILIAS\Plugin\UdfEditor\Setup\Migration\DBUpdateSteps;
+use ILIAS\Plugin\UdfEditor\Setup\DBUpdateSteps;
 
 class ilUdfEditorPlugin extends ilRepositoryObjectPlugin
 {
