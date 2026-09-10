@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\UdfEditor\Setup;
 
 use ilDatabaseUpdateStepsExecutedObjective;
-use ILIAS\Plugin\UdfEditor\Setup\DBUpdateSteps;
 use ILIAS\Refinery\Transformation;
 use ILIAS\Setup;
 use ILIAS\Setup\Agent;
