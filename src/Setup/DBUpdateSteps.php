@@ -18,7 +18,7 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\UdfEditor\Setup\Migration;
+namespace ILIAS\Plugin\UdfEditor\Setup;
 
 use ilDatabaseUpdateSteps;
 use ilDBConstants;
