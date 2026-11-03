@@ -98,7 +98,8 @@ final class Repository implements RepositoryInterface
 
     public function notifications(): NotificationsRepositoryInterface
     {
-        return NotificationsRepository::getInstance();
+        global $DIC;
+        return new NotificationsRepository($DIC->database());
     }
 
 

@@ -4,7 +4,7 @@ namespace ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification;
 
 use ilDateTime;
 use ilDBConstants;
-use ILIAS\DI\Container;
+use ilDBInterface;
 use ILIAS\Plugin\UdfEditor\Libs\CustomInputGUIs\TabsInputGUI\MultilangualTabsInputGUI;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Language\NotificationLanguage;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Parser\twigParser;
@@ -16,42 +16,24 @@ final class Repository implements RepositoryInterface
 {
     use Notifications4PluginTrait;
 
-    /**
-     * @var RepositoryInterface|null
-     */
-    protected static $instance = null;
-    private Container $dic;
 
-
-    private function __construct()
+    public function __construct(private readonly ilDBInterface $db)
     {
-        global $DIC;
-        $this->dic = $DIC;
+
     }
-
-
-    public static function getInstance(): RepositoryInterface
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
 
     public function deleteNotification(NotificationInterface $notification): void
     {
-        $this->dic->database()->manipulateF('DELETE FROM ' . $this->dic->database()->quoteIdentifier(Notification::getTableName())
+        $this->db->manipulateF('DELETE FROM ' . $this->db->quoteIdentifier(Notification::getTableName())
             . ' WHERE id=%s', [ilDBConstants::T_INTEGER], [$notification->getId()]);
     }
 
 
     public function dropTables(): void
     {
-        $this->dic->database()->dropTable(Notification::getTableName(), false);
+        $this->db->dropTable(Notification::getTableName(), false);
 
-        //$this->dic->database()->dropAutoIncrementTable(Notification::getTableName());
+        //$this->db->dropAutoIncrementTable(Notification::getTableName());
 
         $this->dropTablesLanguage();
     }
@@ -81,7 +63,7 @@ final class Repository implements RepositoryInterface
         /**
          * @var NotificationInterface|null $notification
          */
-        $stm = $this->dic->database()->queryF(
+        $stm = $this->db->queryF(
             'SELECT * FROM ' . Notification::getTableName() . ' WHERE id=%s',
             [ilDBConstants::T_INTEGER],
             [$id]
@@ -99,7 +81,7 @@ final class Repository implements RepositoryInterface
 
     public function getNotificationByName(string $name): ?NotificationInterface
     {
-        $stm = $this->dic->database()->queryF(
+        $stm = $this->db->queryF(
             'SELECT * FROM ' . Notification::getTableName() . ' WHERE name=%s',
             [ilDBConstants::T_TEXT],
             [$name]
@@ -118,7 +100,7 @@ final class Repository implements RepositoryInterface
 
     public function getNotifications(): array
     {
-        $stm = $this->dic->database()->query('SELECT *' . ' FROM ' . $this->dic->database()->quoteIdentifier(Notification::getTableName()));
+        $stm = $this->db->query('SELECT *' . ' FROM ' . $this->db->quoteIdentifier(Notification::getTableName()));
 
         $notifications = [];
         while ($stdClass = $stm->fetchObject()) {
@@ -132,9 +114,9 @@ final class Repository implements RepositoryInterface
     public function getNotificationsCount(): int
     {
 
-        $sql = 'SELECT COUNT(id) AS count' . ' FROM ' . $this->dic->database()->quoteIdentifier(Notification::getTableName());
+        $sql = 'SELECT COUNT(id) AS count' . ' FROM ' . $this->db->quoteIdentifier(Notification::getTableName());
 
-        $result = $this->dic->database()->query($sql);
+        $result = $this->db->query($sql);
 
         if (($row = $result->fetchAssoc()) !== false) {
             return (int) $row["count"];
@@ -152,22 +134,22 @@ final class Repository implements RepositoryInterface
             // Fix Call to a member function getName() on null (Because not use ILIAS sequence)
         }
 
-        if ($this->dic->database()->sequenceExists(Notification::getTableName())) {
-            $this->dic->database()->dropSequence(Notification::getTableName());
+        if ($this->db->sequenceExists(Notification::getTableName())) {
+            $this->db->dropSequence(Notification::getTableName());
         }
 
         $this->createAutoIncrement(Notification::getTableName(), "id");
 
         $this->migrateLanguages();
 
-        if ($this->dic->database()->tableColumnExists(Notification::getTableName(), "default_language")) {
-            $this->dic->database()->dropTableColumn(Notification::getTableName(), "default_language");
+        if ($this->db->tableColumnExists(Notification::getTableName(), "default_language")) {
+            $this->db->dropTableColumn(Notification::getTableName(), "default_language");
         }
     }
 
     public function createAutoIncrement(string $table_name, string $field): void
     {
-        $this->dic->database()->manipulate('ALTER TABLE ' . $table_name . ' MODIFY COLUMN ' . $field . ' INT NOT NULL AUTO_INCREMENT');
+        $this->db->manipulate('ALTER TABLE ' . $table_name . ' MODIFY COLUMN ' . $field . ' INT NOT NULL AUTO_INCREMENT');
     }
 
 
@@ -187,10 +169,10 @@ final class Repository implements RepositoryInterface
         ]); // (Prevents LibraryNamespaceChanger)
 
         if (!empty($name)) {
-            if ($this->dic->database()->tableExists($global_plugin_notification_table_name)
-                && $this->dic->database()->tableExists($global_plugin_notification_language_table_name)
+            if ($this->db->tableExists($global_plugin_notification_table_name)
+                && $this->db->tableExists($global_plugin_notification_language_table_name)
             ) {
-                $result = $this->dic->database()->queryF('SELECT * FROM ' . $this->dic->database()
+                $result = $this->db->queryF('SELECT * FROM ' . $this->db
                         ->quoteIdentifier($global_plugin_notification_table_name) . ' WHERE name=%s', [ilDBConstants::T_TEXT], [$name]);
 
                 if (($row = $result->fetchAssoc()) !== false) {
@@ -212,7 +194,7 @@ final class Repository implements RepositoryInterface
                         $notification->setParser((string) $row["parser"]);
                     }
 
-                    $result2 = $this->dic->database()->queryF('SELECT * FROM ' . $this->dic->database()
+                    $result2 = $this->db->queryF('SELECT * FROM ' . $this->db
                             ->quoteIdentifier($global_plugin_notification_language_table_name)
                         . ' WHERE notification_id=%s', [ilDBConstants::T_INTEGER], [$row["id"]]);
 
@@ -260,13 +242,13 @@ final class Repository implements RepositoryInterface
         ];
 
         if (empty($notification->getId())) {
-            $this->dic->database()->insert(
+            $this->db->insert(
                 Notification::getTableName(),
                 $values
             );
-            $notification->setId($this->dic->database()->getLastInsertId());
+            $notification->setId($this->db->getLastInsertId());
         } else {
-            $this->dic->database()->update(
+            $this->db->update(
                 Notification::getTableName(),
                 $values,
                 [
@@ -282,17 +264,17 @@ final class Repository implements RepositoryInterface
      */
     protected function dropTablesLanguage(): void
     {
-        if ($this->dic->database()->sequenceExists(NotificationLanguage::getTableName() . "g")) {
-            $this->dic->database()->dropSequence(NotificationLanguage::getTableName() . "g");
+        if ($this->db->sequenceExists(NotificationLanguage::getTableName() . "g")) {
+            $this->db->dropSequence(NotificationLanguage::getTableName() . "g");
         }
-        $this->dic->database()->dropTable(NotificationLanguage::getTableName() . "g", false);
-        //$this->dic->database()->dropAutoIncrementTable(NotificationLanguage::getTableName() . "g");
+        $this->db->dropTable(NotificationLanguage::getTableName() . "g", false);
+        //$this->db->dropAutoIncrementTable(NotificationLanguage::getTableName() . "g");
 
-        if ($this->dic->database()->sequenceExists(NotificationLanguage::getTableName())) {
-            $this->dic->database()->dropSequence(NotificationLanguage::getTableName());
+        if ($this->db->sequenceExists(NotificationLanguage::getTableName())) {
+            $this->db->dropSequence(NotificationLanguage::getTableName());
         }
-        $this->dic->database()->dropTable(NotificationLanguage::getTableName(), false);
-        //$this->dic->database()->dropAutoIncrementTable(NotificationLanguage::getTableName());
+        $this->db->dropTable(NotificationLanguage::getTableName(), false);
+        //$this->db->dropAutoIncrementTable(NotificationLanguage::getTableName());
     }
 
 
@@ -304,7 +286,7 @@ final class Repository implements RepositoryInterface
         /**
          * @var stdClass|null $l
          */
-        $l = $this->dic->database()->fetchObjectClass($this->dic->database()->queryF('SELECT * FROM ' . $this->dic->database()
+        $l = $this->db->fetchObjectClass($this->db->queryF('SELECT * FROM ' . $this->db
                 ->quoteIdentifier(NotificationLanguage::getTableName()) . ' WHERE notification_id=%s AND language=%s', [
             ilDBConstants::T_INTEGER,
             ilDBConstants::T_TEXT
@@ -316,11 +298,11 @@ final class Repository implements RepositoryInterface
 
     protected function migrateLanguages(): void
     {
-        if ($this->dic->database()->tableExists(NotificationLanguage::getTableName() . "g")) {
-            $this->dic->database()->renameTable(NotificationLanguage::getTableName() . "g", NotificationLanguage::getTableName());
+        if ($this->db->tableExists(NotificationLanguage::getTableName() . "g")) {
+            $this->db->renameTable(NotificationLanguage::getTableName() . "g", NotificationLanguage::getTableName());
         }
 
-        if ($this->dic->database()->tableExists(NotificationLanguage::getTableName())) {
+        if ($this->db->tableExists(NotificationLanguage::getTableName())) {
 
             foreach (self::notifications4plugin()->notifications()->getNotifications() as $notification) {
 
