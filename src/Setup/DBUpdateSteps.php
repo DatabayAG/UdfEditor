@@ -25,10 +25,12 @@ use ilDBConstants;
 use ilDBInterface;
 use ilDBStepExecutionDB;
 use ilDBStepReader;
+use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Notification\Repository as NotificationsRepository;
 use ILIAS\Plugin\UdfEditor\Libs\Notifications4Plugin\Repository;
 use ILIAS\Plugin\UdfEditor\Repository\ContentElementRepository;
 use ILIAS\Plugin\UdfEditor\Repository\LogEntryRepository;
 use ILIAS\Plugin\UdfEditor\Repository\SettingsRepository;
+use ilUdfEditorPlugin;
 
 class DBUpdateSteps implements ilDatabaseUpdateSteps
 {
@@ -262,7 +264,8 @@ class DBUpdateSteps implements ilDatabaseUpdateSteps
 
     public function step_6(): void
     {
-        Repository::getInstance()->installTables();
+        Repository::getInstance()->withTableNamePrefix(ilUdfEditorPlugin::ID);
+        (new NotificationsRepository($this->db))->installTables();
     }
 
     public function step_7(): void
